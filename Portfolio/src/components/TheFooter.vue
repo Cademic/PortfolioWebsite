@@ -1,9 +1,12 @@
 <template>
   <footer class="footer">
     <div class="container">
+      <div class="code-comment">/* Let's connect */</div>
       <div class="footer__content">
         <div class="footer__copyright">
-          © {{ new Date().getFullYear() }} Carter Wright. All rights reserved.
+          <span class="code-keyword">const</span> <span class="code-var">year</span> = <span class="code-string">{{ new Date().getFullYear() }}</span>;
+          <br>
+          <span class="code-comment">// © Carter Wright. All rights reserved.</span>
         </div>
         <div class="footer__social">
           <a href="https://github.com/cademic" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="GitHub">
@@ -20,26 +23,58 @@
 
 <style scoped>
 .footer {
-  background-color: #f9fafb;
+  background-color: var(--color-background-alt);
   padding: 2rem 0;
   margin-top: 4rem;
+  border-top: 1px solid var(--color-border);
+  position: relative;
 }
 
 .container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 1rem;
+  position: relative;
+}
+
+.code-comment {
+  font-family: var(--font-mono);
+  color: var(--color-accent-3);
+  margin-bottom: 1rem;
+  opacity: 0.7;
 }
 
 .footer__content {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 1rem;
+  background-color: var(--color-background-code);
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
 }
 
 .footer__copyright {
-  color: #6b7280;
+  color: var(--color-text);
   font-size: 0.875rem;
+  font-family: var(--font-mono);
+  line-height: 1.5;
+}
+
+.code-keyword {
+  color: var(--color-secondary);
+}
+
+.code-var {
+  color: var(--color-accent-2);
+}
+
+.code-string {
+  color: var(--color-accent-1);
+}
+
+.code-comment {
+  color: var(--color-accent-3);
 }
 
 .footer__social {
@@ -48,18 +83,29 @@
 }
 
 .social-link {
-  color: #6b7280;
-  transition: color 0.3s;
+  color: var(--color-text-light);
+  transition: color 0.3s, transform 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: var(--color-background-alt);
+  border: 1px solid var(--color-border);
 }
 
 .social-link:hover {
-  color: #4f46e5;
+  color: var(--color-primary);
+  transform: translateY(-3px);
+  box-shadow: 0 3px 5px rgba(0, 224, 255, 0.2);
 }
 
 @media (max-width: 640px) {
   .footer__content {
     flex-direction: column;
     gap: 1rem;
+    padding: 1.5rem;
   }
 }
 </style> 

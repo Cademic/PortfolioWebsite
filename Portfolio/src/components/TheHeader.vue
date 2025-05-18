@@ -11,7 +11,7 @@ const toggleMenu = () => {
   <header class="header">
     <div class="container">
       <div class="logo">
-        <h1>Carter Wright</h1>
+        <h1><span class="logo__bracket">{</span> Carter Wright <span class="logo__bracket">}</span></h1>
       </div>
       
       <button class="menu-toggle" @click="toggleMenu">
@@ -38,9 +38,10 @@ const toggleMenu = () => {
   top: 0;
   left: 0;
   width: 100%;
-  background-color: #ffffff;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  background-color: var(--color-background-alt);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
   z-index: 100;
+  border-bottom: 1px solid var(--color-border);
 }
 
 .container {
@@ -56,6 +57,13 @@ const toggleMenu = () => {
   font-size: 1.5rem;
   font-weight: 700;
   margin: 0;
+  font-family: var(--font-mono);
+  color: var(--color-text);
+}
+
+.logo__bracket {
+  color: var(--color-primary);
+  opacity: 0.8;
 }
 
 .nav__list {
@@ -67,17 +75,36 @@ const toggleMenu = () => {
 
 .nav__item {
   margin-left: 2rem;
+  position: relative;
+}
+
+.nav__item::before {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background-color: var(--color-primary);
+  transition: width 0.3s ease;
+}
+
+.nav__item:hover::before {
+  width: 100%;
 }
 
 .nav__link {
   text-decoration: none;
-  color: #333;
+  color: var(--color-text);
   font-weight: 500;
   transition: color 0.3s;
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  position: relative;
 }
 
 .nav__link:hover {
-  color: #4f46e5;
+  color: var(--color-primary);
 }
 
 .menu-toggle {
@@ -100,7 +127,7 @@ const toggleMenu = () => {
     display: block;
     position: absolute;
     height: 2px;
-    background-color: #333;
+    background-color: var(--color-text);
     transition: all 0.3s ease;
   }
   
@@ -125,13 +152,14 @@ const toggleMenu = () => {
     top: 100%;
     left: 0;
     width: 100%;
-    background-color: #fff;
+    background-color: var(--color-background-alt);
     padding: 1rem 0;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
     transform: translateY(-100%);
     opacity: 0;
     visibility: hidden;
     transition: all 0.3s ease;
+    border-bottom: 1px solid var(--color-border);
   }
   
   .nav--open {
@@ -148,6 +176,15 @@ const toggleMenu = () => {
   .nav__item {
     margin: 0;
     padding: 0.5rem 0;
+    border-bottom: 1px solid var(--color-border);
+  }
+  
+  .nav__item:last-child {
+    border-bottom: none;
+  }
+  
+  .nav__item::before {
+    display: none;
   }
 }
 </style> 
