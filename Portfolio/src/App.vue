@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, reactive, onMounted } from 'vue'
+import { ref } from 'vue'
 import TheHeader from './components/TheHeader.vue'
 import TheFooter from './components/TheFooter.vue'
 import ProjectCard from './components/ProjectCard.vue'
@@ -47,67 +47,41 @@ const projects = [
   }
 ]
 
-// Contact form
-const contactForm = reactive({
-  name: '',
-  email: '',
-  message: ''
-})
+// Contact form state
+const formSubmitting = ref(false)
+const formSubmitted = ref(false)
+const formError = ref('')
 
-const isSubmitting = ref(false)
-const formStatus = ref<{ type: 'success' | 'error', message: string } | null>(null)
-
-const handleSubmit = async () => {
-  isSubmitting.value = true
-  formStatus.value = null
+// Contact form submission handler
+const handleSubmit = async (event: Event) => {
+  event.preventDefault()
+  formSubmitting.value = true
+  formError.value = ''
+  
+  const form = event.target as HTMLFormElement
+  const formData = new FormData(form)
   
   try {
-    // Send form data to our API endpoint
-    const response = await fetch('/api/contact', {
+    const response = await fetch('https://formspree.io/f/mpwdbery', {
       method: 'POST',
+      body: formData,
       headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        name: contactForm.name,
-        email: contactForm.email,
-        message: contactForm.message
-      }),
-    });
-
-    // Get response text first
-    const responseText = await response.text();
+        'Accept': 'application/json'
+      }
+    })
     
-    // Try to parse as JSON if possible
-    let data = { error: 'Unknown error' };
-    try {
-      data = JSON.parse(responseText);
-    } catch (e) {
-      console.error('Failed to parse response:', responseText);
-      throw new Error(`Invalid response format: ${responseText.substring(0, 100)}...`);
+    if (response.ok) {
+      formSubmitted.value = true
+      form.reset()
+    } else {
+      const data = await response.json()
+      formError.value = data.error || 'Something went wrong. Please try again.'
     }
-    
-    if (!response.ok) {
-      throw new Error(data.error || 'Failed to send message');
-    }
-    
-    formStatus.value = {
-      type: 'success',
-      message: 'Thank you for your message! I will get back to you soon.'
-    }
-    
-    // Reset the form
-    contactForm.name = ''
-    contactForm.email = ''
-    contactForm.message = ''
   } catch (error) {
-    console.error('Contact form error:', error)
-    formStatus.value = {
-      type: 'error',
-      message: 'There was an error sending your message. Please try again.'
-    }
+    formError.value = 'Network error. Please try again.'
+    console.error('Form submission error:', error)
   } finally {
-    isSubmitting.value = false
+    formSubmitting.value = false
   }
 }
 </script>
@@ -282,13 +256,29 @@ const handleSubmit = async () => {
               
               <div class="contact__form-container">
                 <h3 class="contact-subtitle">Send a Message</h3>
-                <form class="contact__form" @submit.prevent="handleSubmit">
+                
+                <!-- Show success message when form is submitted -->
+                <div v-if="formSubmitted" class="form-status form-status--success">
+                  Thank you for your message! I'll get back to you soon.
+                </div>
+                
+                <!-- Show error message if there was an error -->
+                <div v-if="formError" class="form-status">
+                  {{ formError }}
+                </div>
+                
+                <form 
+                  class="contact__form" 
+                  @submit="handleSubmit"
+                  action="https://formspree.io/f/mpwdbery" 
+                  method="POST"
+                >
                   <div class="form-group">
                     <label for="name">Name</label>
                     <input 
                       type="text" 
                       id="name" 
-                      v-model="contactForm.name"
+                      name="name"
                       placeholder="Your Name"
                       required
                     >
@@ -298,7 +288,7 @@ const handleSubmit = async () => {
                     <input 
                       type="email" 
                       id="email" 
-                      v-model="contactForm.email"
+                      name="email"
                       placeholder="your.email@example.com"
                       required
                     >
@@ -307,17 +297,18 @@ const handleSubmit = async () => {
                     <label for="message">Message</label>
                     <textarea 
                       id="message" 
+                      name="message"
                       rows="8" 
-                      v-model="contactForm.message"
                       placeholder="Your message..."
                       required
                     ></textarea>
                   </div>
-                  <div v-if="formStatus" class="form-status" :class="{ 'form-status--success': formStatus.type === 'success' }">
-                    {{ formStatus.message }}
-                  </div>
-                  <button type="submit" class="btn btn--primary" :disabled="isSubmitting">
-                    {{ isSubmitting ? 'Sending...' : 'Send Message' }}
+                  <button 
+                    type="submit" 
+                    class="btn btn--primary"
+                    :disabled="formSubmitting"
+                  >
+                    {{ formSubmitting ? 'Sending...' : 'Send Message' }}
                   </button>
                 </form>
               </div>
