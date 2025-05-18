@@ -8,7 +8,7 @@ const app = createApp(App)
 // Custom directive for smooth scrolling
 app.directive('smooth-scroll', {
   mounted(el, binding) {
-    el.addEventListener('click', (e) => {
+    el.addEventListener('click', (e: MouseEvent) => {
       e.preventDefault()
       
       // Get the target id from href attribute

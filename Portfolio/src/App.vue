@@ -447,7 +447,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .hero__title::before {
-  content: 'System.Println("';
+  content: 'System.Out.Println("';
   font-size: 1rem;
   position: absolute;
   top: -1.5rem;
@@ -874,28 +874,6 @@ h1, h2, h3, h4, h5, h6 {
   opacity: 0.6;
 }
 
-.about__details {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--spacing-lg);
-}
-
-.about__card {
-  background-color: var(--color-background-code);
-  padding: var(--spacing-lg);
-  border-radius: 8px;
-  border: 1px solid var(--color-border);
-  height: 100%;
-  position: relative;
-}
-
-.about__subtitle {
-  color: var(--color-text);
-  margin-bottom: var(--spacing-md);
-  font-family: var(--font-mono);
-  font-size: 1.1rem;
-}
-
 .code-keyword {
   color: var(--color-secondary);
 }
@@ -907,38 +885,6 @@ h1, h2, h3, h4, h5, h6 {
 .code-comment {
   color: var(--color-accent-3);
   font-size: 0.85rem;
-}
-
-.about__list {
-  list-style-type: none;
-  margin-bottom: var(--spacing-md);
-  font-family: var(--font-mono);
-  font-size: 0.9rem;
-}
-
-.about__list li {
-  margin-bottom: 0.5rem;
-  position: relative;
-}
-
-.indented {
-  padding-left: 1.5rem;
-}
-
-.card-closing {
-  font-family: var(--font-mono);
-  color: var(--color-text);
-  margin-top: 1rem;
-}
-
-@media (max-width: 768px) {
-  .about__details {
-    grid-template-columns: 1fr;
-  }
-  
-  .about__card {
-    margin-bottom: var(--spacing-md);
-  }
 }
 
 </style>
