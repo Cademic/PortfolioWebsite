@@ -1,12 +1,9 @@
 <template>
   <footer class="footer">
     <div class="container">
-      <div class="code-comment">/* Let's connect */</div>
       <div class="footer__content">
         <div class="footer__copyright">
-          <span class="code-keyword">const</span> <span class="code-var">year</span> = <span class="code-string">{{ new Date().getFullYear() }}</span>;
-          <br>
-          <span class="code-comment">// © Carter Wright. All rights reserved.</span>
+          <span class="code-comment">// © {{ new Date().getFullYear() }} Carter Wright. All rights reserved.</span>
         </div>
         <div class="footer__social">
           <a href="https://github.com/cademic" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="GitHub">
@@ -25,7 +22,7 @@
 .footer {
   background-color: var(--color-background-alt);
   padding: 2rem 0;
-  margin-top: 4rem;
+  margin-top: 2rem;
   border-top: 1px solid var(--color-border);
   position: relative;
 }
