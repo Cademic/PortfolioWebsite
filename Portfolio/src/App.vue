@@ -75,7 +75,17 @@ const handleSubmit = async () => {
       }),
     });
 
-    const data = await response.json();
+    // Get response text first
+    const responseText = await response.text();
+    
+    // Try to parse as JSON if possible
+    let data = { error: 'Unknown error' };
+    try {
+      data = JSON.parse(responseText);
+    } catch (e) {
+      console.error('Failed to parse response:', responseText);
+      throw new Error(`Invalid response format: ${responseText.substring(0, 100)}...`);
+    }
     
     if (!response.ok) {
       throw new Error(data.error || 'Failed to send message');

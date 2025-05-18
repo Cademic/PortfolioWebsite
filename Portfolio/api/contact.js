@@ -1,7 +1,7 @@
 // Vercel Serverless API endpoint for contact form
-const nodemailer = require('nodemailer');
+import nodemailer from 'nodemailer';
 
-module.exports = async (req, res) => {
+export default async function handler(req, res) {
   // Set CORS headers
   res.setHeader('Access-Control-Allow-Credentials', true);
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -25,19 +25,25 @@ module.exports = async (req, res) => {
     // Get form data from request body
     const { name, email, message } = req.body;
 
+    console.log('Received form submission:', { name, email });
+
     // Validate form data
     if (!name || !email || !message) {
       return res.status(400).json({ error: 'All fields are required' });
     }
 
     // Create email transporter
-    // Note: You should store these credentials as environment variables in Vercel
     const transporter = nodemailer.createTransport({
       service: 'gmail', // or another service
       auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS,
       },
+    });
+
+    console.log('Email configured with:', { 
+      user: process.env.EMAIL_USER ? 'Set' : 'Not set',
+      pass: process.env.EMAIL_PASS ? 'Set' : 'Not set' 
     });
 
     // Setup email data
@@ -63,11 +69,15 @@ ${message}
 
     // Send the email
     await transporter.sendMail(mailOptions);
+    console.log('Email sent successfully');
 
     // Return success response
     return res.status(200).json({ success: true });
   } catch (error) {
     console.error('Email error:', error);
-    return res.status(500).json({ error: 'Failed to send email' });
+    return res.status(500).json({ 
+      error: 'Failed to send email', 
+      details: error.message 
+    });
   }
-}; 
+} 
