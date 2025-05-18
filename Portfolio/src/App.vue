@@ -97,8 +97,8 @@ const handleSubmit = async () => {
             <h1 class="hero__title">Hi, I'm <span class="highlight">Carter Wright</span></h1>
             <p class="hero__subtitle">Full-Stack Developer | Passion for clean code</p>
             <div class="hero__cta">
-              <a href="#projects" class="btn btn--primary">View My Work</a>
-              <a href="#contact" class="btn btn--secondary">Contact Me</a>
+              <a href="#projects" class="btn btn--primary" v-smooth-scroll>View My Work</a>
+              <a href="#contact" class="btn btn--secondary" v-smooth-scroll>Contact Me</a>
             </div>
           </div>
         </div>
@@ -337,6 +337,10 @@ const handleSubmit = async () => {
   padding: 0;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -365,6 +369,7 @@ h1, h2, h3, h4, h5, h6 {
 .section {
   padding: var(--spacing-lg) 0;
   position: relative;
+  scroll-margin-top: 80px; /* Accounts for fixed header height */
 }
 
 /* Removed section comment decoration */
@@ -397,6 +402,7 @@ h1, h2, h3, h4, h5, h6 {
   border-bottom: 1px solid var(--color-border);
   position: relative;
   overflow: hidden;
+  scroll-margin-top: 80px; /* Accounts for fixed header height */
 }
 
 .hero::after {

@@ -1,10 +1,62 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 
 const menuOpen = ref(false);
 const toggleMenu = () => {
   menuOpen.value = !menuOpen.value;
 };
+
+// Function to handle smooth scrolling
+const smoothScroll = (e: Event, targetId: string) => {
+  e.preventDefault();
+  
+  // Close the mobile menu if it's open
+  if (menuOpen.value) {
+    menuOpen.value = false;
+  }
+  
+  const targetElement = document.getElementById(targetId);
+  
+  if (targetElement) {
+    const headerHeight = 80; // Approximate header height
+    const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - headerHeight;
+    
+    window.scrollTo({
+      top: targetPosition,
+      behavior: 'smooth'
+    });
+  }
+};
+
+onMounted(() => {
+  // Add scroll event listener to highlight active section in navigation
+  const navLinks = document.querySelectorAll('.nav__link');
+  const sections = document.querySelectorAll('section[id]');
+  
+  const highlightNavOnScroll = () => {
+    let currentSection = '';
+    
+    sections.forEach((section) => {
+      const sectionTop = (section as HTMLElement).offsetTop - 100;
+      const sectionHeight = (section as HTMLElement).offsetHeight;
+      
+      if (window.pageYOffset >= sectionTop && window.pageYOffset < sectionTop + sectionHeight) {
+        currentSection = section.getAttribute('id') || '';
+      }
+    });
+    
+    navLinks.forEach((link) => {
+      link.classList.remove('active');
+      const href = link.getAttribute('href');
+      if (href && href === `#${currentSection}`) {
+        link.classList.add('active');
+      }
+    });
+  };
+  
+  window.addEventListener('scroll', highlightNavOnScroll);
+  highlightNavOnScroll(); // Initial call
+});
 </script>
 
 <template>
@@ -20,11 +72,11 @@ const toggleMenu = () => {
       
       <nav class="nav" :class="{ 'nav--open': menuOpen }">
         <ul class="nav__list">
-          <li class="nav__item"><a href="#home" class="nav__link">Home</a></li>
-          <li class="nav__item"><a href="#about" class="nav__link">About</a></li>
-          <li class="nav__item"><a href="#projects" class="nav__link">Projects</a></li>
-          <li class="nav__item"><a href="#skills" class="nav__link">Skills</a></li>
-          <li class="nav__item"><a href="#contact" class="nav__link">Contact</a></li>
+          <li class="nav__item"><a href="#home" class="nav__link" @click="(e) => smoothScroll(e, 'home')">Home</a></li>
+          <li class="nav__item"><a href="#about" class="nav__link" @click="(e) => smoothScroll(e, 'about')">About</a></li>
+          <li class="nav__item"><a href="#projects" class="nav__link" @click="(e) => smoothScroll(e, 'projects')">Projects</a></li>
+          <li class="nav__item"><a href="#skills" class="nav__link" @click="(e) => smoothScroll(e, 'skills')">Skills</a></li>
+          <li class="nav__item"><a href="#contact" class="nav__link" @click="(e) => smoothScroll(e, 'contact')">Contact</a></li>
         </ul>
       </nav>
     </div>
@@ -103,6 +155,7 @@ const toggleMenu = () => {
   position: relative;
 }
 
+.nav__link.active,
 .nav__link:hover {
   color: var(--color-primary);
 }
