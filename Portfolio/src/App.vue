@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, reactive } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 import TheHeader from './components/TheHeader.vue'
 import TheFooter from './components/TheFooter.vue'
 import ProjectCard from './components/ProjectCard.vue'
@@ -62,9 +62,24 @@ const handleSubmit = async () => {
   formStatus.value = null
   
   try {
-    // In a real application, you would send the form data to a backend service
-    // For demo purposes, we'll just simulate a successful submission
-    await new Promise(resolve => setTimeout(resolve, 1500))
+    // Send form data to our API endpoint
+    const response = await fetch('/api/contact', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        name: contactForm.name,
+        email: contactForm.email,
+        message: contactForm.message
+      }),
+    });
+
+    const data = await response.json();
+    
+    if (!response.ok) {
+      throw new Error(data.error || 'Failed to send message');
+    }
     
     formStatus.value = {
       type: 'success',
@@ -76,6 +91,7 @@ const handleSubmit = async () => {
     contactForm.email = ''
     contactForm.message = ''
   } catch (error) {
+    console.error('Contact form error:', error)
     formStatus.value = {
       type: 'error',
       message: 'There was an error sending your message. Please try again.'
