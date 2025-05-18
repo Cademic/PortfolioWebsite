@@ -1,10 +1,26 @@
+<!--
+  App.vue
+  
+  The main application component that serves as the entry point for the portfolio website.
+  
+  This component:
+  1. Imports and orchestrates all child components
+  2. Contains project data
+  3. Implements the contact form functionality
+  4. Defines the overall page structure and sections
+  5. Contains the global styling for the application
+-->
+
 <script setup lang="ts">
 import { ref } from 'vue'
 import TheHeader from './components/TheHeader.vue'
 import TheFooter from './components/TheFooter.vue'
 import ProjectCard from './components/ProjectCard.vue'
 
-// Project data
+/**
+ * Project data array containing information about each project
+ * Each project includes title, description, technology tags, and links
+ */
 const projects = [
   {
     title: 'MineSweeper',
@@ -47,12 +63,22 @@ const projects = [
   }
 ]
 
-// Contact form state
+/**
+ * Contact form state variables
+ * @property {boolean} formSubmitting - Tracks when the form is being submitted
+ * @property {boolean} formSubmitted - Tracks if the form was successfully submitted
+ * @property {string} formError - Stores any error messages during form submission
+ */
 const formSubmitting = ref(false)
 const formSubmitted = ref(false)
 const formError = ref('')
 
-// Contact form submission handler
+/**
+ * Handles the contact form submission using Formspree
+ * Sends data asynchronously and manages submission state
+ * 
+ * @param {Event} event - The form submission event
+ */
 const handleSubmit = async (event: Event) => {
   event.preventDefault()
   formSubmitting.value = true
@@ -62,6 +88,7 @@ const handleSubmit = async (event: Event) => {
   const formData = new FormData(form)
   
   try {
+    // Submit form data to Formspree endpoint
     const response = await fetch('https://formspree.io/f/mpwdbery', {
       method: 'POST',
       body: formData,
@@ -71,13 +98,16 @@ const handleSubmit = async (event: Event) => {
     })
     
     if (response.ok) {
+      // Handle successful submission
       formSubmitted.value = true
       form.reset()
     } else {
+      // Handle error response from Formspree
       const data = await response.json()
       formError.value = data.error || 'Something went wrong. Please try again.'
     }
   } catch (error) {
+    // Handle network errors
     formError.value = 'Network error. Please try again.'
     console.error('Form submission error:', error)
   } finally {
@@ -88,9 +118,11 @@ const handleSubmit = async (event: Event) => {
 
 <template>
   <div class="app">
+    <!-- Site header with navigation -->
     <TheHeader />
     
     <main class="main">
+      <!-- Hero/Home Section -->
       <section id="home" class="hero">
         <div class="container">
           <div class="hero__content">
@@ -104,6 +136,7 @@ const handleSubmit = async (event: Event) => {
         </div>
       </section>
       
+      <!-- About Section -->
       <section id="about" class="section">
         <div class="container">
           <h2 class="section__title">About Me</h2>
@@ -117,6 +150,7 @@ const handleSubmit = async (event: Event) => {
         </div>
       </section>
       
+      <!-- Projects Section -->
       <section id="projects" class="section">
         <div class="container">
           <h2 class="section__title">My Projects</h2>
@@ -133,6 +167,7 @@ const handleSubmit = async (event: Event) => {
         </div>
       </section>
       
+      <!-- Skills Section -->
       <section id="skills" class="section">
         <div class="container">
           <h2 class="section__title">Skills</h2>
@@ -219,6 +254,7 @@ const handleSubmit = async (event: Event) => {
         </div>
       </section>
       
+      <!-- Contact Section -->
       <section id="contact" class="section">
         <div class="container">
           <h2 class="section__title">Contact Me</h2>
@@ -267,6 +303,7 @@ const handleSubmit = async (event: Event) => {
                   {{ formError }}
                 </div>
                 
+                <!-- Contact form using Formspree for submission -->
                 <form 
                   class="contact__form" 
                   @submit="handleSubmit"
@@ -318,6 +355,7 @@ const handleSubmit = async (event: Event) => {
       </section>
     </main>
     
+    <!-- Site footer -->
     <TheFooter />
   </div>
 </template>
@@ -326,38 +364,58 @@ const handleSubmit = async (event: Event) => {
 /* Import Google Font for monospace */
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap');
 
+/**
+ * Global CSS Variables
+ * Defines color palette, spacing, and fonts used throughout the application
+ */
 :root {
-  --color-primary: #00e0ff;
-  --color-primary-dark: #00b8cc;
-  --color-secondary: #ff5f56;
-  --color-accent-1: #ffbd2e;
-  --color-accent-2: #27c93f;
-  --color-accent-3: #bd93f9;
-  --color-text: #f8f8f2;
-  --color-text-light: #8f93a2;
-  --color-background: #282a36;
-  --color-background-alt: #1e1f29;
-  --color-background-code: #21222c;
-  --color-border: #44475a;
-  --container-width: 1200px;
+  /* Color Palette - Based on a dark coding theme */
+  --color-primary: #00e0ff;         /* Primary accent color - bright cyan */
+  --color-primary-dark: #00b8cc;    /* Darker version of primary for hover states */
+  --color-secondary: #ff5f56;       /* Secondary accent - soft red */
+  --color-accent-1: #ffbd2e;        /* Yellow accent for highlights */
+  --color-accent-2: #27c93f;        /* Green accent for success states */
+  --color-accent-3: #bd93f9;        /* Purple accent for additional highlights */
+  
+  /* Text Colors */
+  --color-text: #f8f8f2;            /* Primary text color - off-white */
+  --color-text-light: #8f93a2;      /* Secondary text color - light gray */
+  
+  /* Background Colors */
+  --color-background: #282a36;      /* Main background - dark blue-gray */
+  --color-background-alt: #1e1f29;  /* Alternate background - slightly darker */
+  --color-background-code: #21222c; /* Code blocks background - even darker */
+  
+  /* Border Colors */
+  --color-border: #44475a;          /* Border color - medium gray */
+  
+  /* Layout Variables */
+  --container-width: 1200px;        /* Maximum content width */
+  
+  /* Spacing Scale */
   --spacing-xs: 0.25rem;
   --spacing-sm: 0.5rem;
   --spacing-md: 1rem;
   --spacing-lg: 2rem;
   --spacing-xl: 2.5rem;
+  
+  /* Typography */
   --font-mono: 'JetBrains Mono', monospace;
 }
 
+/* Global Reset */
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
+/* Enable smooth scrolling for the entire site */
 html {
   scroll-behavior: smooth;
 }
 
+/* Base Body Styles */
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -367,30 +425,33 @@ body {
   background-color: var(--color-background);
 }
 
+/* Typography Defaults */
 h1, h2, h3, h4, h5, h6 {
   font-weight: 700;
   line-height: 1.2;
   font-family: var(--font-mono);
 }
 
+/* Main Content Area */
 .main {
   padding-top: 80px; /* Height of the fixed header */
 }
 
+/* Container for Content Sections */
 .container {
   max-width: var(--container-width);
   margin: 0 auto;
   padding: 0 var(--spacing-md);
 }
 
+/* Standard Section Styling */
 .section {
   padding: var(--spacing-lg) 0;
   position: relative;
-  scroll-margin-top: 80px; /* Accounts for fixed header height */
+  scroll-margin-top: 80px; /* Accounts for fixed header height when scrolling to anchors */
 }
 
-/* Removed section comment decoration */
-
+/* Section Title Styling */
 .section__title {
   font-size: 2rem;
   margin-bottom: var(--spacing-lg);
@@ -400,6 +461,7 @@ h1, h2, h3, h4, h5, h6 {
   display: inline-block;
 }
 
+/* Code-like tag decorations for section titles */
 .section__title::before {
   content: '<';
   margin-right: 0.5rem;
@@ -412,7 +474,10 @@ h1, h2, h3, h4, h5, h6 {
   opacity: 0.7;
 }
 
-/* Hero Section */
+/* 
+ * Hero Section Styling 
+ * First section of the page with the main headline and CTA buttons
+ */
 .hero {
   padding: var(--spacing-lg) 0;
   background-color: var(--color-background-alt);
@@ -422,6 +487,7 @@ h1, h2, h3, h4, h5, h6 {
   scroll-margin-top: 80px; /* Accounts for fixed header height */
 }
 
+/* Background grid pattern for hero section */
 .hero::after {
   content: '';
   position: absolute;
@@ -437,6 +503,7 @@ h1, h2, h3, h4, h5, h6 {
   pointer-events: none;
 }
 
+/* Gradient fade at bottom of hero section */
 .hero::before {
   content: '';
   position: absolute;
@@ -448,6 +515,7 @@ h1, h2, h3, h4, h5, h6 {
   z-index: 1;
 }
 
+/* Hero content container */
 .hero__content {
   max-width: 800px;
   margin: 0 auto;
@@ -456,6 +524,7 @@ h1, h2, h3, h4, h5, h6 {
   z-index: 1;
 }
 
+/* Main headline styling */
 .hero__title {
   font-size: 3rem;
   margin-bottom: var(--spacing-md);
@@ -463,6 +532,7 @@ h1, h2, h3, h4, h5, h6 {
   display: inline-block;
 }
 
+/* Decorative code-like elements for the title */
 .hero__title::before {
   content: 'System.Out.Println("';
   font-size: 1rem;
@@ -485,6 +555,7 @@ h1, h2, h3, h4, h5, h6 {
   opacity: 0.7;
 }
 
+/* Subtitle styling */
 .hero__subtitle {
   font-size: 1.25rem;
   color: var(--color-text-light);
@@ -492,11 +563,13 @@ h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-mono);
 }
 
+/* Name highlight with cursor effect */
 .highlight {
   color: var(--color-primary);
   position: relative;
 }
 
+/* Blinking cursor after highlighted name */
 .highlight::after {
   content: '';
   display: inline-block;
@@ -509,18 +582,23 @@ h1, h2, h3, h4, h5, h6 {
   margin-left: 5px;
 }
 
+/* Cursor blink animation */
 @keyframes blink {
   0%, 100% { opacity: 0; }
   50% { opacity: 0.5; }
 }
 
+/* Call to action button container */
 .hero__cta {
   display: flex;
   gap: var(--spacing-md);
   justify-content: center;
 }
 
-/* Buttons */
+/* 
+ * Button Styles 
+ * Used for CTA buttons and form submission
+ */
 .btn {
   display: inline-block;
   padding: 0.75rem 1.5rem;
@@ -535,29 +613,34 @@ h1, h2, h3, h4, h5, h6 {
   border: none;
 }
 
+/* Terminal-like prompt before buttons */
 .btn::before {
   content: '>';
   margin-right: 0.5rem;
   font-weight: bold;
 }
 
+/* Primary button - solid background */
 .btn--primary {
   background-color: var(--color-primary);
   color: var(--color-background);
 }
 
+/* Primary button hover effect */
 .btn--primary:hover {
   background-color: var(--color-primary-dark);
   transform: translateY(-2px);
   box-shadow: 0 4px 10px rgba(0, 224, 255, 0.3);
 }
 
+/* Secondary button - outlined style */
 .btn--secondary {
   background-color: transparent;
   color: var(--color-primary);
   border: 1px solid var(--color-primary);
 }
 
+/* Secondary button hover effect */
 .btn--secondary:hover {
   background-color: rgba(0, 224, 255, 0.1);
   transform: translateY(-2px);

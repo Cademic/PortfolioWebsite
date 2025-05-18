@@ -1,12 +1,33 @@
+<!--
+  TheHeader.vue
+  
+  This component renders the site header with navigation menu.
+  It includes a responsive menu that collapses on mobile devices
+  and implements smooth scrolling to page sections.
+-->
+
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 
+/**
+ * Tracks whether the mobile menu is open
+ * Used to toggle the navigation menu on small screens
+ */
 const menuOpen = ref(false);
+
+/**
+ * Toggles the mobile menu open/closed state
+ */
 const toggleMenu = () => {
   menuOpen.value = !menuOpen.value;
 };
 
-// Function to handle smooth scrolling
+/**
+ * Handles smooth scrolling to page sections when navigation links are clicked
+ * 
+ * @param {Event} e - The click event
+ * @param {string} targetId - The ID of the target section to scroll to
+ */
 const smoothScroll = (e: Event, targetId: string) => {
   e.preventDefault();
   
@@ -18,9 +39,11 @@ const smoothScroll = (e: Event, targetId: string) => {
   const targetElement = document.getElementById(targetId);
   
   if (targetElement) {
-    const headerHeight = 80; // Approximate header height
+    // Adjust scroll position to account for fixed header
+    const headerHeight = 80; // Fixed header height in pixels
     const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - headerHeight;
     
+    // Perform smooth scroll
     window.scrollTo({
       top: targetPosition,
       behavior: 'smooth'
@@ -29,13 +52,23 @@ const smoothScroll = (e: Event, targetId: string) => {
 };
 
 onMounted(() => {
-  // Add scroll event listener to highlight active section in navigation
+  /**
+   * Sets up scroll event listener to highlight the active navigation link
+   * based on which section is currently visible in the viewport
+   */
+  
+  // Get all navigation links and page sections
   const navLinks = document.querySelectorAll('.nav__link');
   const sections = document.querySelectorAll('section[id]');
   
+  /**
+   * Updates the active navigation link based on scroll position
+   * The active link corresponds to the section currently in view
+   */
   const highlightNavOnScroll = () => {
     let currentSection = '';
     
+    // Determine which section is currently in view
     sections.forEach((section) => {
       const sectionTop = (section as HTMLElement).offsetTop - 100;
       const sectionHeight = (section as HTMLElement).offsetHeight;
@@ -45,6 +78,7 @@ onMounted(() => {
       }
     });
     
+    // Update active class on navigation links
     navLinks.forEach((link) => {
       link.classList.remove('active');
       const href = link.getAttribute('href');
@@ -54,22 +88,28 @@ onMounted(() => {
     });
   };
   
+  // Register scroll event listener
   window.addEventListener('scroll', highlightNavOnScroll);
-  highlightNavOnScroll(); // Initial call
+  
+  // Initialize active navigation state on page load
+  highlightNavOnScroll();
 });
 </script>
 
 <template>
   <header class="header">
     <div class="container">
+      <!-- Logo/branding -->
       <div class="logo">
         <h1><span class="logo__bracket">{</span> Carter Wright <span class="logo__bracket">}</span></h1>
       </div>
       
-      <button class="menu-toggle" @click="toggleMenu">
+      <!-- Mobile menu toggle button -->
+      <button class="menu-toggle" @click="toggleMenu" aria-label="Toggle navigation menu">
         <span class="menu-icon"></span>
       </button>
       
+      <!-- Main navigation -->
       <nav class="nav" :class="{ 'nav--open': menuOpen }">
         <ul class="nav__list">
           <li class="nav__item"><a href="#home" class="nav__link" @click="(e) => smoothScroll(e, 'home')">Home</a></li>
@@ -84,6 +124,10 @@ onMounted(() => {
 </template>
 
 <style scoped>
+/* 
+ * Header styling
+ * Fixed position at the top of the page with subtle shadow and border
+ */
 .header {
   padding: 1rem 0;
   position: fixed;
@@ -96,6 +140,7 @@ onMounted(() => {
   border-bottom: 1px solid var(--color-border);
 }
 
+/* Container for header contents with flexbox layout */
 .container {
   max-width: 1200px;
   margin: 0 auto;
@@ -105,6 +150,7 @@ onMounted(() => {
   align-items: center;
 }
 
+/* Logo styling */
 .logo h1 {
   font-size: 1.5rem;
   font-weight: 700;
@@ -118,6 +164,7 @@ onMounted(() => {
   opacity: 0.8;
 }
 
+/* Navigation list - horizontal on desktop */
 .nav__list {
   display: flex;
   list-style: none;
@@ -130,6 +177,7 @@ onMounted(() => {
   position: relative;
 }
 
+/* Animated underline effect for navigation items */
 .nav__item::before {
   content: '';
   position: absolute;
@@ -145,6 +193,7 @@ onMounted(() => {
   width: 100%;
 }
 
+/* Navigation link styling */
 .nav__link {
   text-decoration: none;
   color: var(--color-text);
@@ -160,11 +209,14 @@ onMounted(() => {
   color: var(--color-primary);
 }
 
+/* Hide mobile menu toggle by default (desktop) */
 .menu-toggle {
   display: none;
 }
 
+/* Mobile-specific styles */
 @media (max-width: 768px) {
+  /* Show mobile menu toggle button */
   .menu-toggle {
     display: block;
     background: none;
@@ -175,6 +227,7 @@ onMounted(() => {
     position: relative;
   }
   
+  /* Hamburger icon styles */
   .menu-icon, .menu-icon::before, .menu-icon::after {
     content: '';
     display: block;
@@ -200,6 +253,7 @@ onMounted(() => {
     bottom: -8px;
   }
   
+  /* Mobile navigation menu - hidden by default */
   .nav {
     position: absolute;
     top: 100%;
@@ -215,12 +269,14 @@ onMounted(() => {
     border-bottom: 1px solid var(--color-border);
   }
   
+  /* Mobile navigation menu - open state */
   .nav--open {
     transform: translateY(0);
     opacity: 1;
     visibility: visible;
   }
   
+  /* Vertical layout for mobile navigation */
   .nav__list {
     flex-direction: column;
     padding: 0 1rem;
@@ -236,6 +292,7 @@ onMounted(() => {
     border-bottom: none;
   }
   
+  /* Disable underline effect on mobile */
   .nav__item::before {
     display: none;
   }

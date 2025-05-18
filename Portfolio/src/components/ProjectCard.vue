@@ -1,13 +1,35 @@
+<!--
+  ProjectCard.vue
+  
+  This component displays a single project in a card format.
+  It receives project data as props and renders a stylized card
+  with title, description, technology tags, and links.
+-->
+
 <script setup lang="ts">
+/**
+ * Interface representing a technology tag (e.g., JavaScript, React)
+ */
 interface Tag {
   name: string;
 }
 
+/**
+ * Interface representing a link associated with the project
+ * (e.g., GitHub repository, live demo)
+ */
 interface ProjectLink {
   text: string;
   url: string;
 }
 
+/**
+ * Props interface for the ProjectCard component
+ * @property {string} title - The name of the project
+ * @property {string} description - Project description text
+ * @property {Tag[]} tags - Array of technology tags used in the project
+ * @property {ProjectLink[]} links - Array of links related to the project
+ */
 interface Props {
   title: string;
   description: string;
@@ -15,20 +37,28 @@ interface Props {
   links: ProjectLink[];
 }
 
+// Define component props
 const props = defineProps<Props>();
 </script>
 
 <template>
   <div class="project-card">
+    <!-- Card header with code styling -->
     <div class="project-card__header">
       <span class="code-line">import Project from './{{ title }}';</span>
     </div>
+    
+    <!-- Main card content -->
     <div class="project-card__content">
       <h3 class="project-card__title">{{ title }}</h3>
       <p class="project-card__description">{{ description }}</p>
+      
+      <!-- Technology tags -->
       <div class="project-card__tags">
         <span class="tag" v-for="tag in tags" :key="tag.name">{{ tag.name }}</span>
       </div>
+      
+      <!-- Project links (GitHub repositories, etc.) -->
       <div class="project-card__links">
         <a 
           v-for="link in links" 
@@ -49,6 +79,10 @@ const props = defineProps<Props>();
 </template>
 
 <style scoped>
+/* 
+ * Main card container 
+ * Card has elevation shadow and rises on hover
+ */
 .project-card {
   border-radius: 8px;
   overflow: hidden;
@@ -62,11 +96,13 @@ const props = defineProps<Props>();
   position: relative;
 }
 
+/* Hover effect - card rises and shadow deepens */
 .project-card:hover {
   transform: translateY(-5px);
   box-shadow: 0 10px 15px rgba(0, 0, 0, 0.4);
 }
 
+/* Code-inspired header with import statement */
 .project-card__header {
   background-color: var(--color-background-alt);
   padding: 0.5rem;
@@ -76,6 +112,7 @@ const props = defineProps<Props>();
   border-bottom: 1px solid var(--color-border);
 }
 
+/* Code line with ellipsis for overflow */
 .code-line {
   display: block;
   white-space: nowrap;
@@ -83,6 +120,7 @@ const props = defineProps<Props>();
   text-overflow: ellipsis;
 }
 
+/* Main content area of the card */
 .project-card__content {
   padding: 1.25rem;
   flex: 1;
@@ -91,6 +129,7 @@ const props = defineProps<Props>();
   position: relative;
 }
 
+/* Decorative code braces in the top-right corner */
 .project-card__content::before {
   content: '{ }';
   position: absolute;
@@ -105,6 +144,7 @@ const props = defineProps<Props>();
   font-weight: bold;
 }
 
+/* Project title styling */
 .project-card__title {
   font-size: 1.25rem;
   margin-bottom: 0.75rem;
@@ -112,6 +152,7 @@ const props = defineProps<Props>();
   color: var(--color-accent-2);
 }
 
+/* Project description styling */
 .project-card__description {
   color: var(--color-text-light);
   margin-bottom: 1.25rem;
@@ -119,6 +160,7 @@ const props = defineProps<Props>();
   line-height: 1.6;
 }
 
+/* Container for technology tags */
 .project-card__tags {
   display: flex;
   flex-wrap: wrap;
@@ -126,6 +168,7 @@ const props = defineProps<Props>();
   margin-bottom: 1.25rem;
 }
 
+/* Individual technology tag styling */
 .tag {
   background-color: var(--color-background-alt);
   color: var(--color-accent-1);
@@ -136,6 +179,7 @@ const props = defineProps<Props>();
   border: 1px solid rgba(255, 189, 46, 0.3);
 }
 
+/* Container for project links */
 .project-card__links {
   display: flex;
   justify-content: flex-end;
@@ -143,6 +187,7 @@ const props = defineProps<Props>();
   margin-top: auto;
 }
 
+/* Individual project link styling */
 .project-card__link {
   display: flex;
   align-items: center;
@@ -155,12 +200,14 @@ const props = defineProps<Props>();
   transition: all 0.3s ease;
 }
 
+/* Hover effect for project links */
 .project-card__link:hover {
   transform: translateY(-3px);
   box-shadow: 0 3px 5px rgba(0, 0, 0, 0.3);
   background-color: rgba(0, 224, 255, 0.1);
 }
 
+/* GitHub icon styling */
 .github-icon {
   width: 22px;
   height: 22px;
