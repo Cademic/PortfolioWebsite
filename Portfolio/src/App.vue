@@ -149,13 +149,16 @@ const handleSubmit = async (event: Event) => {
       <section id="about" class="section">
         <div class="container">
           <h2 class="section__title">About Me</h2>
-          <div class="about__content">
+          <div class="about__content about__content--with-image">
+            <img src="/CarterPFP.jpg" alt="Carter Wright" class="about__image" />
             <div class="about__intro">
               <p>I am interested in technology and have had since I was a child. This early curiosity evolved into a genuine passion for programming and problem-solving. After exploring various technology fields, I discovered that software development perfectly combines my analytical thinking with my creative drive to build solutions.</p>
               <br>
               <p>Currently, I'm completing my senior year at Grand Canyon University, pursuing a Bachelor's degree in Software Development with a Minor in Cyber Security. My education has provided me with a strong foundation in both front-end and back-end technologies, while also teaching me the importance of secure coding practices and protecting digital assets.</p>
               <br>
               <p>Outside of required class assignments, I enjoy working on my own personal coding projects that challenge me to learn new languages and frameworks. I'm particularly interested in creating intuitive user experiences and developing efficient, scalable backend systems.</p>
+              <br>
+              <p>I have a variety of hobbies that keep me active and creative. I work out daily at the gym and love playing sports like soccer and baseball with my friends. I'm also a big LEGO fan! I have a layout to display my builds and designing new creations. Other hobbies I am into are hiking, traveling, playing video games, and watching movies.</p>
               <br>
               <p>I'm always open to connecting with other developers and industry professionals. If you have any questions about my experience or projects, please reach out through my email or LinkedIn. I look forward to discussing how my skills and passion could contribute to meaningful software solutions.</p>
             </div>
@@ -210,7 +213,7 @@ const handleSubmit = async (event: Event) => {
 
                 <div class="skill-item">
                   <div class="skill-info">
-                    <span class="skill-name">JavaScript</span>
+                    <span class="skill-name">JavaScript/TypeScript</span>
                   </div>
                   <div class="skill-bar">
                     <div class="skill-progress" style="width: 65%"></div>
@@ -307,7 +310,7 @@ const handleSubmit = async (event: Event) => {
                 <!-- Show error message if there was an error -->
                 <div v-if="formError" class="form-status">
                   {{ formError }}
-    </div>
+                </div>
                 
                 <!-- Contact form using Formspree for submission -->
                 <form 
@@ -947,8 +950,9 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* About Section */
-.about__content {
-  max-width: 800px;
+.about__content,
+.about__content--with-image {
+  max-width: 2000px;
   margin: 0 auto;
 }
 
@@ -992,6 +996,35 @@ h1, h2, h3, h4, h5, h6 {
 .code-comment {
   color: var(--color-accent-3);
   font-size: 0.85rem;
+}
+
+.about__content--with-image {
+  display: flex;
+  align-items: flex-start;
+  gap: 2rem;
+}
+
+.about__image {
+  width: 500px;
+  height: 700px;
+  object-fit: cover;
+  border-radius: 12px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+  border: 2px solid var(--color-border);
+  background: var(--color-background-code);
+}
+
+@media (max-width: 900px) {
+  .about__content--with-image {
+    flex-direction: column;
+    align-items: center;
+  }
+  .about__image {
+    width: 70vw;
+    max-width: 420px;
+    height: auto;
+    margin-bottom: 1.5rem;
+  }
 }
 
 </style>
