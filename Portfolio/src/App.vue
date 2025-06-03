@@ -37,7 +37,7 @@ const projects = [
   },
   {
     title: 'Blodged',
-    description: 'Created a blogging/social media platform with RESTful APIs using Java and Spring Boot. Designed and implemented MySQL schema for user authentication and post management. Integrated Spring Security for secure authentication and role-based access.',
+    description: 'Developing a blogging/social media platform with RESTful APIs using Java and Spring Boot. Designed and implemented MySQL schema for user authentication and post management. Integrated Spring Security for secure authentication and role-based access.',
     tags: [
       { name: 'Java' },
       { name: 'Spring Boot' },
@@ -60,7 +60,34 @@ const projects = [
     links: [
       { text: 'Source Code', url: 'https://github.com/omniV1/CineScope' }
     ]
+  },
+  {
+    title: 'Lunara Postpartum Support Platform',
+    description: 'Lunara is a comprehensive platform designed to provide support for individuals during the postpartum period. It features a robust backend API and a modern frontend interface.',
+    tags: [
+      { name: 'Express.js' },
+      { name: 'MongoDB' },
+      { name: 'TypeScript' },
+      { name: 'React' },
+    ],
+    links: [
+      { text: 'Source Code', url: 'https://github.com/omniV1/AQC' }
+    ]
+  },
+  {
+    title: 'TableWorks',
+    description: 'Creating a web application designed to help users organize and manage data efficiently using customizable lists and a table-based layout.',
+    tags: [
+      { name: 'Spring Boot' },
+      { name: 'PostgreSQL' },
+      { name: 'TypeScript' },
+      { name: 'React' },
+    ],
+    links: [
+      { text: 'Source Code', url: 'https://github.com/Cademic/TableWorks' }
+    ]
   }
+  
 ]
 
 /**
