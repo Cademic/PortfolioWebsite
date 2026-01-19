@@ -154,7 +154,7 @@ const handleSubmit = async (event: Event) => {
         <div class="container">
           <div class="hero__content">
             <h1 class="hero__title">Hi, I'm <span class="highlight">Carter Wright</span></h1>
-            <p class="hero__subtitle">Full-Stack Software Developer | Love to Create Solutions</p>
+            <p class="hero__subtitle">Full-Stack Software Developer</p>
             <div class="hero__cta">
               <a href="#projects" class="btn btn--primary" v-smooth-scroll>View My Work</a>
               <a href="#contact" class="btn btn--secondary" v-smooth-scroll>Contact Me</a>
@@ -179,15 +179,11 @@ const handleSubmit = async (event: Event) => {
           <div class="about__content about__content--with-image">
             <img src="/CarterPFP.jpg" alt="Carter Wright" class="about__image" />
             <div class="about__intro">
-              <p>I am interested in technology and have had since I was a child. This early curiosity evolved into a genuine passion for programming and problem-solving. After exploring various technology fields, I discovered that software development perfectly combines my analytical thinking with my creative drive to build solutions.</p>
+              <p>Hello! My name is Carter Wright. I am an upcoming software developer looking to enhance my skills while doing what I love.</p>
               <br>
-              <p>Currently, I'm completing my senior year at Grand Canyon University, pursuing a Bachelor's degree in Software Development with a Minor in Cyber Security. My education has provided me with a strong foundation in both front-end and back-end technologies, while also teaching me the importance of secure coding practices and protecting digital assets.</p>
+              <p>I am originally from Michigan, but currently living in <b>Pheonix, AZ</b> as I am studing for my <b>Bachelors in Software Development at Grand Canyon University</b>. I am set to graduate in April 2026 and searching for the perfect postion to get my foot into the door in this career.</p>
               <br>
-              <p>Outside of required class assignments, I enjoy working on my own personal coding projects that challenge me to learn new languages and frameworks. I'm particularly interested in creating intuitive user experiences and developing efficient, scalable backend systems.</p>
-              <br>
-              <p>I have a variety of hobbies that keep me active and creative. I work out daily at the gym and love playing sports like soccer and baseball with my friends. I'm also a big LEGO fan! I have a layout to display my builds and designing new creations. Other hobbies I am into are hiking, traveling, playing video games, and watching movies.</p>
-              <br>
-              <p>I'm always open to connecting with other developers and industry professionals. If you have any questions about my experience or projects, please reach out through my email or LinkedIn. I look forward to discussing how my skills and passion could contribute to meaningful software solutions.</p>
+              <p>My recent work has focused on full-stack web development using <b>C# ASP.NET</b>, <b>Enterprise Java</b>, and <b>Node.js</b>. I also have experience in cybersecurity and integrating industry-standard frameworks such as <b>NIST</b>, <b>CIS</b>, <b>MITRE</b>, and <b>OWASP</b> into my applications.</p>
             </div>
           </div>
         </div>
