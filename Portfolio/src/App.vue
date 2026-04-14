@@ -12,59 +12,662 @@
 -->
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 import TheHeader from './components/TheHeader.vue'
 import TheFooter from './components/TheFooter.vue'
 import ProjectShowcase from './components/ProjectShowcase.vue'
+import ProjectCard from './components/ProjectCard.vue'
 
-/** Carousel projects: image + short copy; image links to GitHub for full details */
-const projects = [
+interface ProjectDetails {
+  slug: string
+  title: string
+  tagline: string
+  description: string
+  longDescription: string
+  problem: string
+  role: string
+  imageSrc: string
+  imageAlt: string
+  galleryImages: Array<{ src: string; alt: string }>
+  githubUrl: string
+  liveUrl?: string
+  highlights: string[]
+  techStack: string[]
+  architecture: string[]
+  readmeResources: string[]
+  qualityNotes: string[]
+  keyFacts: Array<{ label: string; value: string }>
+  caseStudySections?: Array<{
+    title: string
+    points: string[]
+  }>
+  keyTakeaways?: string[]
+}
+
+const projects: ProjectDetails[] = [
   {
-    title: 'Lunara',
-    tagline: 'Support for the fourth trimester',
-    description:
-      'A postpartum support platform connecting families with doulas—scheduling, messaging, mood tracking, and care plans in one storybook-inspired React + Express + MongoDB app.',
-    imageSrc: '/LunaraCare.png',
-    imageAlt: 'Lunara application home screen',
-    detailUrl: 'https://github.com/omniV1/lunaraCare',
-  },
-  {
+    slug: 'asidenote',
     title: 'ASideNote',
-    tagline: 'Ideas pinned, linked, and in motion',
+    tagline: 'Visual thinking meets structured writing.',
     description:
-      'A visual cork-board workspace for sticky notes, index cards, and red-string links—ASP.NET Core 8, React, TypeScript, and PostgreSQL (successor to TableWorks).',
+      'A freeform note-taking workspace where users place, edit, and connect ideas on a flexible infinite canvas.',
+    longDescription:
+      'ASideNote is a modern visual note-taking system built for non-linear thinking. Instead of forcing users into rigid document trees, it provides an interactive board where notes can be placed spatially, edited with rich text, and grouped by intent. The product combines whiteboard-style freedom with document-style structure, making it useful for brainstorming, planning, and long-form organization.',
+    problem:
+      'Most productivity tools are either strong at writing or strong at visual layout, but rarely both. ASideNote solves that gap by combining rich text editing with drag-based spatial organization on an infinite workspace.',
+    role:
+      'Led product direction and full-stack implementation across interaction design, editor experience, architecture, security, and deployment.',
     imageSrc: '/ASideNote_Noteboard.png',
     imageAlt: 'ASideNote cork board with notes',
-    detailUrl: 'https://github.com/Cademic/ASideNote',
+    galleryImages: [
+      { src: '/ASideNote_Noteboard.png', alt: 'ASideNote cork board with notes' },
+      { src: '/ASideNote_Dashboard.png', alt: 'ASideNote dashboard view' },
+      { src: '/ASideNote_Projects.png', alt: 'ASideNote projects board view' },
+    ],
+    githubUrl: 'https://github.com/Cademic/ASideNote',
+    liveUrl: 'https://asidenote.net',
+    highlights: [
+      'Infinite-style canvas experience with draggable sticky notes and index cards.',
+      'Rich text editing powered by TipTap for structured, extensible content authoring.',
+      'Visual clustering and freeform arrangement for brainstorming and planning workflows.',
+      'Advanced note capabilities including tables, checklists, formatting controls, and resizing.',
+      'Authentication/security foundation with JWT, OAuth, verification, and role controls.',
+    ],
+    techStack: ['ASP.NET Core 8', 'React 18', 'TypeScript', 'PostgreSQL', 'Render', 'GitHub Actions'],
+    architecture: [
+      'Frontend built with React + TypeScript (Vite) and Tailwind for modular UI delivery.',
+      'Editor layer uses TipTap/ProseMirror to balance rich-text capability with extensibility.',
+      'Clean backend architecture separates API, Application, Core, and Infrastructure concerns.',
+      'State model tracks note content plus spatial coordinates to support visual composition.',
+      'Security model includes JWT refresh rotation, Argon2id hashing, OAuth, and guarded routes.',
+    ],
+    readmeResources: [
+      'Covers core design intent: blending visual organization with structured note editing.',
+      'Implementation notes document board interactions, index-card tools, and rich-editor behavior.',
+      'Architecture and deployment docs outline scaling, security policy, and operational runbooks.',
+    ],
+    qualityNotes: [
+      'Addresses difficult UX engineering tradeoffs: drag interactions + editor focus/event handling.',
+      'Built with growth in mind: persistence strategy, collaboration potential, and export roadmap.',
+      'CI/CD and security practices include automated checks, dependency hygiene, and protected auth flows.',
+    ],
+    keyFacts: [
+      { label: 'Product Focus', value: 'Infinite-canvas style note experience for visual thinkers' },
+      { label: 'Core Engine', value: 'TipTap rich text + drag-based spatial interaction model' },
+      { label: 'Positioning', value: 'Bridges whiteboard flexibility and document-level structure' },
+    ],
+    caseStudySections: [
+      {
+        title: 'How It Works',
+        points: [
+          'Users create notes directly on the canvas and place them spatially based on context.',
+          'Each note opens with rich-text editing so formatting and structure stay expressive.',
+          'Drag interactions let users cluster ideas without rigid folder-first hierarchy.',
+          'The interaction model supports brainstorming first, then refinement into structured content.',
+        ],
+      },
+      {
+        title: 'Key Design Decisions',
+        points: [
+          'Infinite-canvas style layout was chosen to encourage non-linear thought patterns.',
+          'Modular note units make reorganization fast without restructuring entire documents.',
+          'TipTap was selected for extensible rich-text capabilities and long-term editor flexibility.',
+          'Tradeoff: strict page-like formatting was intentionally deprioritized in favor of creative flow.',
+        ],
+      },
+      {
+        title: 'Technical Complexity',
+        points: [
+          'Balancing drag-and-drop interactions with active editor focus requires careful event handling.',
+          'Canvas-scale rendering must stay responsive as note count and interaction density grows.',
+          'Spatial state management combines position data with editor content and interaction states.',
+          'Persistence strategy must handle local-first UX now while preparing for synced collaboration later.',
+        ],
+      },
+      {
+        title: 'Future Roadmap',
+        points: [
+          'Expanded save/load reliability and richer export workflows (PDF and structured outputs).',
+          'Search, tagging, and navigation controls for larger knowledge boards.',
+          'Real-time collaboration and shared board editing over WebSockets.',
+          'Cross-device syncing and stronger mobile ergonomics for capture on the go.',
+        ],
+      },
+    ],
+    keyTakeaways: [
+      'ASideNote demonstrates product thinking beyond CRUD by solving a real UX gap.',
+      'The project blends advanced UI interaction design with practical full-stack architecture.',
+      'It highlights readiness for larger systems involving collaboration, scale, and reliability.',
+    ],
   },
   {
-    title: 'Blodged',
-    tagline: 'A social feed built for coders',
-    description:
-      'A social feed for coders: posts, replies, likes, and follows with a Vue 3 SPA and a Spring Boot API, PostgreSQL, and Docker Compose.',
-    imageSrc: '/Blodged_Home.png',
-    imageAlt: 'Blodged home feed',
-    detailUrl: 'https://github.com/Cademic/blodged',
-  },
-  {
+    slug: 'cinescope',
     title: 'CineScope',
-    tagline: 'For movie lovers, by movie lovers',
+    tagline: 'A movie discovery platform built for exploration.',
     description:
-      'A movie review platform to browse films, write reviews, and moderate content—ASP.NET Core Blazor with MongoDB and an Agile team workflow.',
+      'A web application that helps users discover films, browse details, and engage through review-driven interaction.',
+    longDescription:
+      'CineScope is a discovery-focused movie platform designed for both casual browsing and deeper film exploration. It combines searchable movie experiences with review and moderation workflows, giving users a centralized place to find content and engage with it. The architecture is structured as a multi-project .NET solution that separates client, server, and shared logic for maintainable full-stack delivery.',
+    problem:
+      'Many movie apps are either static catalogs or shallow review tools. CineScope addresses the gap by blending discoverability, user interaction, and operational moderation into a single cohesive experience.',
+    role:
+      'Served as scrum master and full-stack contributor, shaping delivery cadence while implementing search/discovery flows, review features, and platform architecture.',
     imageSrc: '/CineScope_Landing.png',
     imageAlt: 'CineScope landing page',
-    detailUrl: 'https://github.com/omniV1/CineScope',
+    galleryImages: [
+      { src: '/CineScope_Landing.png', alt: 'CineScope landing page' },
+      { src: '/CineScope_Details.png', alt: 'CineScope movie details page' },
+      { src: '/CineScope_Filter.png', alt: 'CineScope filtering interface' },
+      { src: '/CineScope_review.png', alt: 'CineScope review workflow' },
+    ],
+    githubUrl: 'https://github.com/omniV1/CineScope',
+    highlights: [
+      'Search and browse experiences centered on discovery, filtering, and movie exploration.',
+      'Detailed movie views with contextual information and user-generated review workflows.',
+      'Role-aware moderation paths for managing user content and platform quality.',
+      'Responsive web delivery through a client/server/shared .NET application structure.',
+    ],
+    techStack: ['ASP.NET Core', 'Blazor WebAssembly', 'MongoDB', 'C#', 'HTML/CSS'],
+    architecture: [
+      'Multi-project .NET architecture split across Client, Server, and Shared layers.',
+      'Blazor WebAssembly frontend handles interactive UI state and responsive rendering.',
+      'ASP.NET Core backend coordinates API behavior, auth boundaries, and app workflows.',
+      'MongoDB persistence layer supports scalable content and review data handling.',
+    ],
+    readmeResources: [
+      'Project docs include technical design, requirements, and traceable user-story coverage.',
+      'Training and support modules document both end-user and administrative workflows.',
+      'Agile artifacts (including Jira-linked workflow) reinforce production-style delivery discipline.',
+    ],
+    qualityNotes: [
+      'Architecture and requirements are documented to support maintainability and onboarding.',
+      'Development process emphasizes iterative sprint delivery and role-defined ownership.',
+      'System design balances feature richness with clear separation of concerns.',
+    ],
+    keyFacts: [
+      { label: 'Core Value', value: 'Discovery-first movie experience with interaction workflows' },
+      { label: 'Architecture', value: 'Blazor Client / Server / Shared full-stack solution' },
+      { label: 'Portfolio Value', value: 'Shows product thinking, API design, and team delivery' },
+    ],
+    caseStudySections: [
+      {
+        title: 'How It Works',
+        points: [
+          'Users authenticate, then explore movie content through browse and search flows.',
+          'Client pages fetch and display discovery data while supporting review interactions.',
+          'Detailed movie views surface content context and user-contributed feedback.',
+          'Admin-capable workflows allow moderation and operations support for platform health.',
+        ],
+      },
+      {
+        title: 'Key Design Decisions',
+        points: [
+          'Discovery-first UX chosen to prioritize findability over static content presentation.',
+          'Blazor + ASP.NET Core selected for cohesive C# full-stack development and shared models.',
+          'Client/Server/Shared separation adopted for maintainability and cleaner collaboration.',
+          'Tradeoff: increased architectural complexity in return for long-term extensibility.',
+        ],
+      },
+      {
+        title: 'Challenges & Complexity',
+        points: [
+          'Coordinating async discovery/search interactions while maintaining responsive UI state.',
+          'Balancing user engagement features with moderation and platform governance requirements.',
+          'Designing API contracts that support both discovery experiences and review lifecycles.',
+          'Maintaining consistent behavior across multiple project layers in a shared solution.',
+        ],
+      },
+      {
+        title: 'Future Roadmap',
+        points: [
+          'Enhance personalization with smarter recommendations and preference-aware browsing.',
+          'Expand filtering depth (genre, rating, release window, and relevance scoring).',
+          'Add richer social interactions such as expanded review signals and profile activity.',
+          'Continue UI polish for accessibility and mobile-first usability improvements.',
+        ],
+      },
+    ],
+    keyTakeaways: [
+      'CineScope demonstrates API-integrated product development focused on discovery UX.',
+      'The project reflects full-stack architectural maturity through layered solution design.',
+      'It highlights strong team-oriented delivery habits in addition to technical execution.',
+    ],
   },
   {
-    title: 'MineSweeper',
-    tagline: 'Classic logic on a modern stack',
+    slug: 'blodged',
+    title: 'Blodged',
+    tagline: 'A production-style social platform for developers.',
     description:
-      'Classic Minesweeper with board generation, flood-fill reveal, and scoring—ASP.NET Core MVC with Razor Pages, Identity, and MySQL.',
+      'A full-stack blogging and social interaction platform with secure auth, layered backend design, and relational data modeling.',
+    longDescription:
+      'Blodged was built to go beyond basic CRUD and reflect a real-world backend architecture. It combines a Vue frontend with a Spring Boot API where users can create posts, reply in threads, follow profiles, and engage through likes. The system emphasizes maintainable layering, secure authentication patterns, and practical database-backed social features.',
+    problem:
+      'Many student projects stop at simple CRUD and do not demonstrate production-grade backend architecture, security practices, or scalable data relationships. Blodged was designed to close that gap.',
+    role:
+      'Built full-stack features across the Vue SPA and Spring Boot API, with focus on API design, auth flows, and clean Controller -> Service -> Data separation.',
+    imageSrc: '/Blodged_Home.png',
+    imageAlt: 'Blodged home feed',
+    galleryImages: [
+      { src: '/Blodged_Home.png', alt: 'Blodged home feed' },
+    ],
+    githubUrl: 'https://github.com/Cademic/blodged',
+    highlights: [
+      'Secure account system with login, registration, and role-aware access boundaries.',
+      'Core social features including posts, replies, likes, profiles, and follow/unfollow.',
+      'REST-style API design supporting frontend integration and future external consumers.',
+      'Documentation-ready development workflow with OpenAPI/Swagger and seeded local data.',
+    ],
+    techStack: ['Vue 3', 'TypeScript', 'Spring Boot 3', 'PostgreSQL', 'Docker Compose'],
+    architecture: [
+      'Frontend uses Vue 3 + TypeScript (Vite, Router, Pinia) for modular route-driven UX.',
+      'Backend uses Spring Boot with layered architecture: Controller -> Service -> Data access.',
+      'Relational model structures users, posts, likes, and replies for scalable social interactions.',
+      'Dockerized local stack enables reproducible backend + database startup for development.',
+    ],
+    readmeResources: [
+      'README documents Docker and local dev workflows for backend and SPA integration.',
+      'OpenAPI docs are exposed for REST endpoints to improve testability and onboarding.',
+      'Project requirements and technical docs provide traceability beyond source code alone.',
+    ],
+    qualityNotes: [
+      'Seeded data allows fast verification of real user flows across feed, profile, and replies.',
+      'CORS, datasource config, and environment overrides support safer local/prod separation.',
+      'Architecture choices prioritize maintainability and long-term extensibility over shortcuts.',
+    ],
+    keyFacts: [
+      { label: 'Architecture', value: 'Layered Spring backend with clear service boundaries' },
+      { label: 'Security', value: 'Auth-first design with role-aware access patterns' },
+      { label: 'Portfolio Value', value: 'Demonstrates backend depth beyond basic CRUD' },
+    ],
+    caseStudySections: [
+      {
+        title: 'How It Works',
+        points: [
+          'Users register or sign in, then publish posts and interact through replies and likes.',
+          'Feed and profile views consume REST endpoints exposed by the Spring Boot backend.',
+          'Relational persistence keeps post/comment/user relationships consistent and queryable.',
+          'Role-aware flows keep sensitive operations scoped to authorized users.',
+        ],
+      },
+      {
+        title: 'Key Design Decisions',
+        points: [
+          'Spring Boot chosen for production-ready conventions and strong ecosystem support.',
+          'Layered backend design improves maintainability, testing, and separation of concerns.',
+          'Relational modeling selected to preserve clear social graph and content relationships.',
+          'Tradeoff: greater architectural complexity in exchange for real-world readiness.',
+        ],
+      },
+      {
+        title: 'Challenges & Complexity',
+        points: [
+          'Security configuration requires careful handling of auth/authorization boundaries.',
+          'Entity mapping for users, posts, and replies must avoid recursion and serialization issues.',
+          'Endpoint design must keep behavior predictable while supporting evolving frontend needs.',
+          'Database schema and query patterns must stay efficient as interaction volume grows.',
+        ],
+      },
+      {
+        title: 'Future Roadmap',
+        points: [
+          'Add richer interaction features such as reactions, notifications, and enhanced profiles.',
+          'Expand pagination and feed performance for larger datasets.',
+          'Introduce stronger deployment/infra scaling options and caching strategies.',
+          'Continue polishing content authoring with richer editor and media workflows.',
+        ],
+      },
+    ],
+    keyTakeaways: [
+      'Blodged showcases enterprise-style backend thinking, not just CRUD feature delivery.',
+      'The project highlights strong Spring ecosystem fluency and practical API architecture.',
+      'It demonstrates secure, scalable foundations for building larger social platforms.',
+    ],
+  },
+  {
+    slug: 'minesweeper',
+    title: 'MineSweeper',
+    tagline: 'Classic puzzle gameplay powered by algorithmic logic.',
+    description:
+      'A grid-based Minesweeper implementation focused on recursive reveal behavior, state management, and responsive game interactions.',
+    longDescription:
+      'MineSweeper recreates the classic game loop in a modern web implementation where players reveal safe cells, flag suspected mines, and use adjacency clues to solve the board. The project emphasizes strong game-state modeling, grid algorithms, and event-driven interaction handling. It demonstrates how seemingly simple game rules require careful logic for recursion, edge-case control, and win/loss consistency.',
+    problem:
+      'Minesweeper appears simple, but implementing it correctly requires robust handling of 2D grid state, recursive cell expansion, boundary checks, and accurate win/loss transitions under real user input.',
+    role:
+      'Built and refined core gameplay systems including board generation, mine distribution, recursive flood-fill behavior, and gameplay state transitions.',
     imageSrc: '/MineSweep-Landing.png',
     imageAlt: 'MineSweeper game landing',
-    detailUrl: 'https://github.com/NoahStarkenburg/MineSweeper',
+    galleryImages: [
+      { src: '/MineSweep-Landing.png', alt: 'MineSweeper game landing' },
+      { src: '/MineSweep_Start.png', alt: 'MineSweeper start screen' },
+      { src: '/MineSweep_Game.png', alt: 'MineSweeper game board in progress' },
+      { src: '/MineSweep_login.png', alt: 'MineSweeper login screen' },
+      { src: '/MineSweep_succesfulLogin.png', alt: 'MineSweeper successful login state' },
+      { src: '/MineSweep_SavedGames.png', alt: 'MineSweeper saved games list' },
+    ],
+    githubUrl: 'https://github.com/NoahStarkenburg/MineSweeper',
+    highlights: [
+      'Randomized board generation with dynamic mine placement.',
+      'Recursive reveal logic to auto-expand empty regions.',
+      'Flagging and adjacency clue mechanics aligned with classic Minesweeper behavior.',
+      'Win/loss detection driven by consistent board state and interaction rules.',
+      'Interactive grid UI with responsive click-driven gameplay loop.',
+    ],
+    techStack: ['ASP.NET Core MVC', 'C#', 'Razor', 'SQL'],
+    architecture: [
+      'ASP.NET Core MVC + Razor pages for server-driven rendering and game interactions.',
+      'C# game engine models each cell with mine, reveal, flag, and adjacency state.',
+      '2D board data structure supports fast neighbor checks and rule evaluation.',
+      'Game state tracks progression, terminal states, and player interaction effects.',
+    ],
+    readmeResources: [
+      'README and repo context highlight board creation, mine randomization, and flood-fill features.',
+      'Contributor workflow captures collaborative development and branch discipline.',
+      'Project framing focuses on translating classic puzzle mechanics into web architecture.',
+    ],
+    qualityNotes: [
+      'Recursive reveal flow requires careful visited-state and boundary handling to avoid logic bugs.',
+      'Game quality depends on edge-case control (corners, borders, rapid clicks, and terminal states).',
+      'Architecture keeps logic readable and maintainable while preserving responsive interactions.',
+    ],
+    keyFacts: [
+      { label: 'Core Logic', value: 'Grid algorithms + recursive flood-fill reveal' },
+      { label: 'Interaction Model', value: 'Click/flag gameplay with real-time board updates' },
+      { label: 'Portfolio Value', value: 'Demonstrates algorithmic thinking in an interactive app' },
+    ],
+    caseStudySections: [
+      {
+        title: 'How It Works',
+        points: [
+          'The game initializes a 2D grid, randomly places mines, and computes adjacent mine counts.',
+          'Players reveal tiles to uncover safe cells and use right-click style interactions to flag risk areas.',
+          'When a revealed tile has zero adjacent mines, flood-fill logic expands nearby safe regions.',
+          'The engine continuously evaluates win/loss states based on revealed safe cells and mine interactions.',
+        ],
+      },
+      {
+        title: 'Algorithms & Logic',
+        points: [
+          'Neighbor scanning evaluates each cell against up to eight surrounding positions.',
+          'Recursive expansion handles zero-value cells while preventing repeat traversal.',
+          'Random placement logic ensures unique mine coordinates and replay variety.',
+          'State transitions synchronize board data and UI feedback after each user action.',
+        ],
+      },
+      {
+        title: 'Challenges & Complexity',
+        points: [
+          'Recursive reveal can cause incorrect propagation without strict boundary and visited checks.',
+          'Game-state transitions must correctly lock interactions after terminal win/loss events.',
+          'Edge/corner tiles require explicit neighbor-lookup safeguards.',
+          'Random generation must remain fair while preserving predictable game rules.',
+        ],
+      },
+      {
+        title: 'Future Roadmap',
+        points: [
+          'Add difficulty presets, timer/scoring, and richer session statistics.',
+          'Improve visuals with animations and clearer interaction feedback.',
+          'Introduce optional hints or solver assistance for advanced gameplay.',
+          'Expand persistence and leaderboard features for replayability.',
+        ],
+      },
+    ],
+    keyTakeaways: [
+      'MineSweeper highlights strong command of recursion, state, and grid data structures.',
+      'The project demonstrates practical event-driven engineering in a user-facing interactive system.',
+      'It turns foundational CS concepts into polished, playable application behavior.',
+    ],
+  },
+  {
+    slug: 'lunara',
+    title: 'Lunara',
+    tagline: 'A full-stack postpartum support platform.',
+    description:
+      'A production-style care platform connecting postpartum families with doulas through structured workflows, support tools, and secure full-stack architecture.',
+    longDescription:
+      'LUNARA combines two repositories into one cohesive system: `AQC` for backend API/business logic and `lunaracare` for the frontend product experience. Together they deliver a scalable healthcare-oriented workflow for postpartum families and providers, with secure access, structured data flow, and maintainable separation of concerns.',
+    problem:
+      'Postpartum support is often fragmented across disconnected tools, making it difficult for families to access care and for providers to coordinate services in one place.',
+    role:
+      'Full-stack contributor across frontend-backend integration, architecture decisions, auth flow design, and delivery of provider/client user journeys.',
+    imageSrc: '/LunaraCare.png',
+    imageAlt: 'Lunara application home screen',
+    galleryImages: [
+      { src: '/LunaraCare.png', alt: 'Lunara application home screen' },
+      { src: '/LunaraCare_Calendar.png', alt: 'Lunara calendar view' },
+      { src: '/LunaraCare_Message.png', alt: 'Lunara messaging experience' },
+      { src: '/LunaraCare_librarypng.png', alt: 'Lunara resource library screen' },
+    ],
+    githubUrl: 'https://github.com/omniV1/lunaraCare',
+    liveUrl: 'https://www.lunaracare.org',
+    highlights: [
+      'Role-based support workflows for postpartum users, doulas, and admins.',
+      'Secure authentication and API-backed data flow between UI and backend services.',
+      'Service-oriented care experience for connecting users with providers and resources.',
+      'Real-world multi-repo architecture enabling independent frontend/backend delivery.',
+    ],
+    techStack: ['React', 'Vite', 'TypeScript', 'Spring Boot', 'Spring Security', 'PostgreSQL', 'Flyway', 'Docker'],
+    architecture: [
+      'Two-repo system: `AQC` backend handles API/domain logic while `lunaracare` focuses on UX and client workflows.',
+      'Backend follows layered pattern: Controller -> Service -> Repository -> Database.',
+      'Frontend communicates with REST endpoints for auth, care operations, and user-specific data views.',
+      'PostgreSQL + Flyway provides relational consistency and migration-driven schema evolution.',
+    ],
+    readmeResources: [
+      'System design reflects realistic separation of concerns found in modern SaaS teams.',
+      'Multi-repo setup supports clearer collaboration boundaries and independent deployment paths.',
+      'Architecture choices center on maintainability, security, and healthcare workflow extensibility.',
+    ],
+    qualityNotes: [
+      'Frontend-backend auth integration requires careful token handling and session boundary control.',
+      'Docker and environment management improve parity between local development and deployment.',
+      'Domain modeling prioritizes long-term scalability for appointments, services, and provider relationships.',
+    ],
+    keyFacts: [
+      { label: 'Repo Strategy', value: 'Multi-repo architecture (AQC backend + lunaracare frontend)' },
+      { label: 'Data Flow', value: 'React UI -> REST API -> Spring Boot -> PostgreSQL' },
+      { label: 'Portfolio Value', value: 'Capstone-level full-stack system design and integration' },
+    ],
+    caseStudySections: [
+      {
+        title: 'System Structure',
+        points: [
+          'AQC repository contains backend APIs, auth logic, persistence, and domain services.',
+          'lunaracare repository contains the product-facing UI, client flows, and API integration.',
+          'This split enables independent scaling and release cadence for frontend and backend teams.',
+          'The pattern mirrors real-world SaaS architecture where services evolve at different speeds.',
+        ],
+      },
+      {
+        title: 'How It Works',
+        points: [
+          'Users authenticate through the frontend, while backend security controls access policies.',
+          'Client actions trigger API requests that execute business logic and persist relational data.',
+          'Structured workflows support provider connection, service access, and care coordination.',
+          'Data and UI remain synchronized through consistent endpoint contracts.',
+        ],
+      },
+      {
+        title: 'Key Design Decisions',
+        points: [
+          'Multi-repo chosen to enforce clean responsibility boundaries and deployment flexibility.',
+          'Spring Boot and Spring Security selected for enterprise-grade backend patterns.',
+          'React + TypeScript selected for modular UI architecture and maintainable client logic.',
+          'PostgreSQL + Flyway selected for reliable schema evolution and controlled migrations.',
+        ],
+      },
+      {
+        title: 'Challenges & Complexity',
+        points: [
+          'Frontend/backend authentication integration is complex and security-critical.',
+          'Endpoint coordination must remain stable as both repos evolve independently.',
+          'Healthcare-domain modeling requires thoughtful relationship and workflow design.',
+          'Operational consistency depends on environment management and containerized setup.',
+        ],
+      },
+      {
+        title: 'Future Roadmap',
+        points: [
+          'Expanded messaging and scheduling workflows for providers and families.',
+          'Notification pipelines and improved mobile-first interaction polish.',
+          'Intelligent recommendations and deeper personalization pathways.',
+          'Continued security hardening toward stronger healthcare compliance requirements.',
+        ],
+      },
+    ],
+    keyTakeaways: [
+      'LUNARA demonstrates true full-stack architecture, not just isolated feature work.',
+      'The two-repo model reflects real engineering organization and scalable deployment patterns.',
+      'It showcases product thinking applied to a meaningful healthcare support problem.',
+    ],
   },
 ]
+
+const carouselProjects = computed(() =>
+  projects.map((project) => ({
+    title: project.title,
+    tagline: project.tagline,
+    description: project.description,
+    imageSrc: project.imageSrc,
+    imageAlt: project.imageAlt,
+    detailUrl: `/projects/${project.slug}`,
+  })),
+)
+
+const selectedProjectSlug = ref<string | null>(null)
+
+const selectedProject = computed(() =>
+  projects.find((project) => project.slug === selectedProjectSlug.value) ?? null,
+)
+
+const selectedProjectCarouselProjects = computed(() => {
+  const project = selectedProject.value
+  if (!project) return []
+
+  const repeatCount = 3
+  const gallery: Array<{
+    title: string
+    tagline: string
+    description: string
+    imageSrc: string
+    imageAlt: string
+    detailUrl: string
+  }> = []
+
+  for (let cycle = 0; cycle < repeatCount; cycle += 1) {
+    for (let index = 0; index < project.galleryImages.length; index += 1) {
+      const image = project.galleryImages[index]!
+      gallery.push({
+        title: project.title,
+        tagline: project.tagline,
+        description: image.alt,
+        imageSrc: image.src,
+        imageAlt: image.alt,
+        detailUrl: `/projects/${project.slug}#gallery-${cycle + 1}-${index + 1}`,
+      })
+    }
+  }
+
+  return gallery
+})
+
+const shouldUseDetailCarousel = computed(() => {
+  const project = selectedProject.value
+  if (!project) return false
+  return project.galleryImages.length > 1
+})
+
+let projectRevealObserver: IntersectionObserver | null = null
+
+function cleanupProjectRevealObserver() {
+  projectRevealObserver?.disconnect()
+  projectRevealObserver = null
+}
+
+function initProjectDetailReveal() {
+  cleanupProjectRevealObserver()
+
+  nextTick(() => {
+    const targetSelector = selectedProject.value
+      ? '.project-detail [data-scroll-reveal]'
+      : '[data-scroll-reveal="landing"]'
+    const targets = Array.from(document.querySelectorAll<HTMLElement>(targetSelector))
+
+    if (!targets.length) return
+
+    const defaultDelayStepMs = selectedProject.value ? 45 : 90
+    const defaultDelayMaxMs = selectedProject.value ? 220 : 520
+
+    targets.forEach((el, index) => {
+      el.classList.remove('is-revealed')
+      const existingDelay = el.style.getPropertyValue('--reveal-delay').trim()
+      if (!existingDelay) {
+        el.style.setProperty(
+          '--reveal-delay',
+          `${Math.min(index * defaultDelayStepMs, defaultDelayMaxMs)}ms`,
+        )
+      }
+    })
+
+    if (!('IntersectionObserver' in window)) {
+      targets.forEach((el) => el.classList.add('is-revealed'))
+      return
+    }
+
+    projectRevealObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return
+          entry.target.classList.add('is-revealed')
+          projectRevealObserver?.unobserve(entry.target)
+        })
+      },
+      {
+        root: null,
+        threshold: 0.14,
+        rootMargin: '0px 0px -8% 0px',
+      },
+    )
+
+    targets.forEach((el) => projectRevealObserver?.observe(el))
+  })
+}
+
+function projectSlugFromLocation() {
+  const normalizedHash = window.location.hash.replace(/^#/, '')
+  const hashMatch = normalizedHash.match(/^\/projects\/([a-z0-9-]+)$/i)
+  if (hashMatch?.[1]) return hashMatch[1].toLowerCase()
+
+  const pathMatch = window.location.pathname.match(/^\/projects\/([a-z0-9-]+)$/i)
+  return pathMatch?.[1]?.toLowerCase() ?? null
+}
+
+function syncSelectedProjectFromLocation() {
+  selectedProjectSlug.value = projectSlugFromLocation()
+}
+
+function openProject(projectSlug: string) {
+  window.history.pushState({}, '', `/projects/${projectSlug}`)
+  syncSelectedProjectFromLocation()
+}
+
+onMounted(() => {
+  syncSelectedProjectFromLocation()
+  window.addEventListener('hashchange', syncSelectedProjectFromLocation)
+  window.addEventListener('popstate', syncSelectedProjectFromLocation)
+  initProjectDetailReveal()
+})
+
+onUnmounted(() => {
+  window.removeEventListener('hashchange', syncSelectedProjectFromLocation)
+  window.removeEventListener('popstate', syncSelectedProjectFromLocation)
+  cleanupProjectRevealObserver()
+})
+
+watch(selectedProject, () => {
+  initProjectDetailReveal()
+})
 
 /**
  * Contact form state variables
@@ -125,8 +728,153 @@ const handleSubmit = async (event: Event) => {
     <TheHeader />
     
     <main class="main">
+      <section
+        v-if="selectedProject"
+        class="section project-detail"
+        :aria-labelledby="`${selectedProject.slug}-title`"
+      >
+        <div class="container project-detail__container">
+          <article class="project-detail__hero" data-scroll-reveal>
+            <div
+              v-if="shouldUseDetailCarousel"
+              class="project-detail__hero-carousel"
+              aria-label="Project image carousel"
+            >
+              <ProjectShowcase
+                :projects="selectedProjectCarouselProjects"
+                :show-logos="false"
+                :show-descriptions="false"
+                :show-media-hint="false"
+              />
+            </div>
+            <div
+              v-else
+              class="project-detail__single-image-card"
+            >
+              <ProjectCard
+                :title="selectedProject.title"
+                :description="selectedProject.description"
+                :image-src="selectedProject.galleryImages[0]?.src || selectedProject.imageSrc"
+                :image-alt="selectedProject.galleryImages[0]?.alt || selectedProject.imageAlt"
+                :detail-url="`/projects/${selectedProject.slug}`"
+                variant="carousel"
+                :omit-title="true"
+                :is-main-display="true"
+                :show-media-hint="false"
+              />
+            </div>
+            <div class="project-detail__hero-content">
+              <p class="section__eyebrow">Case Study</p>
+              <h1 :id="`${selectedProject.slug}-title`" class="project-detail__title">
+                {{ selectedProject.title }}
+              </h1>
+              <p class="project-detail__tagline">{{ selectedProject.tagline }}</p>
+              <p class="project-detail__summary">{{ selectedProject.longDescription }}</p>
+              <div class="project-detail__actions">
+                <a :href="selectedProject.githubUrl" class="btn btn--primary" target="_blank" rel="noopener noreferrer">
+                  View GitHub
+                </a>
+                <a
+                  v-if="selectedProject.liveUrl"
+                  :href="selectedProject.liveUrl"
+                  class="btn btn--ghost"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  View Live App
+                </a>
+              </div>
+            </div>
+          </article>
+          <div class="project-detail__facts">
+            <article
+              v-for="(fact, index) in selectedProject.keyFacts"
+              :key="fact.label"
+              class="project-detail__fact-card"
+              data-scroll-reveal
+              :style="{ '--reveal-delay': `${Math.min(index * 80, 240)}ms` }"
+            >
+              <p class="project-detail__fact-label">{{ fact.label }}</p>
+              <p class="project-detail__fact-value">{{ fact.value }}</p>
+            </article>
+          </div>
+          <div class="project-detail__overview-grid">
+            <article class="project-detail__panel" data-scroll-reveal style="--reveal-delay: 0ms">
+              <h2 class="project-detail__panel-title">Challenge</h2>
+              <p class="project-detail__copy">{{ selectedProject.problem }}</p>
+            </article>
+            <article class="project-detail__panel" data-scroll-reveal style="--reveal-delay: 110ms">
+              <h2 class="project-detail__panel-title">Contribution</h2>
+              <p class="project-detail__copy">{{ selectedProject.role }}</p>
+            </article>
+          </div>
+          <div class="project-detail__grid">
+            <div class="project-detail__panel" data-scroll-reveal style="--reveal-delay: 0ms">
+              <h2 class="project-detail__panel-title">Key Features</h2>
+              <ul class="project-detail__list">
+                <li v-for="item in selectedProject.highlights" :key="item">{{ item }}</li>
+              </ul>
+            </div>
+            <div class="project-detail__panel" data-scroll-reveal style="--reveal-delay: 80ms">
+              <h2 class="project-detail__panel-title">Tech Stack</h2>
+              <ul class="project-detail__list project-detail__list--stack">
+                <li v-for="item in selectedProject.techStack" :key="item">{{ item }}</li>
+              </ul>
+            </div>
+            <div class="project-detail__panel" data-scroll-reveal style="--reveal-delay: 160ms">
+              <h2 class="project-detail__panel-title">Architecture</h2>
+              <ul class="project-detail__list">
+                <li v-for="item in selectedProject.architecture" :key="item">{{ item }}</li>
+              </ul>
+            </div>
+            <div class="project-detail__panel" data-scroll-reveal style="--reveal-delay: 240ms">
+              <h2 class="project-detail__panel-title">README Highlights</h2>
+              <ul class="project-detail__list">
+                <li v-for="item in selectedProject.readmeResources" :key="item">{{ item }}</li>
+              </ul>
+            </div>
+            <div class="project-detail__panel" data-scroll-reveal style="--reveal-delay: 320ms">
+              <h2 class="project-detail__panel-title">Quality & Delivery</h2>
+              <ul class="project-detail__list">
+                <li v-for="item in selectedProject.qualityNotes" :key="item">{{ item }}</li>
+              </ul>
+            </div>
+          </div>
+          <section
+            v-if="selectedProject.caseStudySections?.length"
+            class="project-detail__case-study"
+            aria-label="Case study highlights"
+          >
+            <article
+              v-for="(section, index) in selectedProject.caseStudySections"
+              :key="section.title"
+              class="project-detail__panel"
+              data-scroll-reveal
+              :style="{ '--reveal-delay': `${Math.min(index * 90, 360)}ms` }"
+            >
+              <h2 class="project-detail__panel-title">{{ section.title }}</h2>
+              <ul class="project-detail__list">
+                <li v-for="point in section.points" :key="point">{{ point }}</li>
+              </ul>
+            </article>
+          </section>
+          <section
+            v-if="selectedProject.keyTakeaways?.length"
+            class="project-detail__takeaways"
+            aria-label="Key takeaways"
+            data-scroll-reveal
+          >
+            <h2 class="project-detail__panel-title">Key Takeaways</h2>
+            <ul class="project-detail__list">
+              <li v-for="item in selectedProject.keyTakeaways" :key="item">{{ item }}</li>
+            </ul>
+          </section>
+        </div>
+      </section>
+
+      <template v-else>
       <!-- Hero/Home Section -->
-      <section id="home" class="hero">
+      <section id="home" class="hero" data-scroll-reveal="landing">
         <div class="hero__glow" aria-hidden="true" />
         <div class="container">
           <div class="hero__content">
@@ -149,22 +897,21 @@ const handleSubmit = async (event: Event) => {
         </div>
       </section>
 
-      <!-- Projects — prominent carousel -->
-      <section id="projects" class="section section--projects section--spotlight" aria-labelledby="projects-heading">
-        <div class="container">
-          <div class="section__heading">
-            <p class="section__eyebrow">Portfolio</p>
-            <h2 id="projects-heading" class="section__title section__title--hero">Featured projects</h2>
-            <p class="section__lede">
-              Browse the row — neighbors sit in perspective on the sides. Click a screenshot to open its GitHub repo, or swipe and use the arrows.
-            </p>
-          </div>
-          <ProjectShowcase :projects="projects" />
+      <!-- Projects — full-viewport carousel (edge-to-edge, no panel) -->
+      <section
+        id="projects"
+        class="section section--projects section--projects-fullbleed"
+        aria-labelledby="projects-heading"
+        data-scroll-reveal="landing"
+      >
+        
+        <div class="section--projects__carousel">
+          <ProjectShowcase :projects="carouselProjects" />
         </div>
       </section>
       
       <!-- About Section -->
-      <section id="about" class="section">
+      <section id="about" class="section" data-scroll-reveal="landing">
         <div class="container">
           <div class="section__heading">
             <p class="section__eyebrow">Background</p>
@@ -183,7 +930,7 @@ const handleSubmit = async (event: Event) => {
       </section>
       
       <!-- Skills Section -->
-      <section id="skills" class="section">
+      <section id="skills" class="section" data-scroll-reveal="landing">
         <div class="container">
           <div class="section__heading">
             <p class="section__eyebrow">Toolkit</p>
@@ -266,7 +1013,7 @@ const handleSubmit = async (event: Event) => {
       </section>
       
       <!-- Contact Section -->
-      <section id="contact" class="section">
+      <section id="contact" class="section" data-scroll-reveal="landing">
         <div class="container">
           <div class="section__heading">
             <p class="section__eyebrow">Let’s talk</p>
@@ -367,6 +1114,7 @@ const handleSubmit = async (event: Event) => {
           </div>
         </div>
       </section>
+      </template>
   </main>
     
     <!-- Site footer -->
@@ -509,11 +1257,236 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .section--projects {
-  background:
-    radial-gradient(ellipse 80% 60% at 50% -20%, rgba(0, 224, 255, 0.12), transparent 55%),
-    var(--color-background);
+  background: var(--color-background);
   border-top: 1px solid var(--color-border);
   border-bottom: 1px solid var(--color-border);
+}
+
+.section--projects-fullbleed {
+  min-height: 0;
+  display: block;
+  padding-top: clamp(1.5rem, 4vw, 2.5rem);
+  padding-bottom: clamp(3.5rem, 7vw, 6rem);
+  scroll-margin-top: 80px;
+}
+
+.section--projects__intro {
+  margin-bottom: clamp(0.75rem, 2vw, 1.25rem);
+}
+
+.section--projects__carousel {
+  display: block;
+  width: 100%;
+}
+
+.project-detail {
+  min-height: calc(100vh - 80px);
+  background: var(--color-background-alt);
+}
+
+[data-scroll-reveal] {
+  opacity: 0;
+  transform: translate3d(0, var(--reveal-shift, 16px), 0) scale(var(--reveal-scale, 0.99));
+  filter: blur(var(--reveal-blur, 5px));
+  transition:
+    opacity var(--reveal-duration, 360ms) cubic-bezier(0.22, 1, 0.36, 1),
+    transform var(--reveal-duration, 360ms) cubic-bezier(0.22, 1, 0.36, 1),
+    filter var(--reveal-duration, 360ms) cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+  will-change: opacity, transform, filter;
+}
+
+[data-scroll-reveal].is-revealed {
+  opacity: 1;
+  transform: translate3d(0, 0, 0) scale(1);
+  filter: none;
+}
+
+[data-scroll-reveal='landing'] {
+  --reveal-duration: 700ms;
+  --reveal-shift: 22px;
+  --reveal-blur: 7px;
+  --reveal-scale: 0.985;
+}
+
+[data-scroll-reveal='landing'].is-revealed {
+  opacity: 1;
+  transform: translate3d(0, 0, 0) scale(1);
+  filter: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-scroll-reveal] {
+    opacity: 1;
+    transform: none;
+    filter: none;
+    transition: none;
+  }
+}
+
+.project-detail__container {
+  max-width: 1120px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.15rem;
+}
+
+.project-detail__title {
+  font-size: clamp(2.2rem, 5vw, 3.2rem);
+  letter-spacing: -0.03em;
+}
+
+.project-detail__hero {
+  display: flex;
+  flex-direction: column;
+  gap: 1.35rem;
+  align-items: stretch;
+}
+
+.project-detail__hero-carousel {
+  width: 100%;
+}
+
+.project-detail__hero-carousel .showcase {
+  padding-inline: 0;
+}
+
+.project-detail__hero-carousel .showcase__viewport {
+  min-height: min(48vh, 620px);
+  padding: clamp(1.75rem, 3.2vw, 2.4rem) 0 clamp(0.35rem, 1vw, 0.7rem);
+  overflow: visible;
+}
+
+.project-detail__single-image-card {
+  width: 100%;
+}
+
+.project-detail__single-image-card :deep(.project-card__media--carousel-hit) {
+  cursor: default;
+  pointer-events: none;
+}
+
+.project-detail__single-image-card :deep(.project-card__carousel-frame) {
+  min-height: min(48vh, 620px);
+}
+
+.project-detail__hero-content {
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.project-detail__tagline {
+  color: var(--color-primary);
+  font-size: 1rem;
+}
+
+.project-detail__summary {
+  font-size: 1rem;
+  line-height: 1.75;
+  color: var(--color-text-light);
+}
+
+.project-detail__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.project-detail__facts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(68, 71, 90, 0.45);
+}
+
+.project-detail__fact-card {
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  padding: 0;
+}
+
+.project-detail__fact-label {
+  margin: 0 0 0.3rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+}
+
+.project-detail__fact-value {
+  margin: 0;
+  color: var(--color-text-light);
+  line-height: 1.45;
+}
+
+.project-detail__overview-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.project-detail__grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.project-detail__case-study {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.project-detail__panel {
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  padding: 0;
+}
+
+.project-detail__panel-title {
+  margin-bottom: 0.7rem;
+  color: var(--color-text);
+  font-size: clamp(1.3rem, 2.4vw, 1.7rem);
+  letter-spacing: 0;
+  line-height: 1.2;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  text-rendering: optimizeLegibility;
+}
+
+.project-detail__list {
+  margin: 0;
+  padding-left: 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  color: var(--color-text-light);
+}
+
+.project-detail__list--stack {
+  list-style: square;
+}
+
+.project-detail__copy {
+  margin: 0;
+  line-height: 1.72;
+  color: var(--color-text-light);
+  max-width: 70ch;
+}
+
+.project-detail__takeaways {
+  margin-top: 0.5rem;
+  padding-left: 1rem;
+  border-left: 2px solid rgba(0, 224, 255, 0.45);
 }
 
 /* 
@@ -995,6 +1968,14 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Responsive styles */
 @media (max-width: 768px) {
+  .project-detail__hero {
+    grid-template-columns: 1fr;
+  }
+
+  .project-detail__facts {
+    grid-template-columns: 1fr;
+  }
+
   .contact {
     grid-template-columns: 1fr;
   }

@@ -51,6 +51,22 @@ const smoothScroll = (e: Event, targetId: string) => {
   }
 };
 
+const goHome = (e: Event) => {
+  e.preventDefault();
+
+  if (menuOpen.value) {
+    menuOpen.value = false;
+  }
+
+  const isProjectRoute = /^\/projects\/[a-z0-9-]+$/i.test(window.location.pathname);
+  if (isProjectRoute) {
+    window.location.assign('/');
+    return;
+  }
+
+  smoothScroll(e, 'home');
+};
+
 onMounted(() => {
   /**
    * Sets up scroll event listener to highlight the active navigation link
@@ -112,9 +128,9 @@ onMounted(() => {
       <!-- Main navigation -->
       <nav class="nav" :class="{ 'nav--open': menuOpen }">
         <ul class="nav__list">
-          <li class="nav__item"><a href="#home" class="nav__link" @click="(e) => smoothScroll(e, 'home')">Home</a></li>
-          <li class="nav__item"><a href="#about" class="nav__link" @click="(e) => smoothScroll(e, 'about')">About</a></li>
+          <li class="nav__item"><a href="/" class="nav__link" @click="goHome">Home</a></li>
           <li class="nav__item"><a href="#projects" class="nav__link" @click="(e) => smoothScroll(e, 'projects')">Projects</a></li>
+          <li class="nav__item"><a href="#about" class="nav__link" @click="(e) => smoothScroll(e, 'about')">About</a></li>
           <li class="nav__item"><a href="#skills" class="nav__link" @click="(e) => smoothScroll(e, 'skills')">Skills</a></li>
           <li class="nav__item"><a href="#contact" class="nav__link" @click="(e) => smoothScroll(e, 'contact')">Contact</a></li>
         </ul>
@@ -255,18 +271,23 @@ onMounted(() => {
   
   /* Mobile navigation menu - hidden by default */
   .nav {
-    position: absolute;
-    top: 100%;
+    position: fixed;
+    top: 80px;
     left: 0;
     width: 100%;
-    background-color: var(--color-background-alt);
-    padding: 1rem 0;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
-    transform: translateY(-100%);
+    height: calc(100vh - 80px);
+    background-color: rgba(30, 31, 41, 0.97);
+    backdrop-filter: blur(6px);
+    padding: 1.25rem 0;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+    transform: translateY(-12px);
     opacity: 0;
     visibility: hidden;
     transition: all 0.3s ease;
+    border-top: 1px solid var(--color-border);
     border-bottom: 1px solid var(--color-border);
+    overflow-y: auto;
+    z-index: 99;
   }
   
   /* Mobile navigation menu - open state */
@@ -279,12 +300,14 @@ onMounted(() => {
   /* Vertical layout for mobile navigation */
   .nav__list {
     flex-direction: column;
-    padding: 0 1rem;
+    height: 100%;
+    padding: 0 1.25rem;
+    justify-content: flex-start;
   }
   
   .nav__item {
     margin: 0;
-    padding: 0.5rem 0;
+    padding: 0.9rem 0;
     border-bottom: 1px solid var(--color-border);
   }
   
