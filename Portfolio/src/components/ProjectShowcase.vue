@@ -111,6 +111,8 @@ const MOBILE_BREAKPOINT_PX = 640
 const MOBILE_SWIPE_THRESHOLD_PX = 11
 const DESKTOP_FLICK_VELOCITY_PX_PER_MS = 0.6
 const MOBILE_FLICK_VELOCITY_PX_PER_MS = 0.25
+const VELOCITY_MOMENTUM_MS_MOBILE = 240
+const VELOCITY_MOMENTUM_MS_DESKTOP = 180
 const DIRECTION_LOCK_MIN_PX = 3
 const HORIZONTAL_INTENT_RATIO = 0.55
 const VERTICAL_INTENT_RATIO = 2.4
@@ -636,24 +638,32 @@ function onPointerUp(e: PointerEvent) {
     // Fast flicks can end before enough move events arrive; infer horizontal intent on release.
     pointerAxisLock.value = 'x'
   }
+  const momentumMs = isMobileViewport ? VELOCITY_MOMENTUM_MS_MOBILE : VELOCITY_MOMENTUM_MS_DESKTOP
+  const momentumPx = pointerVelocityPxPerMs.value * momentumMs
+  const effectiveDrag = drag + momentumPx
   const swipeThresholdPx = isMobileViewport
     ? Math.min(MOBILE_SWIPE_THRESHOLD_PX, span * 0.14)
     : SWIPE_THRESHOLD_PX
-  if (span > 0 && Math.abs(drag) >= swipeThresholdPx) {
+  if (span > 0 && Math.abs(effectiveDrag) >= swipeThresholdPx) {
     const stepSpan = Math.max(1, span * 0.58)
-    const projectedSteps = Math.ceil(Math.abs(drag) / stepSpan)
-    steps = (drag < 0 ? 1 : -1) * projectedSteps
+    const projectedSteps = Math.ceil(Math.abs(effectiveDrag) / stepSpan)
+    steps = (effectiveDrag < 0 ? 1 : -1) * projectedSteps
   }
-  if (steps === 0 && Math.abs(drag) >= swipeThresholdPx) {
-    steps = drag < 0 ? 1 : -1
+  if (steps === 0 && Math.abs(effectiveDrag) >= swipeThresholdPx) {
+    steps = effectiveDrag < 0 ? 1 : -1
   }
-  if (steps === 0 && isMobileViewport && pointerAxisLock.value === 'x' && Math.abs(drag) > 1) {
+  if (
+    steps === 0 &&
+    isMobileViewport &&
+    pointerAxisLock.value === 'x' &&
+    Math.abs(effectiveDrag) > 1
+  ) {
     // Any committed horizontal drag on mobile should advance, not snap back.
-    steps = drag < 0 ? 1 : -1
+    steps = effectiveDrag < 0 ? 1 : -1
   }
-  if (steps === 0 && isMobileViewport && moved && Math.abs(drag) >= DRAG_DETECT_PX) {
+  if (steps === 0 && isMobileViewport && moved && Math.abs(effectiveDrag) >= DRAG_DETECT_PX) {
     // On mobile, a short diagonal/horizontal drag should still progress.
-    steps = drag < 0 ? 1 : -1
+    steps = effectiveDrag < 0 ? 1 : -1
   }
   const flickThreshold = isMobileViewport
     ? MOBILE_FLICK_VELOCITY_PX_PER_MS
