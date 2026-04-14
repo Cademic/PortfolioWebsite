@@ -2107,6 +2107,13 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
+@media (max-width: 640px) {
+  .project-detail__hero-carousel .showcase__viewport {
+    min-height: min(30vh, 300px);
+    padding: 0.25rem 0 0.35rem;
+  }
+}
+
 /* About Section */
 .about__content {
   max-width: 52rem;
