@@ -922,7 +922,6 @@ const handleSubmit = async (event: Event) => {
         id="projects"
         class="section section--projects section--projects-fullbleed"
         aria-labelledby="projects-heading"
-        data-scroll-reveal="landing"
       >
         
         <div class="section--projects__carousel">

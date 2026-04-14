@@ -949,7 +949,7 @@ let wheelCleanup: (() => void) | null = null
         >
           <div
             v-for="(project, index) in items"
-            :key="index"
+            :key="project.detailUrl"
             class="showcase__slide"
             :data-slide-index="index"
             :data-detail-url="project.detailUrl"
