@@ -104,16 +104,16 @@ const pointerAxisLock = ref<'undecided' | 'x' | 'y'>('undecided')
 provide('portfolioCarouselSuppressLinkOpen', suppressCarouselLinkOpen)
 
 const SWIPE_THRESHOLD_PX = 48
-const DRAG_DETECT_PX = 8
+const DRAG_DETECT_PX = 4
 const MAX_DRAG_STEPS = 8
 const BRIEF_CLICK_MS = 220
 const MOBILE_BREAKPOINT_PX = 640
 const MOBILE_SWIPE_THRESHOLD_PX = 11
 const DESKTOP_FLICK_VELOCITY_PX_PER_MS = 0.6
-const MOBILE_FLICK_VELOCITY_PX_PER_MS = 0.4
-const DIRECTION_LOCK_MIN_PX = 6
-const HORIZONTAL_INTENT_RATIO = 0.72
-const VERTICAL_INTENT_RATIO = 1.25
+const MOBILE_FLICK_VELOCITY_PX_PER_MS = 0.25
+const DIRECTION_LOCK_MIN_PX = 3
+const HORIZONTAL_INTENT_RATIO = 0.55
+const VERTICAL_INTENT_RATIO = 1.6
 /** Programmatic slide duration (CSS transition on track — compositor-smooth). */
 const TRACK_TRANSITION_MS_BASE = 300
 const TRACK_TRANSITION_MS_PER_STEP = 34
@@ -620,13 +620,15 @@ function onPointerUp(e: PointerEvent) {
 
   const span = slideSpanPx.value
   let steps = 0
-  if (span > 0) {
-    steps = Math.round(-drag / span)
-  }
   const isMobileViewport = viewportWidth.value <= MOBILE_BREAKPOINT_PX
   const swipeThresholdPx = isMobileViewport
     ? Math.min(MOBILE_SWIPE_THRESHOLD_PX, span * 0.14)
     : SWIPE_THRESHOLD_PX
+  if (span > 0 && Math.abs(drag) >= swipeThresholdPx) {
+    const stepSpan = Math.max(1, span * 0.58)
+    const projectedSteps = Math.ceil(Math.abs(drag) / stepSpan)
+    steps = (drag < 0 ? 1 : -1) * projectedSteps
+  }
   if (steps === 0 && Math.abs(drag) >= swipeThresholdPx) {
     steps = drag < 0 ? 1 : -1
   }
@@ -1000,7 +1002,7 @@ let wheelCleanup: (() => void) | null = null
   min-height: min(44vh, 540px);
   margin: 0;
   padding: clamp(0.75rem, 2vw, 1.5rem) 0 clamp(1.25rem, 3vw, 2.25rem);
-  touch-action: pan-x pan-y pinch-zoom;
+  touch-action: pan-y pinch-zoom;
   perspective: 1400px;
   perspective-origin: 50% 42%;
   cursor: grab;
