@@ -114,6 +114,7 @@ const MOBILE_FLICK_VELOCITY_PX_PER_MS = 0.25
 const VELOCITY_MOMENTUM_MS_MOBILE = 240
 const VELOCITY_MOMENTUM_MS_DESKTOP = 180
 const DIRECTION_LOCK_MIN_PX = 3
+const WHEEL_GESTURE_IDLE_MS = 170
 /** Programmatic slide duration (CSS transition on track — compositor-smooth). */
 const TRACK_TRANSITION_MS_BASE = 300
 const TRACK_TRANSITION_MS_PER_STEP = 34
@@ -796,6 +797,10 @@ onUnmounted(() => {
   mq?.removeEventListener?.('change', updateReducedMotion)
   ro?.disconnect()
   wheelCleanup?.()
+  if (wheelGestureUnlockTimeoutId !== null) {
+    window.clearTimeout(wheelGestureUnlockTimeoutId)
+    wheelGestureUnlockTimeoutId = null
+  }
 })
 
 watch(
@@ -835,6 +840,8 @@ function slideOffset(index: number) {
 }
 
 const slideEase = '0.32s cubic-bezier(0.22, 1, 0.36, 1)'
+const wheelGestureLocked = ref(false)
+let wheelGestureUnlockTimeoutId: number | null = null
 
 function slideVisualStyle(index: number) {
   const off = slideOffset(index)
@@ -907,6 +914,16 @@ function isSlideActive(index: number) {
   return index === activeDisplayIndex.value
 }
 
+function scheduleWheelGestureUnlock() {
+  if (wheelGestureUnlockTimeoutId !== null) {
+    window.clearTimeout(wheelGestureUnlockTimeoutId)
+  }
+  wheelGestureUnlockTimeoutId = window.setTimeout(() => {
+    wheelGestureLocked.value = false
+    wheelGestureUnlockTimeoutId = null
+  }, WHEEL_GESTURE_IDLE_MS)
+}
+
 function onWheel(e: WheelEvent) {
   if (total.value <= 1) return
   suppressIdleTransitions.value = false
@@ -916,6 +933,9 @@ function onWheel(e: WheelEvent) {
   if (Math.abs(dominant) < 18) return
   if (Math.abs(dx) <= Math.abs(dy) && !e.shiftKey) return
   e.preventDefault()
+  scheduleWheelGestureUnlock()
+  if (wheelGestureLocked.value) return
+  wheelGestureLocked.value = true
   if (dominant > 0) next()
   else prev()
 }
