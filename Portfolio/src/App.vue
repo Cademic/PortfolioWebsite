@@ -15,79 +15,55 @@
 import { ref } from 'vue'
 import TheHeader from './components/TheHeader.vue'
 import TheFooter from './components/TheFooter.vue'
-import ProjectCard from './components/ProjectCard.vue'
+import ProjectShowcase from './components/ProjectShowcase.vue'
 
-/**
- * Project data array containing information about each project
- * Each project includes title, description, technology tags, and links
- */
+/** Carousel projects: image + short copy; image links to GitHub for full details */
 const projects = [
   {
-    title: 'MineSweeper',
-    description: 'Developed a full-stack replication of the classic Minesweeper game using C# and Razor Pages. Integrated a MySQL database for storing users, game states, and scores.',
-    tags: [
-      { name: 'C#' },
-      { name: '.NET Framework' },
-      { name: 'MySQL' },
-      { name: 'GitHub' }
-    ],
-    links: [
-      { text: 'Source Code', url: 'https://github.com/NoahStarkenburg/MineSweeper' }
-    ]
+    title: 'Lunara',
+    tagline: 'Support for the fourth trimester',
+    description:
+      'A postpartum support platform connecting families with doulas—scheduling, messaging, mood tracking, and care plans in one storybook-inspired React + Express + MongoDB app.',
+    imageSrc: '/LunaraCare.png',
+    imageAlt: 'Lunara application home screen',
+    detailUrl: 'https://github.com/omniV1/lunaraCare',
+  },
+  {
+    title: 'ASideNote',
+    tagline: 'Ideas pinned, linked, and in motion',
+    description:
+      'A visual cork-board workspace for sticky notes, index cards, and red-string links—ASP.NET Core 8, React, TypeScript, and PostgreSQL (successor to TableWorks).',
+    imageSrc: '/ASideNote_Noteboard.png',
+    imageAlt: 'ASideNote cork board with notes',
+    detailUrl: 'https://github.com/Cademic/ASideNote',
   },
   {
     title: 'Blodged',
-    description: 'Developing a blogging/social media platform with RESTful APIs using Java and Spring Boot. Designed and implemented MySQL schema for user authentication and post management. Integrated Spring Security for secure authentication and role-based access.',
-    tags: [
-      { name: 'Java' },
-      { name: 'Spring Boot' },
-      { name: 'MySQL' },
-      { name: 'RESTful API' }
-    ],
-    links: [
-      { text: 'Source Code', url: 'https://github.com/Cademic/blodged' }
-    ]
+    tagline: 'A social feed built for coders',
+    description:
+      'A social feed for coders: posts, replies, likes, and follows with a Vue 3 SPA and a Spring Boot API, PostgreSQL, and Docker Compose.',
+    imageSrc: '/Blodged_Home.png',
+    imageAlt: 'Blodged home feed',
+    detailUrl: 'https://github.com/Cademic/blodged',
   },
   {
     title: 'CineScope',
-    description: 'Built a movie review app enabling user ratings and reviews. Collaborated using Jira, Confluence, and GitHub for project management.',
-    tags: [
-      { name: 'C#' },
-      { name: '.NET Framework' },
-      { name: 'Jira' },
-      { name: 'MongoDB' }
-    ],
-    links: [
-      { text: 'Source Code', url: 'https://github.com/omniV1/CineScope' }
-    ]
+    tagline: 'For movie lovers, by movie lovers',
+    description:
+      'A movie review platform to browse films, write reviews, and moderate content—ASP.NET Core Blazor with MongoDB and an Agile team workflow.',
+    imageSrc: '/CineScope_Landing.png',
+    imageAlt: 'CineScope landing page',
+    detailUrl: 'https://github.com/omniV1/CineScope',
   },
   {
-    title: 'Lunara Postpartum Support Platform',
-    description: 'Lunara is a comprehensive platform designed to provide support for individuals during the postpartum period. It features a robust backend API and a modern frontend interface.',
-    tags: [
-      { name: 'Express.js' },
-      { name: 'MongoDB' },
-      { name: 'TypeScript' },
-      { name: 'React' },
-    ],
-    links: [
-      { text: 'Source Code', url: 'https://github.com/omniV1/AQC' }
-    ]
+    title: 'MineSweeper',
+    tagline: 'Classic logic on a modern stack',
+    description:
+      'Classic Minesweeper with board generation, flood-fill reveal, and scoring—ASP.NET Core MVC with Razor Pages, Identity, and MySQL.',
+    imageSrc: '/MineSweep-Landing.png',
+    imageAlt: 'MineSweeper game landing',
+    detailUrl: 'https://github.com/NoahStarkenburg/MineSweeper',
   },
-  {
-    title: 'TableWorks',
-    description: 'Creating a web application designed to help users organize and manage data efficiently using customizable lists and a table-based layout.',
-    tags: [
-      { name: 'Spring Boot' },
-      { name: 'PostgreSQL' },
-      { name: 'TypeScript' },
-      { name: 'React' },
-    ],
-    links: [
-      { text: 'Source Code', url: 'https://github.com/Cademic/TableWorks' }
-    ]
-  }
-  
 ]
 
 /**
@@ -151,14 +127,15 @@ const handleSubmit = async (event: Event) => {
     <main class="main">
       <!-- Hero/Home Section -->
       <section id="home" class="hero">
+        <div class="hero__glow" aria-hidden="true" />
         <div class="container">
           <div class="hero__content">
             <h1 class="hero__title">Hi, I'm <span class="highlight">Carter Wright</span></h1>
-            <p class="hero__subtitle">Full-Stack Software Developer</p>
+            <p class="hero__tagline">Full-stack software developer</p>
             <div class="hero__cta">
-              <a href="#projects" class="btn btn--primary" v-smooth-scroll>View My Work</a>
-              <a href="#contact" class="btn btn--secondary" v-smooth-scroll>Contact Me</a>
-              <a href="/resume.pdf" class="btn btn--primary" target="_blank" rel="noopener noreferrer">View Resume</a>
+              <a href="#projects" class="btn btn--primary" v-smooth-scroll>View projects</a>
+              <a href="#contact" class="btn btn--secondary" v-smooth-scroll>Contact</a>
+              <a href="/resume.pdf" class="btn btn--ghost" target="_blank" rel="noopener noreferrer">Resume</a>
             </div>
             <div class="social-links">
                   <a href="https://linkedin.com/in/carterdanw/" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="LinkedIn">
@@ -171,17 +148,33 @@ const handleSubmit = async (event: Event) => {
           </div>
         </div>
       </section>
+
+      <!-- Projects — prominent carousel -->
+      <section id="projects" class="section section--projects section--spotlight" aria-labelledby="projects-heading">
+        <div class="container">
+          <div class="section__heading">
+            <p class="section__eyebrow">Portfolio</p>
+            <h2 id="projects-heading" class="section__title section__title--hero">Featured projects</h2>
+            <p class="section__lede">
+              Browse the row — neighbors sit in perspective on the sides. Click a screenshot to open its GitHub repo, or swipe and use the arrows.
+            </p>
+          </div>
+          <ProjectShowcase :projects="projects" />
+        </div>
+      </section>
       
       <!-- About Section -->
       <section id="about" class="section">
         <div class="container">
-          <h2 class="section__title">About Me</h2>
-          <div class="about__content about__content--with-image">
-            <img src="/CarterPFP.jpg" alt="Carter Wright" class="about__image" />
+          <div class="section__heading">
+            <p class="section__eyebrow">Background</p>
+            <h2 class="section__title">About me</h2>
+          </div>
+          <div class="about__content">
             <div class="about__intro">
               <p>Hello! My name is Carter Wright. I am an upcoming software developer looking to enhance my skills while doing what I love.</p>
               <br>
-              <p>I am originally from Michigan, but currently living in <b>Pheonix, AZ</b> as I am studing for my <b>Bachelors in Software Development at Grand Canyon University</b>. I am set to graduate in April 2026 and searching for the perfect postion to get my foot into the door in this career.</p>
+              <p>I am originally from Michigan, but currently living in <b>Phoenix, AZ</b> as I am studying for my <b>Bachelor's in Software Development at Grand Canyon University</b>. I am set to graduate in April 2026 and searching for the right role to get my foot in the door in this career.</p>
               <br>
               <p>My recent work has focused on full-stack web development using <b>C# ASP.NET</b>, <b>Enterprise Java</b>, and <b>Node.js</b>. I also have experience in cybersecurity and integrating industry-standard frameworks such as <b>NIST</b>, <b>CIS</b>, <b>MITRE</b>, and <b>OWASP</b> into my applications.</p>
             </div>
@@ -189,27 +182,13 @@ const handleSubmit = async (event: Event) => {
         </div>
       </section>
       
-      <!-- Projects Section -->
-      <section id="projects" class="section">
-        <div class="container">
-          <h2 class="section__title">My Projects</h2>
-          <div class="projects__grid">
-            <ProjectCard 
-              v-for="project in projects" 
-              :key="project.title"
-              :title="project.title"
-              :description="project.description"
-              :tags="project.tags"
-              :links="project.links"
-            />
-          </div>
-        </div>
-      </section>
-      
       <!-- Skills Section -->
       <section id="skills" class="section">
         <div class="container">
-          <h2 class="section__title">Skills</h2>
+          <div class="section__heading">
+            <p class="section__eyebrow">Toolkit</p>
+            <h2 class="section__title">Skills</h2>
+          </div>
           <div class="skills__grid">
             <div class="skill skills-container">
               <h3 class="skill__title">Languages & Technologies</h3>
@@ -289,7 +268,10 @@ const handleSubmit = async (event: Event) => {
       <!-- Contact Section -->
       <section id="contact" class="section">
         <div class="container">
-          <h2 class="section__title">Contact Me</h2>
+          <div class="section__heading">
+            <p class="section__eyebrow">Let’s talk</p>
+            <h2 class="section__title">Contact</h2>
+          </div>
           <div class="contact-wrapper">
             <div class="contact">
               <div class="contact__info">
@@ -393,8 +375,7 @@ const handleSubmit = async (event: Event) => {
 </template>
 
 <style>
-/* Import Google Font for monospace */
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap');
+/* Fonts loaded in index.html (Inter + JetBrains Mono) */
 
 /**
  * Global CSS Variables
@@ -432,7 +413,10 @@ const handleSubmit = async (event: Event) => {
   --spacing-xl: 2.5rem;
   
   /* Typography */
-  --font-mono: 'JetBrains Mono', monospace;
+  --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  --radius-lg: 16px;
+  --shadow-soft: 0 24px 60px rgba(0, 0, 0, 0.35);
 }
 
 /* Global Reset */
@@ -449,7 +433,7 @@ html {
 
 /* Base Body Styles */
 body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: var(--color-text);
@@ -483,27 +467,53 @@ h1, h2, h3, h4, h5, h6 {
   scroll-margin-top: 80px; /* Accounts for fixed header height when scrolling to anchors */
 }
 
-/* Section Title Styling */
-.section__title {
-  font-size: 2rem;
-  margin-bottom: var(--spacing-lg);
+/* Section headings — minimal, reference-style hierarchy */
+.section__heading {
   text-align: center;
-  position: relative;
-  color: var(--color-primary);
-  display: inline-block;
+  max-width: 42rem;
+  margin: 0 auto var(--spacing-xl);
 }
 
-/* Code-like tag decorations for section titles */
-.section__title::before {
-  content: '<';
-  margin-right: 0.5rem;
-  opacity: 0.7;
+.section__eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-text-light);
+  margin: 0 0 0.5rem;
 }
 
-.section__title::after {
-  content: '/>';
-  margin-left: 0.5rem;
-  opacity: 0.7;
+.section__title {
+  font-size: clamp(1.75rem, 4vw, 2.25rem);
+  margin: 0;
+  color: var(--color-text);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.section__title--hero {
+  font-size: clamp(2rem, 4.5vw, 2.75rem);
+  color: var(--color-text);
+}
+
+.section__lede {
+  margin: 1rem 0 0;
+  color: var(--color-text-light);
+  font-size: 1.05rem;
+  line-height: 1.6;
+}
+
+.section--spotlight {
+  padding-top: clamp(2.5rem, 6vw, 4rem);
+  padding-bottom: clamp(2.5rem, 6vw, 4rem);
+}
+
+.section--projects {
+  background:
+    radial-gradient(ellipse 80% 60% at 50% -20%, rgba(0, 224, 255, 0.12), transparent 55%),
+    var(--color-background);
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
 }
 
 /* 
@@ -511,12 +521,26 @@ h1, h2, h3, h4, h5, h6 {
  * First section of the page with the main headline and CTA buttons
  */
 .hero {
-  padding: var(--spacing-lg) 0;
+  padding: clamp(3rem, 10vw, 5.5rem) 0 clamp(4rem, 12vw, 6rem);
   background-color: var(--color-background-alt);
   border-bottom: 1px solid var(--color-border);
   position: relative;
   overflow: hidden;
-  scroll-margin-top: 80px; /* Accounts for fixed header height */
+  scroll-margin-top: 80px;
+}
+
+.hero__glow {
+  position: absolute;
+  inset: -40% -20% auto;
+  height: min(70vh, 520px);
+  background: radial-gradient(
+    ellipse at center,
+    rgba(0, 224, 255, 0.14) 0%,
+    rgba(189, 147, 249, 0.06) 45%,
+    transparent 70%
+  );
+  pointer-events: none;
+  z-index: 0;
 }
 
 /* Background grid pattern for hero section */
@@ -527,81 +551,74 @@ h1, h2, h3, h4, h5, h6 {
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: 
-    linear-gradient(to right, var(--color-background-alt) 50%, transparent 50%),
-    linear-gradient(to bottom, var(--color-background-alt) 50%, transparent 50%);
-  background-size: 30px 30px;
-  opacity: 0.05;
+  background-image:
+    linear-gradient(to right, rgba(68, 71, 90, 0.35) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(68, 71, 90, 0.35) 1px, transparent 1px);
+  background-size: 48px 48px;
+  opacity: 0.12;
   pointer-events: none;
-}
-
-/* Gradient fade at bottom of hero section */
-.hero::before {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 30px;
-  background: linear-gradient(to bottom, transparent, var(--color-background-alt) 90%);
-  z-index: 1;
+  mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
 }
 
 /* Hero content container */
 .hero__content {
-  max-width: 800px;
+  max-width: 40rem;
   margin: 0 auto;
   text-align: center;
   position: relative;
   z-index: 1;
 }
 
+.hero__eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-text-light);
+  margin: 0 0 1rem;
+}
+
 /* Main headline styling */
 .hero__title {
-  font-size: 3rem;
-  margin-bottom: var(--spacing-md);
+  font-size: clamp(2.75rem, 8vw, 4rem);
+  margin: 0 0 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  color: var(--color-text);
   position: relative;
   display: inline-block;
 }
 
-/* Decorative code-like elements for the title */
 .hero__title::before {
-  content: 'System.Out.Println("';
-  font-size: 1rem;
+  content: 'System.out.println("';
+  font-size: clamp(0.7rem, 2vw, 1rem);
   position: absolute;
-  top: -1.5rem;
+  top: -1.35rem;
   left: 0;
   color: var(--color-accent-1);
   font-family: var(--font-mono);
-  opacity: 0.7;
+  opacity: 0.85;
+  white-space: nowrap;
 }
 
 .hero__title::after {
   content: '");';
-  font-size: 1rem;
+  font-size: clamp(0.7rem, 2vw, 1rem);
   position: absolute;
-  bottom: -1.5rem;
+  bottom: -1.35rem;
   right: 0;
   color: var(--color-accent-1);
   font-family: var(--font-mono);
-  opacity: 0.7;
+  opacity: 0.85;
+  white-space: nowrap;
 }
 
-/* Subtitle styling */
-.hero__subtitle {
-  font-size: 1.25rem;
-  color: var(--color-text-light);
-  margin-bottom: var(--spacing-lg);
-  font-family: var(--font-mono);
-}
-
-/* Name highlight with cursor effect */
 .highlight {
   color: var(--color-primary);
   position: relative;
 }
 
-/* Blinking cursor after highlighted name */
 .highlight::after {
   content: '';
   display: inline-block;
@@ -614,15 +631,32 @@ h1, h2, h3, h4, h5, h6 {
   margin-left: 5px;
 }
 
-/* Cursor blink animation */
 @keyframes blink {
-  0%, 100% { opacity: 0; }
-  50% { opacity: 0.5; }
+  0%,
+  100% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.hero__tagline {
+  font-size: clamp(1.05rem, 2.4vw, 1.2rem);
+  color: var(--color-text-light);
+  margin: 0 0 2rem;
+  line-height: 1.65;
+}
+
+.hero__accent {
+  color: var(--color-primary);
+  font-weight: 500;
 }
 
 /* Call to action button container */
 .hero__cta {
   display: flex;
+  flex-wrap: wrap;
   gap: var(--spacing-md);
   justify-content: center;
 }
@@ -678,12 +712,16 @@ h1, h2, h3, h4, h5, h6 {
   transform: translateY(-2px);
 }
 
-/* Project Cards */
-.projects__grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 2rem;
-  margin: 1.5rem 0;
+.btn--ghost {
+  background-color: transparent;
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+}
+
+.btn--ghost:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  transform: translateY(-2px);
 }
 
 /* Skills Section */
@@ -957,25 +995,14 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Responsive styles */
 @media (max-width: 768px) {
-  .hero__title {
-    font-size: 2.5rem;
-  }
-  
-  .hero__subtitle {
-    font-size: 1.125rem;
-  }
-  
   .contact {
     grid-template-columns: 1fr;
   }
-  
-  /* Section comment already removed */
 }
 
 /* About Section */
-.about__content,
-.about__content--with-image {
-  max-width: 2000px;
+.about__content {
+  max-width: 52rem;
   margin: 0 auto;
 }
 
@@ -1019,35 +1046,6 @@ h1, h2, h3, h4, h5, h6 {
 .code-comment {
   color: var(--color-accent-3);
   font-size: 0.85rem;
-}
-
-.about__content--with-image {
-  display: flex;
-  align-items: flex-start;
-  gap: 2rem;
-}
-
-.about__image {
-  width: 500px;
-  height: 700px;
-  object-fit: cover;
-  border-radius: 12px;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.18);
-  border: 2px solid var(--color-border);
-  background: var(--color-background-code);
-}
-
-@media (max-width: 900px) {
-  .about__content--with-image {
-    flex-direction: column;
-    align-items: center;
-  }
-  .about__image {
-    width: 70vw;
-    max-width: 420px;
-    height: auto;
-    margin-bottom: 1.5rem;
-  }
 }
 
 </style>
