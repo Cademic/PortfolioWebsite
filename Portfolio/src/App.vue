@@ -933,7 +933,7 @@ const handleSubmit = async (event: Event) => {
       <!-- About Section -->
       <section id="about" class="section" data-scroll-reveal="landing">
         <div class="container">
-          <div class="section__heading">
+          <div class="section__heading" data-scroll-reveal="landing" style="--reveal-delay: 0ms">
             <p class="section__eyebrow">Background</p>
             <h2 class="section__title">About me</h2>
           </div>
@@ -943,7 +943,7 @@ const handleSubmit = async (event: Event) => {
                 Hello! My name is Carter Wright. I am an upcoming software developer looking to enhance my skills while doing what I love.
               </p>
               <p data-scroll-reveal="landing" style="--reveal-delay: 100ms">
-                I am originally from Michigan, but currently living in <b>Phoenix, AZ</b> as I am studying for my <b>Bachelor's in Software Development at Grand Canyon University</b>. I am set to graduate in April 2026 and searching for the right role to get my foot in the door in this career.
+                I am originally from Michigan, but currently living in <b>Phoenix, AZ</b> as I am studying for my <b>Bachelor's in Software Development at Grand Canyon University</b>. I am set to graduate in April 2026 and searching for the right role for me in this career.
               </p>
               <p data-scroll-reveal="landing" style="--reveal-delay: 200ms">
                 My recent work has focused on full-stack web development using <b>C# ASP.NET</b>, <b>Enterprise Java</b>, and <b>Node.js</b>. I also have experience in cybersecurity and integrating industry-standard frameworks such as <b>NIST</b>, <b>CIS</b>, <b>MITRE</b>, and <b>OWASP</b> into my applications.
@@ -1034,9 +1034,9 @@ const handleSubmit = async (event: Event) => {
           </div>
           <div class="contact-wrapper">
             <div class="contact">
-              <div class="contact__info">
+              <div class="contact__info" data-scroll-reveal="landing" style="--reveal-delay: 80ms">
                 <div class="contact-card-grid">
-                  <article class="contact-card">
+                  <article class="contact-card" data-scroll-reveal="landing" style="--reveal-delay: 120ms">
                     <div class="contact-card__icon" aria-hidden="true">
                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M1.5 6.75A2.25 2.25 0 0 1 3.75 4.5h16.5a2.25 2.25 0 0 1 2.25 2.25v10.5a2.25 2.25 0 0 1-2.25 2.25H3.75A2.25 2.25 0 0 1 1.5 17.25V6.75Zm2.8-.75 7.7 5.39 7.7-5.39H4.3Zm16.2 1.56-7.85 5.5a1.125 1.125 0 0 1-1.3 0L3.5 7.56v9.69c0 .414.336.75.75.75h16.5a.75.75 0 0 0 .75-.75V7.56Z" />
@@ -1047,7 +1047,7 @@ const handleSubmit = async (event: Event) => {
                       <a href="mailto:carterwright221@gmail.com" class="contact-card__value">carterwright221@gmail.com</a>
                     </div>
                   </article>
-                  <article class="contact-card">
+                  <article class="contact-card" data-scroll-reveal="landing" style="--reveal-delay: 180ms">
                     <div class="contact-card__icon" aria-hidden="true">
                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M6.62 10.79a15.053 15.053 0 0 0 6.59 6.59l2.2-2.2a1 1 0 0 1 1.01-.24c1.11.37 2.31.57 3.58.57a1 1 0 0 1 1 1V20a1 1 0 0 1-1 1C10.85 21 3 13.15 3 3a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.27.2 2.47.57 3.58a1 1 0 0 1-.24 1.01l-2.2 2.2Z"/>
@@ -1061,7 +1061,7 @@ const handleSubmit = async (event: Event) => {
                 </div>
               </div>
 
-              <div class="contact__form-container">
+              <div class="contact__form-container" data-scroll-reveal="landing" style="--reveal-delay: 240ms">
                 <!-- Show success message when form is submitted -->
                 <div v-if="formSubmitted" class="form-status form-status--success">
                   Thank you for your message! I'll get back to you soon.
@@ -1080,7 +1080,7 @@ const handleSubmit = async (event: Event) => {
                   method="POST"
                 >
                   <div class="form-row">
-                    <div class="form-group">
+                    <div class="form-group" data-scroll-reveal="landing" style="--reveal-delay: 280ms">
                       <label for="name">Name</label>
                       <input 
                         type="text" 
@@ -1090,7 +1090,7 @@ const handleSubmit = async (event: Event) => {
                         required
                       >
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" data-scroll-reveal="landing" style="--reveal-delay: 320ms">
                       <label for="email">Email</label>
                       <input 
                         type="email" 
@@ -1101,7 +1101,7 @@ const handleSubmit = async (event: Event) => {
                       >
                     </div>
                   </div>
-                  <div class="form-group">
+                  <div class="form-group" data-scroll-reveal="landing" style="--reveal-delay: 360ms">
                     <label for="subject">Subject</label>
                     <input 
                       type="text" 
@@ -1111,7 +1111,7 @@ const handleSubmit = async (event: Event) => {
                       required
                     >
                   </div>
-                  <div class="form-group">
+                  <div class="form-group" data-scroll-reveal="landing" style="--reveal-delay: 420ms">
                     <label for="message">Message</label>
                     <textarea 
                       id="message" 
@@ -1121,10 +1121,12 @@ const handleSubmit = async (event: Event) => {
                       required
                     ></textarea>
                   </div>
-                  <button 
+                  <button
                     type="submit" 
                     class="contact__submit-btn"
                     :disabled="formSubmitting"
+                    data-scroll-reveal="landing"
+                    style="--reveal-delay: 480ms"
                   >
                     {{ formSubmitting ? 'Sending...' : 'Send Message' }}
                   </button>
@@ -1168,7 +1170,7 @@ const handleSubmit = async (event: Event) => {
   --color-text-light: #8f93a2;      /* Secondary text color - light gray */
   
   /* Background Colors */
-  --color-background: #101012;      /* Main background */
+  --color-background: #000000;      /* Main background */
   --color-background-alt: #1b2130;  /* Alternate background - medium dark slate */
   --color-background-code: #222a3b; /* Code blocks background - lifted dark tone */
   
@@ -1271,19 +1273,19 @@ h1, h2, h3, h4, h5, h6 {
   pointer-events: none;
   background-image:
     radial-gradient(
-      ellipse 52vw 68vh at 0% 34%,
+      ellipse 40vw 52vh at 0% 34%,
       color-mix(in srgb, var(--page-glow-color) 16%, transparent) 0%,
       color-mix(in srgb, var(--page-glow-color) 7%, transparent) 42%,
       transparent 78%
     ),
     radial-gradient(
-      ellipse 58vw 74vh at 100% 72%,
+      ellipse 44vw 56vh at 100% 72%,
       color-mix(in srgb, var(--page-glow-color) 14%, transparent) 0%,
       color-mix(in srgb, var(--page-glow-color) 6%, transparent) 44%,
       transparent 78%
     ),
     radial-gradient(
-      ellipse 80vw 38vh at 50% 100%,
+      ellipse 60vw 28vh at 50% 100%,
       color-mix(in srgb, var(--page-glow-color) 12%, transparent) 0%,
       color-mix(in srgb, var(--page-glow-color) 5%, transparent) 52%,
       transparent 82%
@@ -1743,7 +1745,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .social-link:hover {
-  color: var(--color-accent-2);
+  color: var(--color-primary);
   transform: translateY(-3px);
   box-shadow: 0 3px 5px rgba(0, 0, 0, 0.3);
 }
@@ -1926,7 +1928,7 @@ h1, h2, h3, h4, h5, h6 {
   display: flex;
   align-items: center;
   gap: 0.8rem;
-  background: transparent;
+  background: #0a0a0a;
 }
 
 .contact-card--full {
@@ -2005,7 +2007,7 @@ h1, h2, h3, h4, h5, h6 {
 .form-group textarea {
   width: 100%;
   padding: 0.95rem 1rem;
-  background-color: transparent;
+  background-color: #0a0a0a;
   border: 1px solid var(--color-border);
   border-radius: 8px;
   color: var(--color-text);

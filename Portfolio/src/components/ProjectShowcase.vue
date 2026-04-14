@@ -139,7 +139,11 @@ const activeDisplayIndex = computed(() =>
 watch(
   [activeDisplayIndex, items],
   ([index, currentItems]) => {
-    const activeProject = currentItems[index]
+    const emitIndex =
+      transitioning.value || translateAnimating.value || isTrackDragging.value
+        ? centerIndex.value
+        : index
+    const activeProject = currentItems[emitIndex]
     if (!activeProject) return
     emit('active-project-change', activeProject)
   },

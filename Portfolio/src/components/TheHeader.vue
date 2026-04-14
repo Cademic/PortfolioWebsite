@@ -150,7 +150,7 @@ onMounted(() => {
   top: 0;
   left: 0;
   width: 100%;
-  background-color: #161616;
+  background-color: #101012;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
   z-index: 100;
 }
@@ -276,7 +276,7 @@ onMounted(() => {
     left: 0;
     width: 100%;
     height: calc(100vh - (var(--mobile-header-offset) - 1px));
-    background-color: rgba(22, 22, 22, 0.94);
+    background-color: #101012;
     padding: 1.25rem 0;
     box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
     clip-path: inset(0 0 100% 0);
@@ -300,8 +300,8 @@ onMounted(() => {
   .nav__list {
     flex-direction: column;
     height: 100%;
-    padding: 0;
-    justify-content: center;
+    padding: 2.75rem 0 0;
+    justify-content: flex-start;
     align-items: center;
   }
   

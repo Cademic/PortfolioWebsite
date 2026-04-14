@@ -45,7 +45,7 @@
  * Appears at the bottom of the page with subtle top border
  */
 .footer {
-  background-color: #0f0f0f;
+  background-color: #101012;
   padding: 0.85rem 0;
   margin-top: 2rem;
   position: relative;
