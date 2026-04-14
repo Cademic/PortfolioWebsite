@@ -855,8 +855,8 @@ function slideVisualStyle(index: number) {
 
   if (isMobile) {
     const isCenter = abs < 0.5
-    const sideScale = isTrackDragging.value || translateAnimating.value ? 0.96 : 0.92
-    const sideDepth = isTrackDragging.value || translateAnimating.value ? -28 : -46
+    const sideScale = 1
+    const sideDepth = -28
     return {
       zIndex: isCenter ? '20' : '1',
       opacity: '1',

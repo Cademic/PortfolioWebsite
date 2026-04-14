@@ -396,6 +396,7 @@ function onCarouselAuxClick(e: MouseEvent) {
   border-radius: 14px;
   overflow: hidden;
   box-shadow: 0 24px 56px rgba(2, 6, 23, 0.3);
+  transform: none;
   transition: box-shadow 680ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
@@ -416,6 +417,31 @@ function onCarouselAuxClick(e: MouseEvent) {
 .project-card--carousel.project-card--main-display .project-card__body {
   position: relative;
   z-index: 1;
+}
+
+@media (hover: hover) {
+  .project-card--carousel.project-card--main-display:hover .project-card__carousel-frame {
+    transform: scale(1.02);
+    transition: transform 260ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+}
+
+.project-card--carousel.project-card--main-display .project-card__media:focus-visible .project-card__carousel-frame {
+  transform: scale(1.02);
+  transition: transform 260ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (max-width: 640px) {
+  .project-card--carousel .project-card__carousel-frame {
+    transform: translateY(0);
+    transition:
+      transform 220ms cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 680ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .project-card--carousel.project-card--main-display .project-card__carousel-frame {
+    transform: translateY(-8px);
+  }
 }
 
 /* Main centered card: soft gradients (no filter: blur — same compositor issue as showcase slides) */
