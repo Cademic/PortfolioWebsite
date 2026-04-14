@@ -113,7 +113,7 @@ const DESKTOP_FLICK_VELOCITY_PX_PER_MS = 0.6
 const MOBILE_FLICK_VELOCITY_PX_PER_MS = 0.25
 const DIRECTION_LOCK_MIN_PX = 3
 const HORIZONTAL_INTENT_RATIO = 0.55
-const VERTICAL_INTENT_RATIO = 1.6
+const VERTICAL_INTENT_RATIO = 2.4
 /** Programmatic slide duration (CSS transition on track — compositor-smooth). */
 const TRACK_TRANSITION_MS_BASE = 300
 const TRACK_TRANSITION_MS_PER_STEP = 34
@@ -554,14 +554,13 @@ function onPointerMove(e: PointerEvent) {
 
   if (pointerAxisLock.value === 'undecided') {
     if (absX < DIRECTION_LOCK_MIN_PX && absY < DIRECTION_LOCK_MIN_PX) return
-    if (absX >= absY * HORIZONTAL_INTENT_RATIO) {
-      pointerAxisLock.value = 'x'
-    } else if (absY >= absX * VERTICAL_INTENT_RATIO) {
+    if (absY >= absX * VERTICAL_INTENT_RATIO && absX < DRAG_DETECT_PX) {
       pointerAxisLock.value = 'y'
       suppressCarouselLinkOpen.value = false
       return
     } else {
-      return
+      // Treat mixed/diagonal gestures as horizontal so swipes feel natural.
+      pointerAxisLock.value = 'x'
     }
   }
 
@@ -630,6 +629,10 @@ function onPointerUp(e: PointerEvent) {
     steps = (drag < 0 ? 1 : -1) * projectedSteps
   }
   if (steps === 0 && Math.abs(drag) >= swipeThresholdPx) {
+    steps = drag < 0 ? 1 : -1
+  }
+  if (steps === 0 && isMobileViewport && moved && Math.abs(drag) >= DRAG_DETECT_PX) {
+    // On mobile, a short diagonal/horizontal drag should still progress.
     steps = drag < 0 ? 1 : -1
   }
   const flickThreshold = isMobileViewport
@@ -819,11 +822,20 @@ function slideVisualStyle(index: number) {
 
   if (isMobile) {
     const isCenter = abs < 0.5
+    const isDraggingMobile = isTrackDragging.value || translateAnimating.value
+    const sideOpacity = isDraggingMobile ? 0.45 : 0.14
+    const sideScale = isDraggingMobile ? 0.95 : 0.9
+    const sideDepth = isDraggingMobile ? -40 : -70
+    const sideFilter = isDraggingMobile
+      ? 'brightness(0.9) saturate(0.9)'
+      : 'brightness(0.72) saturate(0.65)'
     return {
       zIndex: isCenter ? '20' : '1',
-      opacity: isCenter ? '1' : '0.08',
-      transform: isCenter ? 'translateZ(0) scale(1)' : 'translateZ(-70px) scale(0.9)',
-      filter: isCenter ? 'none' : 'brightness(0.72) saturate(0.65)',
+      opacity: isCenter ? '1' : String(sideOpacity),
+      transform: isCenter
+        ? 'translateZ(0) scale(1)'
+        : `translateZ(${sideDepth}px) scale(${sideScale})`,
+      filter: isCenter ? 'none' : sideFilter,
       transition: snapInstant.value || suppressIdleTransitions.value
         ? 'none'
         : `opacity ${slideEase}, transform ${slideEase}`,
@@ -857,6 +869,11 @@ function slideVisualStyle(index: number) {
 
 function slideHeaderStyle(index: number) {
   const abs = Math.abs(slideOffset(index))
+  const isMobile = viewportWidth.value <= MOBILE_BREAKPOINT_PX
+  if (isMobile && (isTrackDragging.value || translateAnimating.value)) {
+    const opacity = abs < 0.5 ? 1 : Math.max(0.62, 0.92 - abs * 0.12)
+    return { opacity: String(opacity) }
+  }
   const opacity = abs < 0.5 ? 1 : Math.max(0.3, 0.88 - abs * 0.18)
   return { opacity: String(opacity) }
 }
