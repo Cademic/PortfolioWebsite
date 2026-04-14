@@ -4,7 +4,32 @@
     <meta charset="UTF-8">
     <link rel="icon" href="/favicon.ico">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Carter's Portfolio</title>
+    <meta name="theme-color" content="#1e1f29">
+    <meta name="description" content="Carter Wright — full-stack software developer portfolio. Projects, skills, and contact.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Carousel screenshots: fetch before first paint so fast swipes never wait on network -->
+    <link rel="preload" as="image" href="/LunaraCare.png" />
+    <link rel="preload" as="image" href="/ASideNote_Noteboard.png" />
+    <link rel="preload" as="image" href="/Blodged_Home.png" />
+    <link rel="preload" as="image" href="/CineScope_Landing.png" />
+    <link rel="preload" as="image" href="/MineSweep-Landing.png" />
+    <style>
+      html, body {
+        margin: 0;
+        padding: 0;
+        min-height: 100%;
+        background: #101012;
+        color-scheme: dark;
+      }
+
+      #app {
+        min-height: 100vh;
+        background: transparent;
+      }
+    </style>
+    <title>Carter Wright — Portfolio</title>
   </head>
   <body>
     <div id="app"></div>

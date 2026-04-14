@@ -45,11 +45,12 @@
  * Appears at the bottom of the page with subtle top border
  */
 .footer {
-  background-color: var(--color-background-alt);
-  padding: 2rem 0;
+  background-color: #0f0f0f;
+  padding: 0.85rem 0;
   margin-top: 2rem;
-  border-top: 1px solid var(--color-border);
   position: relative;
+  z-index: 2;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 /* Content container with max width */
@@ -73,10 +74,9 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem;
-  background-color: var(--color-background-code);
-  border-radius: 8px;
-  border: 1px solid var(--color-border);
+  padding: 0.35rem 0;
+  background-color: transparent;
+  border-radius: 0;
 }
 
 /* Copyright text container */
@@ -120,8 +120,7 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background-color: var(--color-background-alt);
-  border: 1px solid var(--color-border);
+  background-color: transparent;
 }
 
 /* Hover effect for social links */
@@ -135,8 +134,8 @@
 @media (max-width: 640px) {
   .footer__content {
     flex-direction: column;
-    gap: 1rem;
-    padding: 1.5rem;
+    gap: 0.65rem;
+    padding: 0.35rem 0;
   }
 }
 </style> 
