@@ -939,11 +939,15 @@ const handleSubmit = async (event: Event) => {
           </div>
           <div class="about__content">
             <div class="about__intro">
-              <p>Hello! My name is Carter Wright. I am an upcoming software developer looking to enhance my skills while doing what I love.</p>
-              <br>
-              <p>I am originally from Michigan, but currently living in <b>Phoenix, AZ</b> as I am studying for my <b>Bachelor's in Software Development at Grand Canyon University</b>. I am set to graduate in April 2026 and searching for the right role to get my foot in the door in this career.</p>
-              <br>
-              <p>My recent work has focused on full-stack web development using <b>C# ASP.NET</b>, <b>Enterprise Java</b>, and <b>Node.js</b>. I also have experience in cybersecurity and integrating industry-standard frameworks such as <b>NIST</b>, <b>CIS</b>, <b>MITRE</b>, and <b>OWASP</b> into my applications.</p>
+              <p data-scroll-reveal="landing" style="--reveal-delay: 0ms">
+                Hello! My name is Carter Wright. I am an upcoming software developer looking to enhance my skills while doing what I love.
+              </p>
+              <p data-scroll-reveal="landing" style="--reveal-delay: 100ms">
+                I am originally from Michigan, but currently living in <b>Phoenix, AZ</b> as I am studying for my <b>Bachelor's in Software Development at Grand Canyon University</b>. I am set to graduate in April 2026 and searching for the right role to get my foot in the door in this career.
+              </p>
+              <p data-scroll-reveal="landing" style="--reveal-delay: 200ms">
+                My recent work has focused on full-stack web development using <b>C# ASP.NET</b>, <b>Enterprise Java</b>, and <b>Node.js</b>. I also have experience in cybersecurity and integrating industry-standard frameworks such as <b>NIST</b>, <b>CIS</b>, <b>MITRE</b>, and <b>OWASP</b> into my applications.
+              </p>
             </div>
           </div>
         </div>
@@ -2112,6 +2116,10 @@ h1, h2, h3, h4, h5, h6 {
   border-radius: 8px;
   margin-bottom: var(--spacing-lg);
   position: relative;
+}
+
+.about__intro p + p {
+  margin-top: 1rem;
 }
 
 .about__intro::before {

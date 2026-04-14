@@ -594,8 +594,9 @@ function onPointerMove(e: PointerEvent) {
 
 function onPointerUp(e: PointerEvent) {
   if (activePointerId.value !== e.pointerId) return
-  const drag = dragOffsetPx.value
-  const moved = pointerDragMoved.value
+  const finalDx = e.clientX - dragStartX.value
+  const drag = dragOffsetPx.value === 0 ? finalDx : dragOffsetPx.value
+  const moved = pointerDragMoved.value || Math.abs(drag) > DRAG_DETECT_PX
   const pressDurationMs = performance.now() - pointerDownStartedAt.value
   const tappedDetailUrl = pointerDownDetailUrl.value
   cleanupPointerDrag(e)
@@ -623,6 +624,14 @@ function onPointerUp(e: PointerEvent) {
   const span = slideSpanPx.value
   let steps = 0
   const isMobileViewport = viewportWidth.value <= MOBILE_BREAKPOINT_PX
+  if (
+    isMobileViewport &&
+    pointerAxisLock.value === 'undecided' &&
+    Math.abs(drag) > 2
+  ) {
+    // Fast flicks can end before enough move events arrive; infer horizontal intent on release.
+    pointerAxisLock.value = 'x'
+  }
   const swipeThresholdPx = isMobileViewport
     ? Math.min(MOBILE_SWIPE_THRESHOLD_PX, span * 0.14)
     : SWIPE_THRESHOLD_PX
@@ -829,20 +838,15 @@ function slideVisualStyle(index: number) {
 
   if (isMobile) {
     const isCenter = abs < 0.5
-    const isDraggingMobile = isTrackDragging.value || translateAnimating.value
-    const sideOpacity = isDraggingMobile ? 0.45 : 0.14
-    const sideScale = isDraggingMobile ? 0.95 : 0.9
-    const sideDepth = isDraggingMobile ? -40 : -70
-    const sideFilter = isDraggingMobile
-      ? 'brightness(0.9) saturate(0.9)'
-      : 'brightness(0.72) saturate(0.65)'
+    const sideScale = isTrackDragging.value || translateAnimating.value ? 0.96 : 0.92
+    const sideDepth = isTrackDragging.value || translateAnimating.value ? -28 : -46
     return {
       zIndex: isCenter ? '20' : '1',
-      opacity: isCenter ? '1' : String(sideOpacity),
+      opacity: '1',
       transform: isCenter
         ? 'translateZ(0) scale(1)'
         : `translateZ(${sideDepth}px) scale(${sideScale})`,
-      filter: isCenter ? 'none' : sideFilter,
+      filter: 'none',
       transition: snapInstant.value || suppressIdleTransitions.value
         ? 'none'
         : `opacity ${slideEase}, transform ${slideEase}`,
@@ -875,12 +879,9 @@ function slideVisualStyle(index: number) {
 }
 
 function slideHeaderStyle(index: number) {
-  const abs = Math.abs(slideOffset(index))
   const isMobile = viewportWidth.value <= MOBILE_BREAKPOINT_PX
-  if (isMobile && (isTrackDragging.value || translateAnimating.value)) {
-    const opacity = abs < 0.5 ? 1 : Math.max(0.62, 0.92 - abs * 0.12)
-    return { opacity: String(opacity) }
-  }
+  if (isMobile) return { opacity: '1' }
+  const abs = Math.abs(slideOffset(index))
   const opacity = abs < 0.5 ? 1 : Math.max(0.3, 0.88 - abs * 0.18)
   return { opacity: String(opacity) }
 }
