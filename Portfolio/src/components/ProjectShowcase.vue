@@ -114,8 +114,6 @@ const MOBILE_FLICK_VELOCITY_PX_PER_MS = 0.25
 const VELOCITY_MOMENTUM_MS_MOBILE = 240
 const VELOCITY_MOMENTUM_MS_DESKTOP = 180
 const DIRECTION_LOCK_MIN_PX = 3
-const HORIZONTAL_INTENT_RATIO = 0.55
-const VERTICAL_INTENT_RATIO = 2.4
 /** Programmatic slide duration (CSS transition on track — compositor-smooth). */
 const TRACK_TRANSITION_MS_BASE = 300
 const TRACK_TRANSITION_MS_PER_STEP = 34
@@ -560,14 +558,13 @@ function onPointerMove(e: PointerEvent) {
 
   if (pointerAxisLock.value === 'undecided') {
     if (absX < DIRECTION_LOCK_MIN_PX && absY < DIRECTION_LOCK_MIN_PX) return
-    if (absY >= absX * VERTICAL_INTENT_RATIO && absX < DRAG_DETECT_PX) {
+    if (absX < 1 && absY >= DIRECTION_LOCK_MIN_PX) {
       pointerAxisLock.value = 'y'
       suppressCarouselLinkOpen.value = false
       return
-    } else {
-      // Treat mixed/diagonal gestures as horizontal so swipes feel natural.
-      pointerAxisLock.value = 'x'
     }
+    // Any gesture with horizontal movement (including diagonal) controls carousel.
+    pointerAxisLock.value = 'x'
   }
 
   if (pointerAxisLock.value === 'y') return
@@ -670,6 +667,9 @@ function onPointerUp(e: PointerEvent) {
     : DESKTOP_FLICK_VELOCITY_PX_PER_MS
   if (steps === 0 && Math.abs(pointerVelocityPxPerMs.value) >= flickThreshold) {
     steps = pointerVelocityPxPerMs.value < 0 ? 1 : -1
+  }
+  if (steps !== 0) {
+    steps = steps > 0 ? 1 : -1
   }
   steps = Math.max(-MAX_DRAG_STEPS, Math.min(MAX_DRAG_STEPS, steps))
 
