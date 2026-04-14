@@ -87,6 +87,7 @@ let translateRafId: number | null = null
 /** Pointer drag / swipe (touch + mouse left button) */
 const activePointerId = ref<number | null>(null)
 const dragStartX = ref(0)
+const dragStartY = ref(0)
 const dragOffsetPx = ref(0)
 const isTrackDragging = ref(false)
 const pointerDragMoved = ref(false)
@@ -95,6 +96,9 @@ const suppressCarouselLinkOpen = ref(false)
 const pointerDownStartedAt = ref(0)
 const pointerDownSlideIndex = ref<number | null>(null)
 const pointerDownDetailUrl = ref<string | null>(null)
+const pointerLastX = ref(0)
+const pointerLastMovedAt = ref(0)
+const pointerVelocityPxPerMs = ref(0)
 
 provide('portfolioCarouselSuppressLinkOpen', suppressCarouselLinkOpen)
 
@@ -102,6 +106,10 @@ const SWIPE_THRESHOLD_PX = 48
 const DRAG_DETECT_PX = 8
 const MAX_DRAG_STEPS = 8
 const BRIEF_CLICK_MS = 220
+const MOBILE_BREAKPOINT_PX = 640
+const MOBILE_SWIPE_THRESHOLD_PX = 30
+const DESKTOP_FLICK_VELOCITY_PX_PER_MS = 0.6
+const MOBILE_FLICK_VELOCITY_PX_PER_MS = 0.4
 /** Programmatic slide duration (CSS transition on track — compositor-smooth). */
 const TRACK_TRANSITION_MS_BASE = 300
 const TRACK_TRANSITION_MS_PER_STEP = 34
@@ -508,10 +516,14 @@ function onPointerDown(e: PointerEvent) {
   trackTransitionDurationMs.value = TRACK_TRANSITION_MS_BASE
   activePointerId.value = e.pointerId
   dragStartX.value = e.clientX
+  dragStartY.value = e.clientY
   dragOffsetPx.value = 0
-  isTrackDragging.value = true
+  isTrackDragging.value = false
   pointerDragMoved.value = false
   pointerDownStartedAt.value = performance.now()
+  pointerLastX.value = e.clientX
+  pointerLastMovedAt.value = pointerDownStartedAt.value
+  pointerVelocityPxPerMs.value = 0
   const target = e.target as HTMLElement | null
   const slideEl = target?.closest('.showcase__slide') as HTMLElement | null
   const slideIndexRaw = slideEl?.dataset.slideIndex
@@ -526,20 +538,42 @@ function onPointerDown(e: PointerEvent) {
   pointerDownDetailUrl.value = slideEl?.dataset.detailUrl ?? null
   // Avoid immediate click-through redirects while deciding tap vs drag.
   suppressCarouselLinkOpen.value = true
-  viewportRef.value?.classList.add('showcase__viewport--dragging')
-  try {
-    viewportRef.value?.setPointerCapture(e.pointerId)
-  } catch {
-    /* ignore */
-  }
 }
 
 function onPointerMove(e: PointerEvent) {
   if (activePointerId.value !== e.pointerId) return
-  dragOffsetPx.value = e.clientX - dragStartX.value
-  if (Math.abs(dragOffsetPx.value) > DRAG_DETECT_PX) {
+  const dx = e.clientX - dragStartX.value
+  const dy = e.clientY - dragStartY.value
+  const absX = Math.abs(dx)
+  const absY = Math.abs(dy)
+
+  if (!isTrackDragging.value) {
+    if (absX < DRAG_DETECT_PX && absY < DRAG_DETECT_PX) return
+    if (absY > absX) {
+      suppressCarouselLinkOpen.value = false
+      activePointerId.value = null
+      return
+    }
+    isTrackDragging.value = true
+    viewportRef.value?.classList.add('showcase__viewport--dragging')
+    try {
+      viewportRef.value?.setPointerCapture(e.pointerId)
+    } catch {
+      /* ignore */
+    }
+  }
+
+  dragOffsetPx.value = dx
+  if (absX > DRAG_DETECT_PX) {
     pointerDragMoved.value = true
   }
+  const now = performance.now()
+  const dt = now - pointerLastMovedAt.value
+  if (dt > 0) {
+    pointerVelocityPxPerMs.value = (e.clientX - pointerLastX.value) / dt
+  }
+  pointerLastX.value = e.clientX
+  pointerLastMovedAt.value = now
 }
 
 function onPointerUp(e: PointerEvent) {
@@ -562,8 +596,16 @@ function onPointerUp(e: PointerEvent) {
   if (span > 0) {
     steps = Math.round(-drag / span)
   }
-  if (steps === 0 && Math.abs(drag) >= SWIPE_THRESHOLD_PX) {
+  const isMobileViewport = viewportWidth.value <= MOBILE_BREAKPOINT_PX
+  const swipeThresholdPx = isMobileViewport ? MOBILE_SWIPE_THRESHOLD_PX : SWIPE_THRESHOLD_PX
+  if (steps === 0 && Math.abs(drag) >= swipeThresholdPx) {
     steps = drag < 0 ? 1 : -1
+  }
+  const flickThreshold = isMobileViewport
+    ? MOBILE_FLICK_VELOCITY_PX_PER_MS
+    : DESKTOP_FLICK_VELOCITY_PX_PER_MS
+  if (steps === 0 && Math.abs(pointerVelocityPxPerMs.value) >= flickThreshold) {
+    steps = pointerVelocityPxPerMs.value < 0 ? 1 : -1
   }
   steps = Math.max(-MAX_DRAG_STEPS, Math.min(MAX_DRAG_STEPS, steps))
 
@@ -611,6 +653,7 @@ function onPointerUp(e: PointerEvent) {
   pointerDownSlideIndex.value = null
   pointerDownDetailUrl.value = null
   pointerDragMoved.value = false
+  pointerVelocityPxPerMs.value = 0
 }
 
 function onPointerCancel(e: PointerEvent) {
@@ -623,6 +666,7 @@ function onPointerCancel(e: PointerEvent) {
   pointerDownSlideIndex.value = null
   pointerDownDetailUrl.value = null
   suppressCarouselLinkOpen.value = false
+  pointerVelocityPxPerMs.value = 0
 }
 
 /** Shortest signed steps on the project circle from current center to target slot index. */

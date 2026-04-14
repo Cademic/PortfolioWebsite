@@ -1386,7 +1386,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 [data-scroll-reveal='landing'] {
-  --reveal-duration: 700ms;
+  --reveal-duration: 420ms;
   --reveal-shift: 22px;
   --reveal-blur: 7px;
   --reveal-scale: 0.985;
