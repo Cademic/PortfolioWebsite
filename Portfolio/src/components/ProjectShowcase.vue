@@ -520,6 +520,9 @@ function cleanupPointerDrag(e: PointerEvent) {
 function onPointerDown(e: PointerEvent) {
   if (total.value <= 1) return
   if (e.pointerType === 'mouse' && e.button !== 0) return
+  if (e.pointerType === 'touch' && e.cancelable) {
+    e.preventDefault()
+  }
   suppressIdleTransitions.value = false
   trackTransitionDurationMs.value = TRACK_TRANSITION_MS_BASE
   activePointerId.value = e.pointerId
@@ -976,7 +979,6 @@ let wheelCleanup: (() => void) | null = null
               />
             </div>
             <ProjectCard
-              :key="project.detailUrl"
               :title="project.title"
               :description="project.description"
               :image-src="project.imageSrc"
@@ -1041,7 +1043,7 @@ let wheelCleanup: (() => void) | null = null
   min-height: min(44vh, 540px);
   margin: 0;
   padding: clamp(0.75rem, 2vw, 1.5rem) 0 clamp(1.25rem, 3vw, 2.25rem);
-  touch-action: pan-y pinch-zoom;
+  touch-action: none;
   perspective: 1400px;
   perspective-origin: 50% 42%;
   cursor: grab;

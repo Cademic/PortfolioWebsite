@@ -1235,6 +1235,7 @@ h1, h2, h3, h4, h5, h6 {
   min-height: 100vh;
   isolation: isolate;
   z-index: 0;
+  overflow-x: clip;
   transition: --page-glow-color 700ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
@@ -1435,6 +1436,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .project-detail__hero-carousel {
   width: 100%;
+  overflow: visible;
 }
 
 .project-detail__hero-carousel .showcase {
