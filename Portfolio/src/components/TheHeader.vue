@@ -150,10 +150,9 @@ onMounted(() => {
   top: 0;
   left: 0;
   width: 100%;
-  background-color: var(--color-background-alt);
+  background-color: #161616;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
   z-index: 100;
-  border-bottom: 1px solid var(--color-border);
 }
 
 /* Container for header contents with flexbox layout */
@@ -271,48 +270,49 @@ onMounted(() => {
   
   /* Mobile navigation menu - hidden by default */
   .nav {
+    --mobile-header-offset: 64px;
     position: fixed;
-    top: 80px;
+    top: calc(var(--mobile-header-offset) - 1px);
     left: 0;
     width: 100%;
-    height: calc(100vh - 80px);
-    background-color: rgba(30, 31, 41, 0.97);
-    backdrop-filter: blur(6px);
+    height: calc(100vh - (var(--mobile-header-offset) - 1px));
+    background-color: rgba(22, 22, 22, 0.94);
     padding: 1.25rem 0;
     box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
-    transform: translateY(-12px);
-    opacity: 0;
+    clip-path: inset(0 0 100% 0);
+    opacity: 0.35;
     visibility: hidden;
-    transition: all 0.3s ease;
-    border-top: 1px solid var(--color-border);
-    border-bottom: 1px solid var(--color-border);
+    transition: clip-path 0.35s ease, opacity 0.28s ease, visibility 0.28s ease;
     overflow-y: auto;
-    z-index: 99;
+    z-index: 95;
   }
   
   /* Mobile navigation menu - open state */
   .nav--open {
-    transform: translateY(0);
+    clip-path: inset(0 0 0 0);
     opacity: 1;
     visibility: visible;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
   }
   
   /* Vertical layout for mobile navigation */
   .nav__list {
     flex-direction: column;
     height: 100%;
-    padding: 0 1.25rem;
-    justify-content: flex-start;
+    padding: 0;
+    justify-content: center;
+    align-items: center;
   }
   
   .nav__item {
     margin: 0;
     padding: 0.9rem 0;
-    border-bottom: 1px solid var(--color-border);
+    text-align: center;
   }
-  
-  .nav__item:last-child {
-    border-bottom: none;
+
+  .nav__link {
+    font-size: 1.3rem;
   }
   
   /* Disable underline effect on mobile */

@@ -678,6 +678,25 @@ watch(selectedProject, () => {
 const formSubmitting = ref(false)
 const formSubmitted = ref(false)
 const formError = ref('')
+const activePageGlowColor = ref('#00e0ff')
+
+function glowColorForProjectTitle(title: string) {
+  const key = title.trim().toLowerCase()
+  if (key === 'blodged') return '#a855f7'
+  if (key === 'cinescope') return '#ef4444'
+  if (key === 'minesweeper') return '#3b82f6'
+  if (key === 'lunara') return '#f8fafc'
+  if (key === 'asidenote') return '#3b82f6'
+  return '#00e0ff'
+}
+
+function handleActiveProjectChange(project: { title: string }) {
+  activePageGlowColor.value = glowColorForProjectTitle(project.title)
+}
+
+const appThemeStyle = computed(() => ({
+  '--page-glow-color': activePageGlowColor.value,
+}))
 
 /**
  * Handles the contact form submission using Formspree
@@ -723,7 +742,7 @@ const handleSubmit = async (event: Event) => {
 </script>
 
 <template>
-  <div class="app">
+  <div class="app" :style="appThemeStyle">
     <!-- Site header with navigation -->
     <TheHeader />
     
@@ -745,6 +764,7 @@ const handleSubmit = async (event: Event) => {
                 :show-logos="false"
                 :show-descriptions="false"
                 :show-media-hint="false"
+                @active-project-change="handleActiveProjectChange"
               />
             </div>
             <div
@@ -906,7 +926,7 @@ const handleSubmit = async (event: Event) => {
       >
         
         <div class="section--projects__carousel">
-          <ProjectShowcase :projects="carouselProjects" />
+          <ProjectShowcase :projects="carouselProjects" @active-project-change="handleActiveProjectChange" />
         </div>
       </section>
       
@@ -941,70 +961,59 @@ const handleSubmit = async (event: Event) => {
               <h3 class="skill__title">Languages & Technologies</h3>
               <div class="skill-subtitle"><span class="code-keyword">const</span> <span class="code-var">mySkills</span> = {</div>
               <div class="skill__list">
-
-                <div class="skill-item">
+                <article class="skill-item" data-scroll-reveal="landing" style="--reveal-delay: 0ms">
                   <div class="skill-info">
                     <span class="skill-name">ASP.NET/C#</span>
                   </div>
                   <div class="skill-bar">
-                    <div class="skill-progress" style="width: 85%"></div>
+                    <div class="skill-progress" style="--skill-level: 85%"></div>
                   </div>
-                </div>
+                </article>
 
-                <div class="skill-item">
+                <article class="skill-item" data-scroll-reveal="landing" style="--reveal-delay: 70ms">
                   <div class="skill-info">
                     <span class="skill-name">Java</span>
                   </div>
                   <div class="skill-bar">
-                    <div class="skill-progress" style="width: 80%"></div>
+                    <div class="skill-progress" style="--skill-level: 65%"></div>
                   </div>
-                </div>
+                </article>
 
-                <div class="skill-item">
+                <article class="skill-item" data-scroll-reveal="landing" style="--reveal-delay: 140ms">
                   <div class="skill-info">
                     <span class="skill-name">JavaScript/TypeScript</span>
                   </div>
                   <div class="skill-bar">
-                    <div class="skill-progress" style="width: 65%"></div>
+                    <div class="skill-progress" style="--skill-level: 80%"></div>
                   </div>
-                </div>
+                </article>
 
-                <div class="skill-item">
-                  <div class="skill-info">
-                    <span class="skill-name">Python</span>
-                  </div>
-                  <div class="skill-bar">
-                    <div class="skill-progress" style="width: 70%"></div>
-                  </div>
-                </div>
-
-                <div class="skill-item">
+                <article class="skill-item" data-scroll-reveal="landing" style="--reveal-delay: 210ms">
                   <div class="skill-info">
                     <span class="skill-name">HTML/CSS</span>
                   </div>
                   <div class="skill-bar">
-                    <div class="skill-progress" style="width: 80%"></div>
+                    <div class="skill-progress" style="--skill-level: 80%"></div>
                   </div>
-                </div>
+                </article>
 
-                <div class="skill-item">
+                <article class="skill-item" data-scroll-reveal="landing" style="--reveal-delay: 280ms">
                   <div class="skill-info">
                     <span class="skill-name">C/C++</span>
                   </div>
                   <div class="skill-bar">
-                    <div class="skill-progress" style="width: 60%"></div>
+                    <div class="skill-progress" style="--skill-level: 60%"></div>
                   </div>
-                </div>
+                </article>
 
-                <div class="skill-item">
+                <article class="skill-item" data-scroll-reveal="landing" style="--reveal-delay: 350ms">
                   <div class="skill-info">
                     <span class="skill-name">SQL</span>
                   </div>
                   <div class="skill-bar">
-                    <div class="skill-progress" style="width: 85%"></div>
+                    <div class="skill-progress" style="--skill-level: 85%"></div>
                   </div>
-                </div>
-
+                </article>
               </div>
               <div class="skill-closing">}</div>
             </div>
@@ -1022,38 +1031,33 @@ const handleSubmit = async (event: Event) => {
           <div class="contact-wrapper">
             <div class="contact">
               <div class="contact__info">
-                <h3 class="contact-subtitle">Get In Touch</h3>
-                <p class="contact-text">Feel free to reach out through any of these channels:</p>
-                <ul class="contact__list">
-                  <li class="contact-item">
-                    <span class="contact-icon">📧</span>
-                    <span class="contact-label">Email:</span>
-                    <span class="contact-value">carterwright221@gmail.com</span>
-                  </li>
-                  <li class="contact-item">
-                    <span class="contact-icon">📱</span>
-                    <span class="contact-label">Phone:</span>
-                    <span class="contact-value">(810)-569-3888</span>
-                  </li>
-                  <li class="contact-item">
-                    <span class="contact-icon">📍</span>
-                    <span class="contact-label">Location:</span>
-                    <span class="contact-value">Phoenix, AZ</span>
-                  </li>
-                </ul>
-                <div class="social-links">
-                  <a href="https://linkedin.com/in/carterdanw/" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="LinkedIn">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
-                  </a>
-                  <a href="https://github.com/cademic" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="GitHub">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
-                  </a>
+                <div class="contact-card-grid">
+                  <article class="contact-card">
+                    <div class="contact-card__icon" aria-hidden="true">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M1.5 6.75A2.25 2.25 0 0 1 3.75 4.5h16.5a2.25 2.25 0 0 1 2.25 2.25v10.5a2.25 2.25 0 0 1-2.25 2.25H3.75A2.25 2.25 0 0 1 1.5 17.25V6.75Zm2.8-.75 7.7 5.39 7.7-5.39H4.3Zm16.2 1.56-7.85 5.5a1.125 1.125 0 0 1-1.3 0L3.5 7.56v9.69c0 .414.336.75.75.75h16.5a.75.75 0 0 0 .75-.75V7.56Z" />
+                      </svg>
+                    </div>
+                    <div class="contact-card__text">
+                      <p class="contact-card__label">Email</p>
+                      <a href="mailto:carterwright221@gmail.com" class="contact-card__value">carterwright221@gmail.com</a>
+                    </div>
+                  </article>
+                  <article class="contact-card">
+                    <div class="contact-card__icon" aria-hidden="true">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M6.62 10.79a15.053 15.053 0 0 0 6.59 6.59l2.2-2.2a1 1 0 0 1 1.01-.24c1.11.37 2.31.57 3.58.57a1 1 0 0 1 1 1V20a1 1 0 0 1-1 1C10.85 21 3 13.15 3 3a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.27.2 2.47.57 3.58a1 1 0 0 1-.24 1.01l-2.2 2.2Z"/>
+                      </svg>
+                    </div>
+                    <div class="contact-card__text">
+                      <p class="contact-card__label">Phone</p>
+                      <a href="tel:+18105693888" class="contact-card__value">(810) 569-3888</a>
+                    </div>
+                  </article>
                 </div>
               </div>
-              
+
               <div class="contact__form-container">
-                <h3 class="contact-subtitle">Send a Message</h3>
-                
                 <!-- Show success message when form is submitted -->
                 <div v-if="formSubmitted" class="form-status form-status--success">
                   Thank you for your message! I'll get back to you soon.
@@ -1071,23 +1075,35 @@ const handleSubmit = async (event: Event) => {
                   action="https://formspree.io/f/mpwdbery" 
                   method="POST"
                 >
-                  <div class="form-group">
-                    <label for="name">Name</label>
-                    <input 
-                      type="text" 
-                      id="name" 
-                      name="name"
-                      placeholder="Your Name"
-                      required
-                    >
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label for="name">Name</label>
+                      <input 
+                        type="text" 
+                        id="name" 
+                        name="name"
+                        placeholder="Your name"
+                        required
+                      >
+                    </div>
+                    <div class="form-group">
+                      <label for="email">Email</label>
+                      <input 
+                        type="email" 
+                        id="email" 
+                        name="email"
+                        placeholder="your@email.com"
+                        required
+                      >
+                    </div>
                   </div>
                   <div class="form-group">
-                    <label for="email">Email</label>
+                    <label for="subject">Subject</label>
                     <input 
-                      type="email" 
-                      id="email" 
-                      name="email"
-                      placeholder="your.email@example.com"
+                      type="text" 
+                      id="subject" 
+                      name="subject"
+                      placeholder="What's this about?"
                       required
                     >
                   </div>
@@ -1097,13 +1113,13 @@ const handleSubmit = async (event: Event) => {
                       id="message" 
                       name="message"
                       rows="8" 
-                      placeholder="Your message..."
+                      placeholder="Tell me about your project..."
                       required
                     ></textarea>
                   </div>
                   <button 
                     type="submit" 
-                    class="btn btn--primary"
+                    class="contact__submit-btn"
                     :disabled="formSubmitting"
                   >
                     {{ formSubmitting ? 'Sending...' : 'Send Message' }}
@@ -1124,6 +1140,11 @@ const handleSubmit = async (event: Event) => {
 
 <style>
 /* Fonts loaded in index.html (Inter + JetBrains Mono) */
+@property --page-glow-color {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #00e0ff;
+}
 
 /**
  * Global CSS Variables
@@ -1143,9 +1164,9 @@ const handleSubmit = async (event: Event) => {
   --color-text-light: #8f93a2;      /* Secondary text color - light gray */
   
   /* Background Colors */
-  --color-background: #282a36;      /* Main background - dark blue-gray */
-  --color-background-alt: #1e1f29;  /* Alternate background - slightly darker */
-  --color-background-code: #21222c; /* Code blocks background - even darker */
+  --color-background: #101012;      /* Main background */
+  --color-background-alt: #1b2130;  /* Alternate background - medium dark slate */
+  --color-background-code: #222a3b; /* Code blocks background - lifted dark tone */
   
   /* Border Colors */
   --color-border: #44475a;          /* Border color - medium gray */
@@ -1165,6 +1186,7 @@ const handleSubmit = async (event: Event) => {
   --font-mono: 'JetBrains Mono', ui-monospace, monospace;
   --radius-lg: 16px;
   --shadow-soft: 0 24px 60px rgba(0, 0, 0, 0.35);
+  --page-glow-color: #00e0ff;
 }
 
 /* Global Reset */
@@ -1187,6 +1209,7 @@ body {
   color: var(--color-text);
   line-height: 1.5;
   background-color: var(--color-background);
+  background-image: none;
 }
 
 /* Typography Defaults */
@@ -1199,6 +1222,68 @@ h1, h2, h3, h4, h5, h6 {
 /* Main Content Area */
 .main {
   padding-top: 80px; /* Height of the fixed header */
+}
+
+.app {
+  position: relative;
+  min-height: 100vh;
+  isolation: isolate;
+  transition: --page-glow-color 700ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.app::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(to right, rgba(68, 71, 90, 0.3) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(68, 71, 90, 0.3) 1px, transparent 1px);
+  background-size: 52px 52px;
+  opacity: 0.12;
+  mask-image: linear-gradient(
+    to top,
+    black 0%,
+    rgba(0, 0, 0, 0.95) 20%,
+    rgba(0, 0, 0, 0.55) 50%,
+    transparent 85%
+  );
+  -webkit-mask-image: linear-gradient(
+    to top,
+    black 0%,
+    rgba(0, 0, 0, 0.95) 20%,
+    rgba(0, 0, 0, 0.55) 50%,
+    transparent 85%
+  );
+}
+
+.app::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image:
+    radial-gradient(
+      ellipse 56vw 72vh at 0% 58%,
+      color-mix(in srgb, var(--page-glow-color) 24%, transparent) 0%,
+      color-mix(in srgb, var(--page-glow-color) 12%, transparent) 42%,
+      transparent 78%
+    ),
+    radial-gradient(
+      ellipse 54vw 70vh at 100% 56%,
+      color-mix(in srgb, var(--page-glow-color) 20%, transparent) 0%,
+      color-mix(in srgb, var(--page-glow-color) 10%, transparent) 44%,
+      transparent 78%
+    ),
+    radial-gradient(
+      ellipse 80vw 38vh at 50% 100%,
+      color-mix(in srgb, var(--page-glow-color) 18%, transparent) 0%,
+      color-mix(in srgb, var(--page-glow-color) 8%, transparent) 52%,
+      transparent 82%
+    );
+  opacity: 0.72;
 }
 
 /* Container for Content Sections */
@@ -1257,9 +1342,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .section--projects {
-  background: var(--color-background);
-  border-top: 1px solid var(--color-border);
-  border-bottom: 1px solid var(--color-border);
+  background: transparent;
 }
 
 .section--projects-fullbleed {
@@ -1281,7 +1364,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .project-detail {
   min-height: calc(100vh - 80px);
-  background: var(--color-background-alt);
+  background: transparent;
 }
 
 [data-scroll-reveal] {
@@ -1402,7 +1485,6 @@ h1, h2, h3, h4, h5, h6 {
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1.1rem;
   padding-bottom: 1rem;
-  border-bottom: 1px solid rgba(68, 71, 90, 0.45);
 }
 
 .project-detail__fact-card {
@@ -1486,7 +1568,6 @@ h1, h2, h3, h4, h5, h6 {
 .project-detail__takeaways {
   margin-top: 0.5rem;
   padding-left: 1rem;
-  border-left: 2px solid rgba(0, 224, 255, 0.45);
 }
 
 /* 
@@ -1494,9 +1575,9 @@ h1, h2, h3, h4, h5, h6 {
  * First section of the page with the main headline and CTA buttons
  */
 .hero {
-  padding: clamp(3rem, 10vw, 5.5rem) 0 clamp(4rem, 12vw, 6rem);
-  background-color: var(--color-background-alt);
-  border-bottom: 1px solid var(--color-border);
+  margin-top: -80px;
+  padding: calc(80px + clamp(3rem, 10vw, 5.5rem)) 0 clamp(4rem, 12vw, 6rem);
+  background-color: transparent;
   position: relative;
   overflow: hidden;
   scroll-margin-top: 80px;
@@ -1508,8 +1589,8 @@ h1, h2, h3, h4, h5, h6 {
   height: min(70vh, 520px);
   background: radial-gradient(
     ellipse at center,
-    rgba(0, 224, 255, 0.14) 0%,
-    rgba(189, 147, 249, 0.06) 45%,
+    color-mix(in srgb, var(--page-glow-color) 18%, transparent) 0%,
+    color-mix(in srgb, var(--page-glow-color) 8%, transparent) 45%,
     transparent 70%
   );
   pointer-events: none;
@@ -1524,13 +1605,16 @@ h1, h2, h3, h4, h5, h6 {
   left: 0;
   width: 100%;
   height: 100%;
-  background-image:
-    linear-gradient(to right, rgba(68, 71, 90, 0.35) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(68, 71, 90, 0.35) 1px, transparent 1px);
-  background-size: 48px 48px;
-  opacity: 0.12;
+  background-image: radial-gradient(
+    ellipse at 50% 32%,
+    color-mix(in srgb, var(--page-glow-color) 14%, transparent) 0%,
+    color-mix(in srgb, var(--page-glow-color) 8%, transparent) 40%,
+    transparent 74%
+  );
+  opacity: 0.16;
   pointer-events: none;
-  mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+  mask-image: linear-gradient(to bottom, black 0%, rgba(0, 0, 0, 0.85) 55%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, black 0%, rgba(0, 0, 0, 0.85) 55%, transparent 100%);
 }
 
 /* Hero content container */
@@ -1634,6 +1718,31 @@ h1, h2, h3, h4, h5, h6 {
   justify-content: center;
 }
 
+.social-links {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.25rem;
+  justify-content: center;
+}
+
+.social-link {
+  color: var(--color-primary);
+  transition: color 0.3s, transform 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: transparent;
+}
+
+.social-link:hover {
+  color: var(--color-accent-2);
+  transform: translateY(-3px);
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.3);
+}
+
 /* 
  * Button Styles 
  * Used for CTA buttons and form submission
@@ -1676,7 +1785,6 @@ h1, h2, h3, h4, h5, h6 {
 .btn--secondary {
   background-color: transparent;
   color: var(--color-primary);
-  border: 1px solid var(--color-primary);
 }
 
 /* Secondary button hover effect */
@@ -1688,7 +1796,6 @@ h1, h2, h3, h4, h5, h6 {
 .btn--ghost {
   background-color: transparent;
   color: var(--color-text);
-  border: 1px solid var(--color-border);
 }
 
 .btn--ghost:hover {
@@ -1704,90 +1811,77 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .skills-container {
-  max-width: 800px;
+  max-width: 900px;
   width: 100%;
-  background-color: var(--color-background-code);
+  background: transparent;
+  border: none;
   padding: var(--spacing-lg);
-  border-radius: 8px;
-  border: 1px solid var(--color-border);
+  border-radius: 0;
   position: relative;
 }
 
+.skill__title {
+  margin-bottom: 0.6rem;
+  font-size: clamp(1.1rem, 2.4vw, 1.35rem);
+}
+
+.skill__list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.9rem;
+}
+
 .skill-item {
-  margin-bottom: 1.5rem;
+  margin-bottom: 0;
+  border: none;
+  border-radius: 0;
+  padding: 0.25rem 0;
+  background: transparent;
 }
 
 .skill-info {
   display: flex;
-  justify-content: space-between;
-  margin-bottom: 0.5rem;
+  justify-content: flex-start;
+  align-items: center;
+  margin-bottom: 0.55rem;
   font-family: var(--font-mono);
+  gap: 0.75rem;
 }
 
 .skill-name {
   color: var(--color-text);
-}
-
-.skill-percentage {
-  color: var(--color-accent-1);
+  font-size: 0.93rem;
 }
 
 .skill-bar {
-  height: 8px;
-  background-color: var(--color-background-alt);
+  height: 10px;
+  background: color-mix(in srgb, var(--color-text-light) 35%, transparent);
   border-radius: 4px;
   overflow: hidden;
   position: relative;
-  border: 1px solid var(--color-border);
 }
 
 .skill-progress {
   height: 100%;
-  background: linear-gradient(90deg, var(--color-accent-2), var(--color-primary));
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--page-glow-color) 70%, #ffffff 30%),
+    var(--page-glow-color)
+  );
   border-radius: 4px;
   position: relative;
-  transition: width 1.5s ease;
-  animation: progress 1.5s ease;
+  width: 0;
+  transition: width 850ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.skill-progress::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(45deg, 
-              rgba(255, 255, 255, 0.15) 25%, 
-              transparent 25%, 
-              transparent 50%, 
-              rgba(255, 255, 255, 0.15) 50%, 
-              rgba(255, 255, 255, 0.15) 75%, 
-              transparent 75%, 
-              transparent);
-  background-size: 20px 20px;
-  animation: move 1s linear infinite;
-  opacity: 0.3;
-}
-
-@keyframes progress {
-  0% {
-    width: 0;
-  }
-}
-
-@keyframes move {
-  0% {
-    background-position: 0 0;
-  }
-  100% {
-    background-position: 20px 0;
-  }
+.skill-item.is-revealed .skill-progress {
+  width: var(--skill-level, 0%);
+  transition-delay: 380ms;
 }
 
 .skill-subtitle {
   font-family: var(--font-mono);
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
   color: var(--color-text-light);
   font-size: 0.9rem;
 }
@@ -1795,7 +1889,7 @@ h1, h2, h3, h4, h5, h6 {
 .skill-closing {
   font-family: var(--font-mono);
   color: var(--color-text-light);
-  margin-top: 1rem;
+  margin-top: 0.85rem;
   font-size: 0.9rem;
 }
 
@@ -1806,81 +1900,89 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .contact {
-  display: grid;
-  grid-template-columns: 1fr 1.5fr;
+  display: flex;
+  flex-direction: column;
   gap: var(--spacing-lg);
-  background-color: var(--color-background-code);
+  background-color: transparent;
   padding: var(--spacing-lg);
   border-radius: 8px;
+}
+
+.contact-card-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.9rem;
+}
+
+.contact-card {
   border: 1px solid var(--color-border);
+  border-radius: 10px;
+  padding: 1rem 1.1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  background: transparent;
 }
 
-.contact-subtitle {
-  font-size: 1.25rem;
-  margin-bottom: 1rem;
+.contact-card--full {
+  grid-column: 1 / -1;
+}
+
+.contact-card__icon {
+  width: 2.2rem;
+  height: 2.2rem;
+  border-radius: 0.45rem;
+  background: rgba(0, 224, 255, 0.12);
   color: var(--color-primary);
-  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95rem;
 }
 
-.contact-text {
-  margin-bottom: 1.5rem;
+.contact-card__icon svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+.contact-card__text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.contact-card__label {
   color: var(--color-text-light);
+  font-size: 0.88rem;
 }
 
-.contact__list {
-  list-style: none;
-  margin-bottom: 2rem;
-}
-
-.contact-item {
-  display: flex;
-  align-items: center;
-  margin-bottom: 1rem;
-}
-
-.contact-icon {
-  margin-right: 0.5rem;
-  font-size: 1.25rem;
-}
-
-.contact-label {
-  color: var(--color-accent-1);
-  margin-right: 0.5rem;
-  font-weight: 500;
-}
-
-.contact-value {
+.contact-card__value {
   color: var(--color-text);
+  font-size: 1.05rem;
+  font-weight: 600;
+  text-decoration: none;
 }
 
-.social-links {
-  display: flex;
-  gap: 1rem;
-  margin-top: 1rem;
-  justify-content: center;
-}
-
-.social-link {
+.contact-card__value:hover {
   color: var(--color-primary);
-  transition: color 0.3s, transform 0.3s;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background-color: var(--color-background-alt);
-  border: 1px solid var(--color-border);
 }
 
-.social-link:hover {
-  color: var(--color-accent-2);
-  transform: translateY(-3px);
-  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.3);
+.contact__divider {
+  text-align: center;
+  margin-top: 2rem;
+  color: var(--color-text-light);
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
 }
 
 .contact__form-container {
   position: relative;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
 }
 
 .form-group {
@@ -1891,16 +1993,16 @@ h1, h2, h3, h4, h5, h6 {
   display: block;
   margin-bottom: 0.5rem;
   font-weight: 500;
-  color: var(--color-accent-1);
+  color: var(--color-text);
 }
 
 .form-group input,
 .form-group textarea {
   width: 100%;
-  padding: 1rem;
-  background-color: var(--color-background-alt);
+  padding: 0.95rem 1rem;
+  background-color: transparent;
   border: 1px solid var(--color-border);
-  border-radius: 4px;
+  border-radius: 8px;
   color: var(--color-text);
   font-size: 1rem;
   transition: all 0.3s ease;
@@ -1917,9 +2019,31 @@ h1, h2, h3, h4, h5, h6 {
 
 .form-group input:focus,
 .form-group textarea:focus {
-  border-color: var(--color-primary);
   outline: none;
-  box-shadow: 0 0 0 3px rgba(0, 224, 255, 0.1);
+  box-shadow: 0 0 0 2px rgba(0, 224, 255, 0.15);
+}
+
+.contact__submit-btn {
+  border: none;
+  border-radius: 8px;
+  background: var(--color-primary);
+  color: var(--color-background);
+  font-weight: 700;
+  font-size: 1rem;
+  padding: 0.85rem 1.6rem;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+}
+
+.contact__submit-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  background: var(--color-primary-dark);
+  box-shadow: 0 10px 20px rgba(0, 224, 255, 0.2);
+}
+
+.contact__submit-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
 }
 
 .form-status {
@@ -1928,23 +2052,17 @@ h1, h2, h3, h4, h5, h6 {
   border-radius: 4px;
   background-color: rgba(255, 95, 86, 0.1);
   color: var(--color-secondary);
-  border-left: 3px solid var(--color-secondary);
 }
 
 .form-status--success {
   background-color: rgba(39, 201, 63, 0.1);
   color: var(--color-accent-2);
-  border-left: 3px solid var(--color-accent-2);
 }
 
 @media (max-width: 768px) {
-  .contact {
+  .contact-card-grid,
+  .form-row {
     grid-template-columns: 1fr;
-    gap: var(--spacing-lg);
-  }
-  
-  .contact__info {
-    margin-bottom: 2rem;
   }
 }
 
@@ -1976,8 +2094,8 @@ h1, h2, h3, h4, h5, h6 {
     grid-template-columns: 1fr;
   }
 
-  .contact {
-    grid-template-columns: 1fr;
+  .contact__divider {
+    margin-top: 1.5rem;
   }
 }
 
@@ -1988,10 +2106,9 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .about__intro {
-  background-color: var(--color-background-code);
+  background-color: transparent;
   padding: var(--spacing-lg);
   border-radius: 8px;
-  border: 1px solid var(--color-border);
   margin-bottom: var(--spacing-lg);
   position: relative;
 }

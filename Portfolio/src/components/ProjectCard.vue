@@ -301,8 +301,7 @@ function onCarouselAuxClick(e: MouseEvent) {
   height: 100%;
   border-radius: var(--radius-lg, 18px);
   overflow: hidden;
-  background: linear-gradient(165deg, var(--color-surface-raised, #161b26), var(--color-background-code, #12161f));
-  border: 1px solid var(--color-border);
+  background: transparent;
   box-shadow:
     0 4px 24px rgba(0, 0, 0, 0.35),
     inset 0 1px 0 rgba(255, 255, 255, 0.04);
@@ -513,7 +512,6 @@ function onCarouselAuxClick(e: MouseEvent) {
   border-radius: 999px;
   color: var(--color-primary);
   background: rgba(15, 23, 42, 0.72);
-  border: 1px solid rgba(248, 250, 252, 0.22);
   box-shadow: 0 6px 18px rgba(2, 6, 23, 0.45);
   display: inline-flex;
   align-items: center;

@@ -35,6 +35,9 @@ const props = withDefaults(defineProps<Props>(), {
   showDescriptions: true,
   showMediaHint: true,
 })
+const emit = defineEmits<{
+  (e: 'active-project-change', project: ProjectItem): void
+}>()
 const CAROUSEL_STATE_STORAGE_KEY = 'portfolio-showcase-order-v1'
 
 function logoForProject(title: string): string | null {
@@ -120,6 +123,34 @@ const activeDisplayIndex = computed(() =>
     ? nearestVisualIndex.value
     : centerIndex.value,
 )
+
+watch(
+  [activeDisplayIndex, items],
+  ([index, currentItems]) => {
+    const activeProject = currentItems[index]
+    if (!activeProject) return
+    emit('active-project-change', activeProject)
+  },
+  { immediate: true },
+)
+
+const indicatorImageSources = computed(() => {
+  const seen = new Set<string>()
+  const out: string[] = []
+  for (const project of props.projects) {
+    if (!project.imageSrc || seen.has(project.imageSrc)) continue
+    seen.add(project.imageSrc)
+    out.push(project.imageSrc)
+  }
+  return out
+})
+
+const activeIndicatorIndex = computed(() => {
+  const activeItem = items.value[activeDisplayIndex.value]
+  if (!activeItem) return 0
+  const idx = indicatorImageSources.value.findIndex((src) => src === activeItem.imageSrc)
+  return idx >= 0 ? idx : 0
+})
 
 function absoluteImageUrl(src: string): string {
   if (!src) return ''
@@ -849,6 +880,19 @@ let wheelCleanup: (() => void) | null = null
     </div>
 
   </div>
+
+  <div
+    v-if="indicatorImageSources.length > 1"
+    class="showcase__indicators"
+    aria-hidden="true"
+  >
+    <span
+      v-for="(src, index) in indicatorImageSources"
+      :key="src"
+      class="showcase__indicator-dot"
+      :class="{ 'showcase__indicator-dot--active': index === activeIndicatorIndex }"
+    />
+  </div>
 </template>
 
 <style scoped>
@@ -1013,6 +1057,24 @@ let wheelCleanup: (() => void) | null = null
   gap: 0;
 }
 
+.showcase__indicators {
+  display: none;
+}
+
+.showcase__indicator-dot {
+  display: inline-block;
+  width: 0.48rem;
+  height: 0.48rem;
+  border-radius: 999px;
+  background: rgba(148, 163, 184, 0.35);
+  transition: all 220ms ease;
+}
+
+.showcase__indicator-dot--active {
+  width: 1.3rem;
+  background: rgba(0, 224, 255, 0.95);
+}
+
 @media (max-width: 1024px) {
   .showcase__viewport {
     min-height: min(40vh, 470px);
@@ -1035,6 +1097,14 @@ let wheelCleanup: (() => void) | null = null
     padding-top: 0.55rem;
     font-size: 0.92rem;
     line-height: 1.45;
+  }
+
+  .showcase__indicators {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.45rem;
+    padding-top: 0.35rem;
   }
 }
 
