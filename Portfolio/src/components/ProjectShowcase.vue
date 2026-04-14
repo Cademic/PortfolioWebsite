@@ -105,7 +105,7 @@ provide('portfolioCarouselSuppressLinkOpen', suppressCarouselLinkOpen)
 
 const SWIPE_THRESHOLD_PX = 48
 const DRAG_DETECT_PX = 4
-const MAX_DRAG_STEPS = 8
+const MAX_DRAG_STEPS = 48
 const BRIEF_CLICK_MS = 220
 const MOBILE_BREAKPOINT_PX = 640
 const MOBILE_SWIPE_THRESHOLD_PX = 11
@@ -577,6 +577,9 @@ function onPointerMove(e: PointerEvent) {
   }
 
   dragOffsetPx.value = dx
+  if (e.cancelable) {
+    e.preventDefault()
+  }
   if (absX > DRAG_DETECT_PX) {
     pointerDragMoved.value = true
   }
@@ -629,6 +632,10 @@ function onPointerUp(e: PointerEvent) {
     steps = (drag < 0 ? 1 : -1) * projectedSteps
   }
   if (steps === 0 && Math.abs(drag) >= swipeThresholdPx) {
+    steps = drag < 0 ? 1 : -1
+  }
+  if (steps === 0 && isMobileViewport && pointerAxisLock.value === 'x' && Math.abs(drag) > 1) {
+    // Any committed horizontal drag on mobile should advance, not snap back.
     steps = drag < 0 ? 1 : -1
   }
   if (steps === 0 && isMobileViewport && moved && Math.abs(drag) >= DRAG_DETECT_PX) {
