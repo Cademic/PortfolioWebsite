@@ -1228,6 +1228,7 @@ h1, h2, h3, h4, h5, h6 {
   position: relative;
   min-height: 100vh;
   isolation: isolate;
+  z-index: 0;
   transition: --page-glow-color 700ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
@@ -1235,7 +1236,7 @@ h1, h2, h3, h4, h5, h6 {
   content: '';
   position: absolute;
   inset: 0;
-  z-index: 0;
+  z-index: -1;
   pointer-events: none;
   background-image:
     linear-gradient(to right, rgba(68, 71, 90, 0.3) 1px, transparent 1px),
@@ -1262,28 +1263,28 @@ h1, h2, h3, h4, h5, h6 {
   content: '';
   position: absolute;
   inset: 0;
-  z-index: 0;
+  z-index: -1;
   pointer-events: none;
   background-image:
     radial-gradient(
-      ellipse 56vw 72vh at 0% 58%,
-      color-mix(in srgb, var(--page-glow-color) 24%, transparent) 0%,
-      color-mix(in srgb, var(--page-glow-color) 12%, transparent) 42%,
+      ellipse 52vw 68vh at 0% 34%,
+      color-mix(in srgb, var(--page-glow-color) 16%, transparent) 0%,
+      color-mix(in srgb, var(--page-glow-color) 7%, transparent) 42%,
       transparent 78%
     ),
     radial-gradient(
-      ellipse 54vw 70vh at 100% 56%,
-      color-mix(in srgb, var(--page-glow-color) 20%, transparent) 0%,
-      color-mix(in srgb, var(--page-glow-color) 10%, transparent) 44%,
+      ellipse 58vw 74vh at 100% 72%,
+      color-mix(in srgb, var(--page-glow-color) 14%, transparent) 0%,
+      color-mix(in srgb, var(--page-glow-color) 6%, transparent) 44%,
       transparent 78%
     ),
     radial-gradient(
       ellipse 80vw 38vh at 50% 100%,
-      color-mix(in srgb, var(--page-glow-color) 18%, transparent) 0%,
-      color-mix(in srgb, var(--page-glow-color) 8%, transparent) 52%,
+      color-mix(in srgb, var(--page-glow-color) 12%, transparent) 0%,
+      color-mix(in srgb, var(--page-glow-color) 5%, transparent) 52%,
       transparent 82%
     );
-  opacity: 0.72;
+  opacity: 0.52;
 }
 
 /* Container for Content Sections */

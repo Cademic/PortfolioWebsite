@@ -406,9 +406,9 @@ function onCarouselAuxClick(e: MouseEvent) {
 
 .project-card--carousel.project-card--main-display .project-card__carousel-frame {
   box-shadow:
-    -42px 0 104px rgba(var(--project-glow-left), 0.14),
-    42px 0 104px rgba(var(--project-glow-right), 0.14),
-    0 0 104px rgba(var(--project-glow-color), 0.1),
+    -32px 0 64px rgba(var(--project-glow-left), 0.05),
+    32px 0 64px rgba(var(--project-glow-right), 0.05),
+    0 0 64px rgba(var(--project-glow-color), 0.035),
     0 24px 56px rgba(2, 6, 23, 0.3);
 }
 
@@ -421,7 +421,7 @@ function onCarouselAuxClick(e: MouseEvent) {
 /* Main centered card: soft gradients (no filter: blur — same compositor issue as showcase slides) */
 .project-card__carousel-glow {
   position: absolute;
-  inset: -42px -38px -34px;
+  inset: -26px -24px -20px;
   z-index: 0;
   pointer-events: none;
   border-radius: 34px;
@@ -436,18 +436,18 @@ function onCarouselAuxClick(e: MouseEvent) {
   background:
     radial-gradient(
       ellipse 95% 80% at 18% 50%,
-      rgba(var(--project-glow-left), 0.2) 0%,
-      transparent 58%
+      rgba(var(--project-glow-left), 0.08) 0%,
+      transparent 50%
     ),
     radial-gradient(
       ellipse 95% 80% at 82% 50%,
-      rgba(var(--project-glow-right), 0.2) 0%,
-      transparent 58%
+      rgba(var(--project-glow-right), 0.08) 0%,
+      transparent 50%
     ),
     radial-gradient(
       ellipse 100% 90% at 50% 56%,
-      rgba(var(--project-glow-color), 0.14) 0%,
-      transparent 62%
+      rgba(var(--project-glow-color), 0.05) 0%,
+      transparent 54%
     );
   will-change: opacity, transform;
   transform: scale(0.9);
@@ -461,15 +461,15 @@ function onCarouselAuxClick(e: MouseEvent) {
 @keyframes glow-grow-in {
   0% {
     transform: scale(0.9);
-    opacity: 0.18;
+    opacity: 0.08;
   }
   60% {
     transform: scale(1.02);
-    opacity: 0.82;
+    opacity: 0.44;
   }
   100% {
     transform: scale(1);
-    opacity: 1;
+    opacity: 0.56;
   }
 }
 
