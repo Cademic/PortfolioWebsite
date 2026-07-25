@@ -939,13 +939,16 @@ const handleSubmit = async (event: Event) => {
           <div class="about__content">
             <div class="about__intro">
               <p data-scroll-reveal="landing" style="--reveal-delay: 0ms">
-                Hello! My name is Carter Wright. I am an upcoming software developer looking to enhance my skills while doing what I love.
+                Hello! My name is Carter Wright. I am a software developer and graduate of <b>Grand Canyon University</b>, where I earned my <b>Bachelor's in Software Development</b>.
               </p>
               <p data-scroll-reveal="landing" style="--reveal-delay: 100ms">
-                I am originally from Michigan, but currently living in <b>Phoenix, AZ</b> as I am studying for my <b>Bachelor's in Software Development at Grand Canyon University</b>. I am set to graduate in April 2026 and searching for the right role for me in this career.
+                I am currently residing in <b>Michigan</b> and seeking full-time software development opportunities. Alongside my job search, I am growing my client base and completing commission-based web design projects for individuals and businesses.
               </p>
               <p data-scroll-reveal="landing" style="--reveal-delay: 200ms">
                 My recent work has focused on full-stack web development using <b>C# ASP.NET</b>, <b>Enterprise Java</b>, and <b>Node.js</b>. I also have experience in cybersecurity and integrating industry-standard frameworks such as <b>NIST</b>, <b>CIS</b>, <b>MITRE</b>, and <b>OWASP</b> into my applications.
+              </p>
+              <p data-scroll-reveal="landing" style="--reveal-delay: 300ms">
+                <a href="#contact" v-smooth-scroll>Contact me</a> to learn more about working together, and take a look at my <a href="/resume.pdf" target="_blank" rel="noopener noreferrer">resume</a> and <a href="#projects" v-smooth-scroll>projects</a> to explore my experience and recent work.
               </p>
             </div>
           </div>
@@ -2130,6 +2133,16 @@ h1, h2, h3, h4, h5, h6 {
 
 .about__intro p + p {
   margin-top: 1rem;
+}
+
+.about__intro a {
+  color: var(--color-secondary);
+  font-weight: 600;
+  text-underline-offset: 0.2em;
+}
+
+.about__intro a:hover {
+  color: var(--color-accent-2);
 }
 
 .about__intro::before {
