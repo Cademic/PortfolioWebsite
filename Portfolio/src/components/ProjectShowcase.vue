@@ -1035,8 +1035,6 @@ let wheelCleanup: (() => void) | null = null
 
 <style scoped>
 .showcase {
-  --font-display: 'DM Serif Display', Georgia, 'Times New Roman', serif;
-
   outline: none;
   display: flex;
   flex-direction: column;
@@ -1051,9 +1049,9 @@ let wheelCleanup: (() => void) | null = null
 
 .showcase:focus-visible {
   box-shadow: none;
-  outline: 2px solid rgba(45, 212, 191, 0.55);
+  outline: 2px solid color-mix(in srgb, var(--color-accent) 55%, transparent);
   outline-offset: 4px;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
 }
 
 .showcase__viewport {
@@ -1184,9 +1182,11 @@ let wheelCleanup: (() => void) | null = null
 .showcase__slide-description {
   margin: 0;
   padding: 0.85rem 0.35rem 0;
-  font-size: clamp(0.95rem, 1.8vw, 1.02rem);
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(0.98rem, 1.8vw, 1.08rem);
   line-height: 1.55;
-  color: rgba(148, 163, 184, 0.95);
+  color: var(--color-ink-muted);
   text-align: center;
   text-wrap: balance;
 }
@@ -1204,13 +1204,13 @@ let wheelCleanup: (() => void) | null = null
   width: 0.48rem;
   height: 0.48rem;
   border-radius: 999px;
-  background: rgba(148, 163, 184, 0.35);
+  background: var(--color-border-strong);
   transition: all 220ms ease;
 }
 
 .showcase__indicator-dot--active {
   width: 1.3rem;
-  background: rgba(0, 224, 255, 0.95);
+  background: var(--color-accent-soft);
 }
 
 @media (max-width: 1024px) {

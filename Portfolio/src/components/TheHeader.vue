@@ -117,7 +117,7 @@ onMounted(() => {
     <div class="container">
       <!-- Logo/branding -->
       <div class="logo">
-        <h1><span class="logo__bracket">{</span> Carter Wright <span class="logo__bracket">}</span></h1>
+        <h1>Carter Wright</h1>
       </div>
       
       <!-- Mobile menu toggle button -->
@@ -150,8 +150,10 @@ onMounted(() => {
   top: 0;
   left: 0;
   width: 100%;
-  background-color: #101012;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  background-color: color-mix(in srgb, var(--color-background) 88%, transparent);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--color-border);
   z-index: 100;
 }
 
@@ -167,16 +169,12 @@ onMounted(() => {
 
 /* Logo styling */
 .logo h1 {
-  font-size: 1.5rem;
-  font-weight: 700;
+  font-size: 1.3rem;
+  font-weight: 500;
+  font-style: italic;
   margin: 0;
-  font-family: var(--font-mono);
-  color: var(--color-text);
-}
-
-.logo__bracket {
-  color: var(--color-primary);
-  opacity: 0.8;
+  font-family: var(--font-display);
+  color: var(--color-ink);
 }
 
 /* Navigation list - horizontal on desktop */
@@ -199,8 +197,8 @@ onMounted(() => {
   bottom: -5px;
   left: 0;
   width: 0;
-  height: 2px;
-  background-color: var(--color-primary);
+  height: 1px;
+  background-color: var(--color-accent);
   transition: width 0.3s ease;
 }
 
@@ -211,17 +209,17 @@ onMounted(() => {
 /* Navigation link styling */
 .nav__link {
   text-decoration: none;
-  color: var(--color-text);
+  color: var(--color-ink-muted);
   font-weight: 500;
   transition: color 0.3s;
-  font-family: var(--font-mono);
+  font-family: var(--font-sans);
   font-size: 0.9rem;
   position: relative;
 }
 
 .nav__link.active,
 .nav__link:hover {
-  color: var(--color-primary);
+  color: var(--color-ink);
 }
 
 /* Hide mobile menu toggle by default (desktop) */
@@ -248,7 +246,7 @@ onMounted(() => {
     display: block;
     position: absolute;
     height: 2px;
-    background-color: var(--color-text);
+    background-color: var(--color-ink);
     transition: all 0.3s ease;
   }
   
@@ -276,7 +274,7 @@ onMounted(() => {
     left: 0;
     width: 100%;
     height: calc(100vh - (var(--mobile-header-offset) - 1px));
-    background-color: #101012;
+    background-color: var(--color-background);
     padding: 1.25rem 0;
     box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
     clip-path: inset(0 0 100% 0);

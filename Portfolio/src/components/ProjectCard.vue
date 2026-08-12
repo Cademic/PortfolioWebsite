@@ -40,15 +40,15 @@ const suppressCarouselLinkOpen = inject<Ref<boolean>>(
 
 function namedGlowForTitle(title: string): string | null {
   const key = title.trim().toLowerCase()
-  if (key === 'blodged') return '168, 85, 247'
-  if (key === 'cinescope') return '239, 68, 68'
-  if (key === 'minesweeper') return '59, 130, 246'
-  if (key === 'lunara') return '248, 250, 252'
-  if (key === 'asidenote') return '59, 130, 246'
+  if (key === 'blodged') return '156, 122, 82'
+  if (key === 'cinescope') return '201, 107, 90'
+  if (key === 'minesweeper') return '111, 143, 156'
+  if (key === 'lunara') return '201, 163, 95'
+  if (key === 'asidenote') return '138, 124, 207'
   return null
 }
 
-const initialNamedGlow = namedGlowForTitle(props.title) ?? '45, 212, 191'
+const initialNamedGlow = namedGlowForTitle(props.title) ?? '201, 120, 79'
 const dominantGlowColor = ref(initialNamedGlow)
 const leftGlowColor = ref(initialNamedGlow)
 const rightGlowColor = ref(initialNamedGlow)
@@ -299,12 +299,10 @@ function onCarouselAuxClick(e: MouseEvent) {
   display: flex;
   flex-direction: column;
   height: 100%;
-  border-radius: var(--radius-lg, 18px);
+  border-radius: var(--radius-md);
   overflow: hidden;
   background: transparent;
-  box-shadow:
-    0 4px 24px rgba(0, 0, 0, 0.35),
-    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  box-shadow: var(--shadow-card);
   transition:
     transform 0.35s var(--ease-out),
     box-shadow 0.35s var(--ease-out);
@@ -313,9 +311,8 @@ function onCarouselAuxClick(e: MouseEvent) {
 .project-card:not(.project-card--carousel):hover {
   transform: translateY(-4px);
   box-shadow:
-    0 16px 48px rgba(0, 0, 0, 0.45),
-    0 0 0 1px rgba(45, 212, 191, 0.12),
-    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    var(--shadow-card-hover),
+    0 0 0 1px color-mix(in srgb, var(--color-accent) 18%, transparent);
 }
 
 /* Carousel: no panel behind project — image + text float on page background */
@@ -343,14 +340,14 @@ function onCarouselAuxClick(e: MouseEvent) {
   overflow: hidden;
   background: transparent;
   outline: none;
-  border-radius: var(--radius-lg, 18px);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
 }
 
 .project-card:not(.project-card--carousel) .project-card__media:focus-visible {
   box-shadow:
-    0 12px 40px rgba(0, 0, 0, 0.35),
-    inset 0 0 0 2px var(--color-primary);
+    var(--shadow-card),
+    inset 0 0 0 2px var(--color-accent);
 }
 
 /* Carousel: no card chrome — image shrink-wraps and centers; hint sits on the bitmap */
@@ -380,9 +377,9 @@ function onCarouselAuxClick(e: MouseEvent) {
 }
 
 .project-card--carousel .project-card__media:focus-visible .project-card__carousel-frame {
-  outline: 2px solid var(--color-primary);
+  outline: 2px solid var(--color-accent);
   outline-offset: 4px;
-  border-radius: 12px;
+  border-radius: var(--radius-md);
 }
 
 /* Same footprint for every project: fixed frame, image scales inside with contain */
@@ -393,9 +390,9 @@ function onCarouselAuxClick(e: MouseEvent) {
   max-width: 100%;
   aspect-ratio: 16 / 9;
   line-height: 0;
-  border-radius: 14px;
+  border-radius: var(--radius-md);
   overflow: hidden;
-  box-shadow: 0 24px 56px rgba(2, 6, 23, 0.3);
+  box-shadow: 0 24px 56px rgba(10, 7, 5, 0.4);
   transform: none;
   transition: box-shadow 680ms cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -407,10 +404,10 @@ function onCarouselAuxClick(e: MouseEvent) {
 
 .project-card--carousel.project-card--main-display .project-card__carousel-frame {
   box-shadow:
-    -32px 0 64px rgba(var(--project-glow-left), 0.05),
-    32px 0 64px rgba(var(--project-glow-right), 0.05),
-    0 0 64px rgba(var(--project-glow-color), 0.035),
-    0 24px 56px rgba(2, 6, 23, 0.3);
+    -32px 0 64px rgba(var(--project-glow-left), 0.045),
+    32px 0 64px rgba(var(--project-glow-right), 0.045),
+    0 0 64px rgba(var(--project-glow-color), 0.03),
+    0 24px 56px rgba(10, 7, 5, 0.4);
 }
 
 .project-card--carousel.project-card--main-display .project-card__media,
@@ -462,22 +459,22 @@ function onCarouselAuxClick(e: MouseEvent) {
   background:
     radial-gradient(
       ellipse 95% 80% at 18% 50%,
-      rgba(var(--project-glow-left), 0.08) 0%,
+      rgba(var(--project-glow-left), 0.05) 0%,
       transparent 50%
     ),
     radial-gradient(
       ellipse 95% 80% at 82% 50%,
-      rgba(var(--project-glow-right), 0.08) 0%,
+      rgba(var(--project-glow-right), 0.05) 0%,
       transparent 50%
     ),
     radial-gradient(
       ellipse 100% 90% at 50% 56%,
-      rgba(var(--project-glow-color), 0.05) 0%,
+      rgba(var(--project-glow-color), 0.03) 0%,
       transparent 54%
     );
   will-change: opacity, transform;
   transform: scale(0.9);
-  opacity: 0.18;
+  opacity: 0.1;
 }
 
 .project-card__carousel-glow-surface--animating {
@@ -487,15 +484,15 @@ function onCarouselAuxClick(e: MouseEvent) {
 @keyframes glow-grow-in {
   0% {
     transform: scale(0.9);
-    opacity: 0.08;
+    opacity: 0.04;
   }
   60% {
     transform: scale(1.02);
-    opacity: 0.44;
+    opacity: 0.24;
   }
   100% {
     transform: scale(1);
-    opacity: 0.56;
+    opacity: 0.32;
   }
 }
 
@@ -536,9 +533,9 @@ function onCarouselAuxClick(e: MouseEvent) {
   width: 34px;
   height: 34px;
   border-radius: 999px;
-  color: var(--color-primary);
-  background: rgba(15, 23, 42, 0.72);
-  box-shadow: 0 6px 18px rgba(2, 6, 23, 0.45);
+  color: var(--color-accent-soft);
+  background: rgba(20, 16, 13, 0.78);
+  box-shadow: 0 6px 18px rgba(10, 7, 5, 0.5);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -595,11 +592,12 @@ function onCarouselAuxClick(e: MouseEvent) {
 
 .project-card__title {
   margin: 0;
-  font-family: var(--font-sans);
+  font-family: var(--font-display);
+  font-style: italic;
   font-size: clamp(1.2rem, 2.2vw, 1.45rem);
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  color: var(--color-text);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: var(--color-ink);
   line-height: 1.2;
 }
 
@@ -607,7 +605,7 @@ function onCarouselAuxClick(e: MouseEvent) {
   margin: 0;
   font-size: 0.95rem;
   line-height: 1.6;
-  color: var(--color-text-muted, #94a3b8);
+  color: var(--color-ink-muted);
 }
 
 .project-card--carousel .project-card__description {
