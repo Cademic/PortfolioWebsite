@@ -64,9 +64,9 @@ function ProjectCard({ project }: { project: (typeof projects)[number] }) {
   return (
     <div
       data-card
-      className="group relative flex w-[85vw] max-w-[400px] shrink-0 flex-col overflow-hidden rounded-xl  bg-card shadow-sm transition-all duration-300 ease-out hover:-translate-y-2 hover:border-accent/40 hover:shadow-xl hover:shadow-black/10 hover:z-10 sm:w-[400px]"
+      className="group relative flex w-[62vw] max-w-[260px] shrink-0 flex-col overflow-hidden rounded-xl  bg-card shadow-sm transition-all duration-300 ease-out hover:-translate-y-2 hover:border-accent/40 hover:shadow-xl hover:shadow-black/10 hover:z-10 sm:w-[400px] sm:max-w-none"
     >
-      <div className="flex items-center gap-2 border-b border-panel-strong/60 bg-panel px-4 py-3">
+      <div className="flex items-center gap-2 border-b border-panel-strong/60 bg-panel px-3 py-2 sm:px-4 sm:py-3">
         <span className="h-2.5 w-2.5 rounded-full bg-red-500" />
         <span className="h-2.5 w-2.5 rounded-full bg-yellow-500" />
         <span className="h-2.5 w-2.5 rounded-full bg-green-500" />
@@ -74,23 +74,23 @@ function ProjectCard({ project }: { project: (typeof projects)[number] }) {
           ~/projects/{slug}
         </span>
       </div>
-      <div className="relative h-56 w-full overflow-hidden bg-panel-strong">
+      <div className="relative h-32 w-full overflow-hidden bg-panel-strong sm:h-56">
         <Image
           src={project.image}
           alt={project.name}
           fill
-          sizes="400px"
+          sizes="(max-width: 639px) 62vw, 400px"
           draggable={false}
           className="object-cover select-none transition-transform duration-500 ease-out group-hover:scale-110"
         />
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-black/0" />
       </div>
-      <div className="flex flex-1 flex-col p-6">
-        <h3 className="flex items-baseline gap-2 text-headline-lg-mobile font-bold text-ink mb-3 font-mono">
+      <div className="flex flex-1 flex-col p-4 sm:p-6">
+        <h3 className="flex items-baseline gap-2 text-lg sm:text-headline-lg-mobile font-bold text-ink mb-2 sm:mb-3 font-mono">
           {project.name}
         </h3>
-        <p className="text-body-md text-ink-muted mb-5 flex-1">{project.description}</p>
-        <div className="flex items-center gap-3 border-t border-panel-strong/60 pt-4">
+        <p className="text-sm sm:text-body-md text-ink-muted mb-3 sm:mb-5 flex-1">{project.description}</p>
+        <div className="flex items-center gap-3 border-t border-panel-strong/60 pt-3 sm:pt-4">
           <a
             href={project.githubUrl}
             target="_blank"

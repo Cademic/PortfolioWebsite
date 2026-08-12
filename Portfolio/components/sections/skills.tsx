@@ -16,6 +16,37 @@ function badgeUrl({ label, color, logo, logoColor = "white" }: Badge) {
   return `https://img.shields.io/badge/${encodeURIComponent(label)}-${color}?${params.toString()}`;
 }
 
+function SkillBadge({ badge }: { badge: Badge }) {
+  const [loaded, setLoaded] = useState(false);
+  return (
+    <span
+      className={cn(
+        "relative inline-flex h-7 shrink-0 items-center",
+        !loaded && "w-20 overflow-hidden"
+      )}
+    >
+      {!loaded && (
+        <span
+          aria-hidden="true"
+          className="absolute inset-0 animate-skeleton rounded bg-panel-strong"
+        />
+      )}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={badgeUrl(badge)}
+        alt={badge.label}
+        height={28}
+        loading="lazy"
+        onLoad={() => setLoaded(true)}
+        className={cn(
+          "h-7 w-auto rounded transition-opacity duration-300 ease-out hover:scale-110",
+          loaded ? "opacity-100" : "absolute inset-0 opacity-0"
+        )}
+      />
+    </span>
+  );
+}
+
 const groups: { title: string; icon: Icon; reverse?: boolean; badges: Badge[] }[] = [
   {
     title: "Languages & Frameworks",
@@ -115,15 +146,7 @@ export function Skills() {
                       className="[--duration:70s] [--gap:0.75rem]"
                     >
                       {badges.map((b) => (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img
-                          key={b.label}
-                          src={badgeUrl(b)}
-                          alt={b.label}
-                          height={28}
-                          loading="lazy"
-                          className="h-7 w-auto rounded transition-transform duration-300 ease-out hover:scale-110"
-                        />
+                        <SkillBadge key={b.label} badge={b} />
                       ))}
                     </Marquee>
                     <div className="pointer-events-none absolute inset-y-0 left-0 w-16 bg-gradient-to-r from-paper to-transparent" />
@@ -170,15 +193,7 @@ export function Skills() {
                     </h4>
                     <div className="flex flex-wrap gap-3">
                       {badges.map((b) => (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img
-                          key={b.label}
-                          src={badgeUrl(b)}
-                          alt={b.label}
-                          height={28}
-                          loading="lazy"
-                          className="h-7 w-auto rounded transition-transform duration-300 ease-out hover:scale-110"
-                        />
+                        <SkillBadge key={b.label} badge={b} />
                       ))}
                     </div>
                   </div>

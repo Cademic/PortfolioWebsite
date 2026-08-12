@@ -148,7 +148,12 @@
   65%, 85% {
     transform: translateZ(0) rotate(270deg);}
   100% {
-    transform: translateZ(0) rotate(360deg);}}}
+    transform: translateZ(0) rotate(360deg);}}
+  --animate-skeleton: skeleton 1.6s ease-in-out infinite;
+  @keyframes skeleton {
+    0%, 100% { opacity: 0.35; }
+    50% { opacity: 0.75; }
+  }}
 
 :root {
   --ink: #111827;

@@ -55,14 +55,20 @@ export function SiteNav() {
             </ShimmerButton>
           </a>
         </div>
-        <button
-          className="md:hidden text-ink transition-transform duration-300 ease-out hover:scale-110"
-          aria-label={open ? "Close menu" : "Open menu"}
-          aria-expanded={open}
-          onClick={() => setOpen((v) => !v)}
-        >
-          {open ? <X size={24} /> : <List size={24} />}
-        </button>
+        <div className="flex items-center gap-3 md:hidden">
+          <AnimatedThemeToggler
+            fromCenter
+            className="text-ink transition-transform duration-300 ease-out hover:scale-110 hover:text-accent"
+          />
+          <button
+            className="text-ink transition-transform duration-300 ease-out hover:scale-110"
+            aria-label={open ? "Close menu" : "Open menu"}
+            aria-expanded={open}
+            onClick={() => setOpen((v) => !v)}
+          >
+            {open ? <X size={24} /> : <List size={24} />}
+          </button>
+        </div>
       </div>
       {open && (
         <div className="md:hidden border-t border-panel-strong bg-card px-6 py-4 flex flex-col gap-4">
@@ -76,13 +82,6 @@ export function SiteNav() {
               {link.label}
             </a>
           ))}
-          <div className="flex items-center gap-2 text-ink font-mono text-label-sm uppercase tracking-[0.1em]">
-            <AnimatedThemeToggler
-              fromCenter
-              className="transition-transform duration-300 ease-out hover:scale-110"
-            />
-            Toggle theme
-          </div>
         </div>
       )}
     </nav>
