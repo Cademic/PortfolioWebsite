@@ -6,19 +6,24 @@ import { HeroHeading } from "@/components/hero-heading";
 
 export function Hero() {
   return (
-    <section className="relative min-h-[70vh] flex items-center px-6 sm:px-8 overflow-hidden">
+    <section className="relative flex items-center px-6 sm:px-8 py-20 sm:py-0 sm:min-h-[70vh] overflow-hidden">
       <HeroShaderBackground className="absolute inset-0 w-full h-full -z-10 animate-in fade-in duration-1000 fill-mode-both" />
+      <Ripple
+        mainCircleSize={140}
+        numCircles={6}
+        className="sm:hidden animate-in fade-in duration-1000 fill-mode-both"
+      />
       <Ripple
         mainCircleSize={420}
         numCircles={10}
-        className="animate-in fade-in duration-1000 fill-mode-both"
+        className="hidden sm:block animate-in fade-in duration-1000 fill-mode-both"
       />
       <div className="max-w-[1200px] w-full mx-auto grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
         <div className="md:col-span-8">
           <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 delay-150 fill-mode-both">
             <HeroHeading
               text="Hi, I'm Carter Wright"
-              className="text-[40px] sm:text-display-lg font-extrabold tracking-tight text-ink"
+              className="text-[38px] sm:text-display-lg font-extrabold tracking-tight text-ink"
             />
           </div>
           <TypingAnimation

@@ -1,6 +1,5 @@
 import { CheckCircle } from "@phosphor-icons/react/dist/ssr";
 import { TextAnimate } from "@/components/ui/text-animate";
-import { DotPattern } from "@/components/ui/dot-pattern";
 
 const hobbies = [
   "Exercising and Working Out",
@@ -12,10 +11,6 @@ const hobbies = [
 export function About() {
   return (
     <section id="about" className="relative py-24 bg-sky-50 dark:bg-sky-950/20 overflow-hidden">
-      <DotPattern
-        glow
-        className="[mask-image:radial-gradient(300px_circle_at_center,white,transparent)]"
-      />
       <div className="max-w-[1200px] mx-auto px-6 sm:px-8 relative">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           <div>
