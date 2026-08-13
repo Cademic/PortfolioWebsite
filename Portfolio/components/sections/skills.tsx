@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import type { Icon } from "@phosphor-icons/react/lib";
 import { CodeIcon, DatabaseIcon, CaretDownIcon } from "@phosphor-icons/react/dist/ssr";
 import { TextAnimate } from "@/components/ui/text-animate";
@@ -18,6 +18,14 @@ function badgeUrl({ label, color, logo, logoColor = "white" }: Badge) {
 
 function SkillBadge({ badge }: { badge: Badge }) {
   const [loaded, setLoaded] = useState(false);
+
+  // Cached images can finish loading before React attaches the onLoad
+  // listener, so the event never fires. This ref callback catches that
+  // case by checking `complete` as soon as the node mounts.
+  const imgRef = useCallback((node: HTMLImageElement | null) => {
+    if (node?.complete) setLoaded(true);
+  }, []);
+
   return (
     <span
       className={cn(
@@ -33,6 +41,7 @@ function SkillBadge({ badge }: { badge: Badge }) {
       )}
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
+        ref={imgRef}
         src={badgeUrl(badge)}
         alt={badge.label}
         height={28}
