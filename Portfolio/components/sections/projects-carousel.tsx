@@ -132,7 +132,7 @@ function ProjectFront({ project }: { project: Project }) {
       <div className="absolute inset-0 bg-black/70 transition-colors duration-300 ease-out group-hover:bg-black/55" />
       <div className="relative flex h-full w-full flex-row items-center justify-center gap-2 px-3 text-center sm:flex-col sm:gap-3">
         {project.logo ? (
-          <span className="relative h-8 w-16 shrink-0 sm:h-14 sm:w-32">
+          <span className="relative h-10 w-20 shrink-0 sm:h-14 sm:w-32">
             <Image
               src={project.logo}
               alt={`${project.name} logo`}
@@ -142,13 +142,13 @@ function ProjectFront({ project }: { project: Project }) {
             />
           </span>
         ) : (
-          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/10 text-white sm:h-14 sm:w-14">
-            <CodeIcon size={16} weight="bold" className="sm:hidden" />
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/10 text-white sm:h-14 sm:w-14">
+            <CodeIcon size={20} weight="bold" className="sm:hidden" />
             <CodeIcon size={26} weight="bold" className="hidden sm:block" />
           </span>
         )}
         <div className="flex flex-col gap-1">
-          <p className="max-w-full truncate font-mono text-sm font-bold text-white">
+          <p className="max-w-full truncate font-mono text-base font-bold text-white">
             {project.name}
           </p>
           <p className="hidden max-w-full truncate font-mono text-xs text-white/50 sm:block">
@@ -164,16 +164,16 @@ function ProjectBack({ project, priority }: { project: Project; priority: boolea
   const slug = project.name.toLowerCase().replace(/\s+/g, "-");
   return (
     <>
-      <div className="flex shrink-0 items-center gap-2 border-b border-panel-strong/60 bg-panel px-3 py-0.5 sm:px-4 sm:py-1.5">
-        <span className="h-2 w-2 rounded-full bg-red-500 sm:h-2.5 sm:w-2.5" />
-        <span className="h-2 w-2 rounded-full bg-yellow-500 sm:h-2.5 sm:w-2.5" />
-        <span className="h-2 w-2 rounded-full bg-green-500 sm:h-2.5 sm:w-2.5" />
-        <span className="ml-1.5 truncate font-mono text-[10px] text-ink-muted sm:text-sm">
+      <div className="flex shrink-0 items-center gap-2 border-b border-panel-strong/60 bg-panel px-3 py-1.5">
+        <span className="h-2.5 w-2.5 rounded-full bg-red-500" />
+        <span className="h-2.5 w-2.5 rounded-full bg-yellow-500" />
+        <span className="h-2.5 w-2.5 rounded-full bg-green-500" />
+        <span className="ml-1.5 truncate font-mono text-xs text-ink-muted sm:text-sm">
           ~/projects/{slug}
         </span>
       </div>
 
-      <div className="relative h-6 w-full shrink-0 overflow-hidden bg-panel-strong sm:h-20">
+      <div className="relative aspect-video w-full shrink-0 overflow-hidden bg-panel-strong sm:aspect-auto sm:h-20">
         <Image
           src={project.image}
           alt={project.name}
@@ -196,24 +196,24 @@ function ProjectBack({ project, priority }: { project: Project; priority: boolea
           a fallback for content that doesn't quite fit rather than the
           intended read path — the card's sizing is tuned so it isn't
           needed in the common case. */}
-      <div className="scrollbar-hide flex flex-1 flex-col overflow-y-auto p-1 sm:p-3">
-        <div className="space-y-0 sm:space-y-1.5">
-          <h3 className="mb-1.5 font-mono text-xs font-bold text-ink sm:mb-3 sm:text-lg">
+      <div className="scrollbar-hide flex flex-1 flex-col overflow-y-auto p-3">
+        <div className="space-y-1.5">
+          <h3 className="mb-2 font-mono text-base font-bold text-ink sm:mb-3 sm:text-lg">
             {project.name}
           </h3>
           {/* The bullets below restate the description in more detail,
               so skip the redundant summary when they're present. */}
           {project.highlights.length === 0 && (
-            <p className="line-clamp-3 text-[10px] leading-none text-ink-muted sm:text-base sm:leading-snug">
+            <p className="line-clamp-3 text-sm leading-snug text-ink-muted sm:text-base">
               {project.description}
             </p>
           )}
           {project.highlights.length > 0 && (
-            <ul className="space-y-0 text-[10px] leading-none text-ink-muted sm:space-y-1.5 sm:text-base sm:leading-snug">
+            <ul className="space-y-1 text-sm leading-snug text-ink-muted sm:space-y-1.5 sm:text-base">
               {project.highlights.map((point) => (
-                <li key={point} className="flex items-start gap-1 sm:gap-2">
+                <li key={point} className="flex items-start gap-1.5 sm:gap-2">
                   <CheckCircle
-                    size={11}
+                    size={14}
                     className="mt-0.5 shrink-0 text-sky-600 dark:text-sky-400 sm:hidden"
                   />
                   <CheckCircle
@@ -226,13 +226,13 @@ function ProjectBack({ project, priority }: { project: Project; priority: boolea
             </ul>
           )}
         </div>
-        <div className="mt-auto space-y-1 pt-1 sm:space-y-2 sm:pt-2">
-          <div className="flex flex-wrap gap-1 sm:gap-2">
+        <div className="mt-auto space-y-1.5 pt-2 sm:space-y-2">
+          <div className="flex flex-wrap gap-1.5 sm:gap-2">
             {project.techStack.map((badge) => (
               <TechBadge key={badge.label} badge={badge} size={16} />
             ))}
           </div>
-          <div className="flex items-center gap-1.5 sm:gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
             <Tooltip>
               <TooltipTrigger
                 render={
@@ -242,9 +242,9 @@ function ProjectBack({ project, priority }: { project: Project; priority: boolea
                     rel="noopener noreferrer"
                     aria-label={`View ${project.name} source code on GitHub`}
                     onClick={(e: React.MouseEvent) => e.stopPropagation()}
-                    className="flex h-7 w-7 items-center justify-center rounded-full border border-panel-strong text-ink transition-[color,background-color,transform,border-color] duration-300 ease-out hover:scale-110 hover:border-ink hover:bg-ink hover:text-card sm:h-10 sm:w-10"
+                    className="flex h-9 w-9 items-center justify-center rounded-full border border-panel-strong text-ink transition-[color,background-color,transform,border-color] duration-300 ease-out hover:scale-110 hover:border-ink hover:bg-ink hover:text-card sm:h-10 sm:w-10"
                   >
-                    <GithubLogoIcon size={14} className="sm:hidden" />
+                    <GithubLogoIcon size={16} className="sm:hidden" />
                     <GithubLogoIcon size={18} className="hidden sm:block" />
                   </a>
                 }
@@ -261,9 +261,9 @@ function ProjectBack({ project, priority }: { project: Project; priority: boolea
                       rel="noopener noreferrer"
                       aria-label={`Open ${project.name} live site`}
                       onClick={(e: React.MouseEvent) => e.stopPropagation()}
-                      className="flex h-7 w-7 items-center justify-center rounded-full border border-panel-strong text-ink transition-[color,background-color,transform,border-color] duration-300 ease-out hover:scale-110 hover:border-accent hover:bg-accent hover:text-ink-on-accent sm:h-10 sm:w-10"
+                      className="flex h-9 w-9 items-center justify-center rounded-full border border-panel-strong text-ink transition-[color,background-color,transform,border-color] duration-300 ease-out hover:scale-110 hover:border-accent hover:bg-accent hover:text-ink-on-accent sm:h-10 sm:w-10"
                     >
-                      <ArrowSquareOutIcon size={14} className="sm:hidden" />
+                      <ArrowSquareOutIcon size={16} className="sm:hidden" />
                       <ArrowSquareOutIcon size={18} className="hidden sm:block" />
                     </a>
                   }

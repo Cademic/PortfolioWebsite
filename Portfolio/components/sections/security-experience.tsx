@@ -203,7 +203,7 @@ function DepthStackCard({
       aria-roledescription="slide"
       aria-label={`${i + 1} of ${count}`}
       aria-hidden={!isActive}
-      className={cn("absolute inset-0", !isActive && "cursor-pointer")}
+      className={cn("absolute inset-0", !isActive && "hidden cursor-pointer sm:block")}
       style={{ zIndex: 10 - Math.abs(offset), x }}
       initial={false}
       animate={
@@ -292,7 +292,7 @@ export function SecurityExperience() {
       </div>
 
       <div className="mx-auto max-w-[680px] px-3 sm:px-8">
-        <div className="relative h-[828px] sm:h-[580px]">
+        <div className="relative h-[760px] sm:h-[580px]">
           <div
             role="region"
             aria-roledescription="carousel"
@@ -300,7 +300,7 @@ export function SecurityExperience() {
             tabIndex={0}
             onKeyDown={handleKeyDown}
             style={{ perspective: PERSPECTIVE_PX }}
-            className="absolute inset-x-0 top-0 h-[920px] origin-top scale-90 outline-none focus-visible:ring-2 focus-visible:ring-accent sm:relative sm:top-auto sm:h-[580px] sm:scale-100"
+            className="absolute inset-x-0 top-0 h-[760px] origin-top outline-none focus-visible:ring-2 focus-visible:ring-accent sm:relative sm:top-auto sm:h-[580px]"
           >
             {engagements.map((engagement, i) => (
               <DepthStackCard
@@ -316,7 +316,7 @@ export function SecurityExperience() {
           </div>
         </div>
 
-        <div className="mt-6 flex items-center justify-center gap-4">
+        <div className="mt-3 flex items-center justify-center gap-4 sm:mt-6">
           <button
             type="button"
             onClick={() => goTo(index - 1)}

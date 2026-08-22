@@ -15,9 +15,7 @@ import { cn } from "@/lib/utils";
 // Fraction of the row/column the active panel occupies; the rest is split
 // evenly across the remaining collapsed panels. Ported from the flex-grow
 // math in reactbits' Accordion Gallery (expandRatio). Both values are tuned
-// alongside the back face's content density (see ProjectBack) to be the
-// smallest ratio that still fits the longest project's content without an
-// inner scrollbar, down to a ~320px viewport.
+// alongside the back face's content density (see ProjectBack).
 const EXPAND_RATIO_DESKTOP = 0.44;
 const EXPAND_RATIO_MOBILE = 0.63;
 const TILT_DEG = 6;
@@ -139,7 +137,7 @@ function AccordionGalleryPanel<T>({
       }}
       style={{ flexGrow: grow }}
       className={cn(
-        "group relative flex min-h-11 min-w-11 flex-1 cursor-pointer rounded-xl bg-transparent outline-none transition-[flex-grow] duration-500 ease-out focus-visible:ring-2 focus-visible:ring-accent motion-reduce:transition-none sm:min-h-0 sm:min-w-11",
+        "group relative flex min-h-16 min-w-11 flex-1 cursor-pointer rounded-xl bg-transparent outline-none transition-[flex-grow] duration-500 ease-out focus-visible:ring-2 focus-visible:ring-accent motion-reduce:transition-none sm:min-h-0 sm:min-w-11",
         isFlipAnimating ? "overflow-visible" : "overflow-hidden"
       )}
     >
@@ -275,7 +273,7 @@ export function AccordionGallery<T>({
       role="list"
       aria-label={ariaLabel}
       style={{ perspective: PERSPECTIVE }}
-      className={cn("flex h-[480px] flex-col gap-2 sm:h-[440px] sm:flex-row sm:gap-3", className)}
+      className={cn("flex h-[985px] flex-col gap-2 sm:h-[440px] sm:flex-row sm:gap-3", className)}
     >
       {items.map((item, i) => (
         <AccordionGalleryPanel
