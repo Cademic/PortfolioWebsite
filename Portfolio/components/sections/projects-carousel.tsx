@@ -4,13 +4,6 @@ import Image from "next/image";
 import { CodeIcon, GithubLogoIcon, ArrowSquareOutIcon, CheckCircle } from "@phosphor-icons/react/dist/ssr";
 import { TextAnimate } from "@/components/ui/text-animate";
 import { type Badge, TechBadge } from "@/components/ui/tech-badge";
-import {
-  PreviewCard,
-  PreviewCardTrigger,
-  PreviewCardPortal,
-  PreviewCardPositioner,
-  PreviewCardPopup,
-} from "@/components/animate-ui/primitives/base/preview-card";
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 import { AccordionGallery } from "@/components/ui/accordion-gallery";
 
@@ -171,16 +164,16 @@ function ProjectBack({ project, priority }: { project: Project; priority: boolea
   const slug = project.name.toLowerCase().replace(/\s+/g, "-");
   return (
     <>
-      <div className="flex shrink-0 items-center gap-2 border-b border-panel-strong/60 bg-panel px-4 py-1 sm:py-2">
-        <span className="h-2.5 w-2.5 rounded-full bg-red-500" />
-        <span className="h-2.5 w-2.5 rounded-full bg-yellow-500" />
-        <span className="h-2.5 w-2.5 rounded-full bg-green-500" />
-        <span className="ml-1.5 truncate font-mono text-xs text-ink-muted">
+      <div className="flex shrink-0 items-center gap-2 border-b border-panel-strong/60 bg-panel px-3 py-0.5 sm:px-4 sm:py-1.5">
+        <span className="h-2 w-2 rounded-full bg-red-500 sm:h-2.5 sm:w-2.5" />
+        <span className="h-2 w-2 rounded-full bg-yellow-500 sm:h-2.5 sm:w-2.5" />
+        <span className="h-2 w-2 rounded-full bg-green-500 sm:h-2.5 sm:w-2.5" />
+        <span className="ml-1.5 truncate font-mono text-[10px] text-ink-muted sm:text-sm">
           ~/projects/{slug}
         </span>
       </div>
 
-      <div className="relative h-11 w-full shrink-0 overflow-hidden bg-panel-strong sm:h-32">
+      <div className="relative h-6 w-full shrink-0 overflow-hidden bg-panel-strong sm:h-20">
         <Image
           src={project.image}
           alt={project.name}
@@ -198,26 +191,34 @@ function ProjectBack({ project, priority }: { project: Project; priority: boolea
           it. The text itself lives in a nested block-flow div, not as a
           direct flex-column child — a line-clamp element as a direct
           flex item in a shrinking column collapses to 0 height instead
-          of the container scrolling, so it stays one level removed. */}
-      <div className="flex flex-1 flex-col overflow-y-auto p-2 sm:p-5">
-        <div className="space-y-1 sm:space-y-2">
-          <h3 className="font-mono text-sm font-bold text-ink sm:text-lg">
+          of the container scrolling, so it stays one level removed.
+          overflow-y-auto (with the scrollbar visually hidden below) is
+          a fallback for content that doesn't quite fit rather than the
+          intended read path — the card's sizing is tuned so it isn't
+          needed in the common case. */}
+      <div className="scrollbar-hide flex flex-1 flex-col overflow-y-auto p-1 sm:p-3">
+        <div className="space-y-0 sm:space-y-1.5">
+          <h3 className="font-mono text-xs font-bold text-ink sm:text-lg">
             {project.name}
           </h3>
           {/* The bullets below restate the description in more detail,
               so skip the redundant summary when they're present. */}
           {project.highlights.length === 0 && (
-            <p className="line-clamp-3 text-xs leading-snug text-ink-muted sm:text-base sm:leading-normal">
+            <p className="line-clamp-3 text-[10px] leading-none text-ink-muted sm:text-base sm:leading-snug">
               {project.description}
             </p>
           )}
           {project.highlights.length > 0 && (
-            <ul className="space-y-1 text-xs leading-snug text-ink-muted sm:space-y-1.5 sm:text-base sm:leading-normal">
+            <ul className="space-y-0 text-[10px] leading-none text-ink-muted sm:space-y-1.5 sm:text-base sm:leading-snug">
               {project.highlights.map((point) => (
-                <li key={point} className="flex items-start gap-1.5 sm:gap-2">
+                <li key={point} className="flex items-start gap-1 sm:gap-2">
                   <CheckCircle
-                    size={16}
-                    className="mt-0.5 shrink-0 text-sky-600 dark:text-sky-400"
+                    size={11}
+                    className="mt-0.5 shrink-0 text-sky-600 dark:text-sky-400 sm:hidden"
+                  />
+                  <CheckCircle
+                    size={18}
+                    className="mt-0.5 hidden shrink-0 text-sky-600 dark:text-sky-400 sm:block"
                   />
                   <span>{point}</span>
                 </li>
@@ -225,13 +226,13 @@ function ProjectBack({ project, priority }: { project: Project; priority: boolea
             </ul>
           )}
         </div>
-        <div className="mt-auto space-y-1.5 pt-2 sm:space-y-2 sm:pt-3">
-          <div className="flex flex-wrap gap-1.5">
+        <div className="mt-auto space-y-1 pt-1 sm:space-y-2 sm:pt-2">
+          <div className="flex flex-wrap gap-1 sm:gap-2">
             {project.techStack.map((badge) => (
-              <TechBadge key={badge.label} badge={badge} size={20} />
+              <TechBadge key={badge.label} badge={badge} size={16} />
             ))}
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 sm:gap-3">
             <Tooltip>
               <TooltipTrigger
                 render={
@@ -241,40 +242,34 @@ function ProjectBack({ project, priority }: { project: Project; priority: boolea
                     rel="noopener noreferrer"
                     aria-label={`View ${project.name} source code on GitHub`}
                     onClick={(e: React.MouseEvent) => e.stopPropagation()}
-                    className="flex h-8 w-8 items-center justify-center rounded-full border border-panel-strong text-ink transition-[color,background-color,transform,border-color] duration-300 ease-out hover:scale-110 hover:border-ink hover:bg-ink hover:text-card"
+                    className="flex h-7 w-7 items-center justify-center rounded-full border border-panel-strong text-ink transition-[color,background-color,transform,border-color] duration-300 ease-out hover:scale-110 hover:border-ink hover:bg-ink hover:text-card sm:h-10 sm:w-10"
                   >
-                    <GithubLogoIcon size={14} />
+                    <GithubLogoIcon size={14} className="sm:hidden" />
+                    <GithubLogoIcon size={18} className="hidden sm:block" />
                   </a>
                 }
               />
               <TooltipContent>Github</TooltipContent>
             </Tooltip>
             {project.liveUrl && (
-              <PreviewCard>
-                <PreviewCardTrigger
-                  href={project.liveUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={`Open ${project.name} live site`}
-                  onClick={(e) => e.stopPropagation()}
-                  className="flex h-8 w-8 items-center justify-center rounded-full border border-panel-strong text-ink transition-[color,background-color,transform,border-color] duration-300 ease-out hover:scale-110 hover:border-accent hover:bg-accent hover:text-ink-on-accent"
-                >
-                  <ArrowSquareOutIcon size={14} />
-                </PreviewCardTrigger>
-                <PreviewCardPortal>
-                  <PreviewCardPositioner side="top" sideOffset={10} align="center" className="z-50">
-                    <PreviewCardPopup className="overflow-hidden rounded-md border border-panel-strong bg-card shadow-md">
-                      <iframe
-                        src={project.liveUrl}
-                        title={`${project.name} live preview`}
-                        sandbox="allow-scripts allow-same-origin"
-                        loading="lazy"
-                        className="pointer-events-none h-[180px] w-[320px]"
-                      />
-                    </PreviewCardPopup>
-                  </PreviewCardPositioner>
-                </PreviewCardPortal>
-              </PreviewCard>
+              <Tooltip>
+                <TooltipTrigger
+                  render={
+                    <a
+                      href={project.liveUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={`Open ${project.name} live site`}
+                      onClick={(e: React.MouseEvent) => e.stopPropagation()}
+                      className="flex h-7 w-7 items-center justify-center rounded-full border border-panel-strong text-ink transition-[color,background-color,transform,border-color] duration-300 ease-out hover:scale-110 hover:border-accent hover:bg-accent hover:text-ink-on-accent sm:h-10 sm:w-10"
+                    >
+                      <ArrowSquareOutIcon size={14} className="sm:hidden" />
+                      <ArrowSquareOutIcon size={18} className="hidden sm:block" />
+                    </a>
+                  }
+                />
+                <TooltipContent>Live Site</TooltipContent>
+              </Tooltip>
             )}
           </div>
         </div>
@@ -286,13 +281,13 @@ function ProjectBack({ project, priority }: { project: Project; priority: boolea
 export function ProjectsCarousel() {
   return (
     <>
-      <div className="max-w-[1200px] mx-auto px-6 sm:px-8 mb-10 sm:mb-12">
+      <div className="max-w-[1200px] mx-auto px-6 sm:px-8 mb-10 sm:mb-12 text-center">
         <TextAnimate
           as="h2"
           by="character"
           animation="slideLeft"
           once
-          className="text-headline-lg-mobile sm:text-headline-lg font-bold text-ink mb-2"
+          className="text-headline-lg-mobile font-bold text-ink mb-2"
         >
           Check Out My Work
         </TextAnimate>

@@ -6,6 +6,7 @@ import { List, X } from "@phosphor-icons/react";
 import { AnimatedShinyText } from "@/components/ui/animated-shiny-text";
 import { AnimatedThemeToggler } from "@/components/ui/animated-theme-toggler";
 import { ShimmerButton } from "@/components/ui/shimmer-button";
+import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 
 const links = [
   { href: "#projects", label: "Projects" },
@@ -35,32 +36,53 @@ export function SiteNav() {
           ))}
         </div>
         <div className="col-start-3 row-start-1 hidden md:flex items-center gap-4 justify-self-end">
-          <AnimatedThemeToggler
-            fromCenter
-            className="text-ink transition-transform duration-300 ease-out hover:scale-110 hover:text-accent"
-          />
-          <a
-            href="/resume.pdf"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex hover:scale-110 transition-transform duration-300 ease-out"
-          >
-            <ShimmerButton
-              tabIndex={-1}
-              background="var(--color-ink)"
-              shimmerColor="var(--color-card)"
-              borderRadius="0.25rem"
-              className="text-card font-mono text-label-sm uppercase tracking-[0.1em] px-6 py-2"
-            >
-              Resume
-            </ShimmerButton>
-          </a>
+          <Tooltip>
+            <TooltipTrigger
+              render={
+                <AnimatedThemeToggler
+                  fromCenter
+                  className="text-ink transition-transform duration-300 ease-out hover:scale-110 hover:text-accent"
+                />
+              }
+            />
+            <TooltipContent>Toggle Theme</TooltipContent>
+          </Tooltip>
+          <Tooltip>
+            <TooltipTrigger
+              render={
+                <a
+                  href="/resume.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex hover:scale-110 transition-transform duration-300 ease-out"
+                >
+                  <ShimmerButton
+                    tabIndex={-1}
+                    background="var(--color-ink)"
+                    shimmerColor="var(--color-card)"
+                    borderRadius="0.25rem"
+                    className="text-card font-mono text-label-sm uppercase tracking-[0.1em] px-6 py-2"
+                  >
+                    Resume
+                  </ShimmerButton>
+                </a>
+              }
+            />
+            <TooltipContent>View my Resume</TooltipContent>
+          </Tooltip>
         </div>
         <div className="col-start-3 row-start-1 flex items-center gap-3 md:hidden justify-self-end">
-          <AnimatedThemeToggler
-            fromCenter
-            className="text-ink transition-transform duration-300 ease-out hover:scale-110 hover:text-accent"
-          />
+          <Tooltip>
+            <TooltipTrigger
+              render={
+                <AnimatedThemeToggler
+                  fromCenter
+                  className="text-ink transition-transform duration-300 ease-out hover:scale-110 hover:text-accent"
+                />
+              }
+            />
+            <TooltipContent>Toggle Theme</TooltipContent>
+          </Tooltip>
           <button
             className="text-ink transition-transform duration-300 ease-out hover:scale-110"
             aria-label={open ? "Close menu" : "Open menu"}

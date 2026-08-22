@@ -269,7 +269,7 @@ export function SecurityExperience() {
 
   return (
     <div id="cybersecurity" className="relative">
-      <div className="max-w-[1200px] mx-auto px-6 sm:px-8 mb-10 sm:mb-12">
+      <div className="max-w-[1200px] mx-auto px-6 sm:px-8 mb-10 sm:mb-12 text-center">
         <TextAnimate
           as="h2"
           by="character"
@@ -291,8 +291,8 @@ export function SecurityExperience() {
         </TextAnimate>
       </div>
 
-      <div className="mx-auto max-w-[540px] px-6 sm:px-8">
-        <div className="relative h-[548px] sm:h-[750px]">
+      <div className="mx-auto max-w-[660px] px-6 sm:px-8">
+        <div className="relative h-[548px] sm:h-[580px]">
           <div
             role="region"
             aria-roledescription="carousel"
@@ -300,7 +300,7 @@ export function SecurityExperience() {
             tabIndex={0}
             onKeyDown={handleKeyDown}
             style={{ perspective: PERSPECTIVE_PX }}
-            className="absolute inset-x-0 top-0 h-[730px] origin-top scale-75 outline-none focus-visible:ring-2 focus-visible:ring-accent sm:relative sm:top-auto sm:h-[750px] sm:scale-100"
+            className="absolute inset-x-0 top-0 h-[730px] origin-top scale-75 outline-none focus-visible:ring-2 focus-visible:ring-accent sm:relative sm:top-auto sm:h-[580px] sm:scale-100"
           >
             {engagements.map((engagement, i) => (
               <DepthStackCard

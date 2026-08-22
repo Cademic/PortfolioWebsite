@@ -14,12 +14,12 @@ import { cn } from "@/lib/utils";
 
 // Fraction of the row/column the active panel occupies; the rest is split
 // evenly across the remaining collapsed panels. Ported from the flex-grow
-// math in reactbits' Accordion Gallery (expandRatio). Desktop uses a lower
-// ratio than mobile so the expanded panel reads as a portrait card instead
-// of a wide landscape one; mobile keeps the larger ratio it was tuned for
-// so the flipped card's content still fits without scrolling.
-const EXPAND_RATIO_DESKTOP = 0.34;
-const EXPAND_RATIO_MOBILE = 0.55;
+// math in reactbits' Accordion Gallery (expandRatio). Both values are tuned
+// alongside the back face's content density (see ProjectBack) to be the
+// smallest ratio that still fits the longest project's content without an
+// inner scrollbar, down to a ~320px viewport.
+const EXPAND_RATIO_DESKTOP = 0.44;
+const EXPAND_RATIO_MOBILE = 0.63;
 const TILT_DEG = 6;
 // Perspective distance for the flip/tilt 3D transforms. The expanded card can
 // be ~450px wide, and CSS perspective foreshortening magnifies the near edge
@@ -80,6 +80,8 @@ interface AccordionGalleryPanelProps<T> {
   onActivate: () => void;
   onHoverStart?: () => void;
   onHoverEnd?: () => void;
+  onFocusStart: () => void;
+  onFocusEnd: () => void;
   onKeyDown: (e: KeyboardEvent<HTMLDivElement>) => void;
   priority: boolean;
   getLabel: (item: T) => string;
@@ -98,6 +100,8 @@ function AccordionGalleryPanel<T>({
   onActivate,
   onHoverStart,
   onHoverEnd,
+  onFocusStart,
+  onFocusEnd,
   onKeyDown,
   priority,
   getLabel,
@@ -123,6 +127,8 @@ function AccordionGalleryPanel<T>({
       onClick={onActivate}
       onMouseEnter={onHoverStart}
       onMouseLeave={onHoverEnd}
+      onFocus={onFocusStart}
+      onBlur={onFocusEnd}
       onKeyDown={(e) => {
         if (e.key === "Enter" || e.key === " ") {
           e.preventDefault();
@@ -133,7 +139,7 @@ function AccordionGalleryPanel<T>({
       }}
       style={{ flexGrow: grow }}
       className={cn(
-        "group relative flex min-h-11 min-w-11 flex-1 cursor-pointer rounded-xl bg-transparent outline-none transition-[flex-grow] duration-500 ease-out focus-visible:ring-2 focus-visible:ring-accent motion-reduce:transition-none sm:min-h-0 sm:min-w-[72px]",
+        "group relative flex min-h-11 min-w-11 flex-1 cursor-pointer rounded-xl bg-transparent outline-none transition-[flex-grow] duration-500 ease-out focus-visible:ring-2 focus-visible:ring-accent motion-reduce:transition-none sm:min-h-0 sm:min-w-11",
         isFlipAnimating ? "overflow-visible" : "overflow-hidden"
       )}
     >
@@ -198,19 +204,20 @@ export function AccordionGallery<T>({
   className,
 }: AccordionGalleryProps<T>) {
   const count = items.length;
+  // `active` only tracks the last-selected card for aria-current — it no
+  // longer drives expansion. With nothing hovered or focused, every panel
+  // sits at its small, collapsed size; only a hovered or keyboard-focused
+  // card expands (and flips to its back), so `expanded` doubles as the
+  // flipped index too.
   const [active, setActive] = useState(0);
-  // Whether the active card should show its back. Separate from `active` so
-  // that hovering away and back doesn't silently re-flip it — only a click
-  // (or keyboard activation) is allowed to show the back again. Starts false
-  // so the page loads on the front face instead of already flipped.
-  const [flipped, setFlipped] = useState(false);
   const [hovered, setHovered] = useState<number | null>(null);
+  const [focused, setFocused] = useState<number | null>(null);
   const isDesktop = useMediaQuery("(min-width: 640px)");
   const supportsHover = useMediaQuery("(hover: hover) and (pointer: fine)");
   const hoverTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const grow = growFor(isDesktop ? EXPAND_RATIO_DESKTOP : EXPAND_RATIO_MOBILE, count);
-  const expanded = hovered ?? active;
+  const expanded = hovered ?? focused;
 
   const clearHoverTimeout = useCallback(() => {
     if (hoverTimeoutRef.current !== null) {
@@ -220,30 +227,18 @@ export function AccordionGallery<T>({
   }, []);
   useEffect(() => clearHoverTimeout, [clearHoverTimeout]);
 
-  const handleActivate = useCallback(
-    (i: number) => {
-      if (i === active) {
-        setFlipped((f) => !f);
-      } else {
-        setActive(i);
-        setFlipped(true);
-      }
-    },
-    [active]
-  );
+  const handleActivate = useCallback((i: number) => {
+    setActive(i);
+  }, []);
 
   const handleHoverStart = useCallback(
     (i: number) => {
       clearHoverTimeout();
       hoverTimeoutRef.current = setTimeout(() => {
         setHovered(i);
-        // Flip the active card back to its front only when a *different*
-        // card is hovered — losing hover entirely (mouse leaves the
-        // gallery) should leave it exactly as it was.
-        if (i !== active) setFlipped(false);
       }, HOVER_INTENT_DELAY);
     },
-    [active, clearHoverTimeout]
+    [clearHoverTimeout]
   );
 
   const handleHoverEnd = useCallback(
@@ -254,16 +249,22 @@ export function AccordionGallery<T>({
     [clearHoverTimeout]
   );
 
+  const handleFocusStart = useCallback((i: number) => {
+    setFocused(i);
+  }, []);
+
+  const handleFocusEnd = useCallback((i: number) => {
+    setFocused((f) => (f === i ? null : f));
+  }, []);
+
   const handleKeyDown = useCallback(
     (e: KeyboardEvent<HTMLDivElement>) => {
       if (e.key === "ArrowRight" || e.key === "ArrowDown") {
         e.preventDefault();
         setActive((i) => (i + 1) % count);
-        setFlipped(true);
       } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
         e.preventDefault();
         setActive((i) => (i - 1 + count) % count);
-        setFlipped(true);
       }
     },
     [count]
@@ -274,7 +275,7 @@ export function AccordionGallery<T>({
       role="list"
       aria-label={ariaLabel}
       style={{ perspective: PERSPECTIVE }}
-      className={cn("flex h-[640px] flex-col gap-3 sm:h-[620px] sm:flex-row sm:gap-4", className)}
+      className={cn("flex h-[480px] flex-col gap-2 sm:h-[440px] sm:flex-row sm:gap-3", className)}
     >
       {items.map((item, i) => (
         <AccordionGalleryPanel
@@ -283,12 +284,14 @@ export function AccordionGallery<T>({
           index={i}
           count={count}
           isActive={i === active}
-          isFlipped={i === active && flipped && i === expanded}
+          isFlipped={i === expanded}
           grow={i === expanded ? grow : 1}
-          tiltDirection={i === expanded ? 0 : i < expanded ? 1 : -1}
+          tiltDirection={expanded === null ? 0 : i === expanded ? 0 : i < expanded ? 1 : -1}
           onActivate={() => handleActivate(i)}
           onHoverStart={supportsHover ? () => handleHoverStart(i) : undefined}
           onHoverEnd={supportsHover ? () => handleHoverEnd(i) : undefined}
+          onFocusStart={() => handleFocusStart(i)}
+          onFocusEnd={() => handleFocusEnd(i)}
           onKeyDown={handleKeyDown}
           priority={i === 0}
           getLabel={getLabel}

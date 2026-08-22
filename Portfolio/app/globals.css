@@ -246,6 +246,16 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Keeps the element scrollable (as a fallback for content that slightly
+   overflows) without ever showing a visible scrollbar. */
+.scrollbar-hide {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
   ::view-transition-old(root), ::view-transition-new(root) {
     animation: none;
     mix-blend-mode: normal;

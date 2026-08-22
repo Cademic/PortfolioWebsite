@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   description: "Full-stack software developer & Cybersecurity analyst",
 };
 
-const themeInitScript = `(function(){try{var t=localStorage.getItem("theme");if(t==="dark"||(!t&&window.matchMedia("(prefers-color-scheme: dark)").matches)){document.documentElement.classList.add("dark")}}catch(e){}})();`;
+const themeInitScript = `(function(){try{var t=localStorage.getItem("theme");if(t==="dark"){document.documentElement.classList.add("dark")}}catch(e){}})();`;
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (

@@ -15,7 +15,7 @@ export type TransitionVariant =
   | "rectangle"
   | "star"
 
-interface AnimatedThemeTogglerProps extends React.ComponentPropsWithoutRef<"button"> {
+interface AnimatedThemeTogglerProps extends React.ComponentPropsWithRef<"button"> {
   duration?: number
   variant?: TransitionVariant
   /** When true, the transition expands from the viewport center instead of the button center. */
@@ -157,6 +157,8 @@ export const AnimatedThemeToggler = ({
   fromCenter = false,
   theme,
   onThemeChange,
+  ref: forwardedRef,
+  onClick: onClickProp,
   ...props
 }: AnimatedThemeTogglerProps) => {
   const shape = variant ?? "circle"
@@ -166,6 +168,20 @@ export const AnimatedThemeToggler = ({
   const buttonRef = useRef<HTMLButtonElement>(null)
   const isTransitioningRef = useRef(false)
   const activeAnimRef = useRef<Animation | null>(null)
+
+  // A wrapping trigger (e.g. TooltipTrigger's `render`) clones this element
+  // with its own ref — merge it with our internal ref instead of losing one.
+  const setRefs = useCallback(
+    (node: HTMLButtonElement | null) => {
+      buttonRef.current = node
+      if (typeof forwardedRef === "function") {
+        forwardedRef(node)
+      } else if (forwardedRef) {
+        forwardedRef.current = node
+      }
+    },
+    [forwardedRef]
+  )
 
   const cancelAnim = useCallback(() => {
     activeAnimRef.current?.cancel()
@@ -315,12 +331,20 @@ export const AnimatedThemeToggler = ({
     cancelAnim,
   ])
 
+  const handleClick = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement>) => {
+      onClickProp?.(e)
+      toggleTheme()
+    },
+    [onClickProp, toggleTheme]
+  )
+
   return (
     <button
       type="button"
-      ref={buttonRef}
-      onClick={toggleTheme}
-      className={cn(className)}
+      ref={setRefs}
+      onClick={handleClick}
+      className={cn("cursor-pointer", className)}
       {...props}
     >
       {isDark ? <SunIcon /> : <MoonIcon />}

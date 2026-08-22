@@ -29,9 +29,12 @@ export function Contact() {
           </TextAnimate>
           <a
             href="mailto:carterwright221@gmail.com"
-            className="group mt-2 inline-flex items-center gap-2 rounded-full border border-panel-strong bg-card px-6 py-3 text-sm font-medium text-ink shadow-sm transition-[transform,box-shadow,background-color,color] duration-200 ease-out hover:-translate-y-0.5 hover:shadow-lg hover:bg-ink hover:text-card motion-reduce:transition-none motion-reduce:hover:transform-none"
+            className="group mt-2 inline-flex items-center gap-2 rounded-full border border-panel-strong bg-card px-6 py-3 text-sm font-medium text-ink shadow-sm outline-none transition-[transform,box-shadow,background-color,color] duration-200 ease-out hover:-translate-y-0.5 hover:bg-ink hover:text-card hover:shadow-lg active:translate-y-0 active:scale-95 active:duration-150 focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 motion-reduce:transition-none motion-reduce:hover:transform-none"
           >
-            <EnvelopeSimpleIcon className="h-4 w-4" aria-hidden="true" />
+            <EnvelopeSimpleIcon
+              className="h-4 w-4 transition-transform duration-300 ease-out group-hover:-rotate-6 group-hover:scale-110"
+              aria-hidden="true"
+            />
             carterwright221@gmail.com
           </a>
         </div>
