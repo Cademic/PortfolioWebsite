@@ -31,7 +31,7 @@ export function About() {
               delay={0.1}
               className="text-body-md text-ink-muted mb-4"
             >
-              Hello! My name is Carter Wright, I'm a software developer. I graduated from Grand Canyon University with a Bachelors in Software Development and minor in Cybersecurity.
+              Hello! My name is Carter Wright, I’m a software developer. I graduated from Grand Canyon University with a Bachelors in Software Development and minor in Cybersecurity.
             </TextAnimate>
             <TextAnimate
               as="p"
@@ -41,7 +41,7 @@ export function About() {
               delay={0.2}
               className="text-body-md text-ink-muted mb-4"
             >
-              I'm currently living in Michigan and seeking full time job opportunities in software development. Alongside my job search I'm currently growing my client base for commission based web design projects for both individuals and businesses. I'm currently working to build my client base, you can reach out for any inquiries or projects you need done by email.
+              I’m currently living in Michigan and seeking full time job opportunities in software development. Alongside my job search I’m currently growing my client base for commission based web design projects for both individuals and businesses. I’m currently working to build my client base, you can reach out for any inquiries or projects you need done by email.
             </TextAnimate>
           </div>
           <div className="bg-panel rounded-lg p-8 border border-sky-100 dark:border-sky-900/40 shadow-sm">

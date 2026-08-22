@@ -39,13 +39,17 @@ export function TechBadge({ badge, size = 28 }: { badge: Badge; size?: number })
           className="absolute inset-0 animate-skeleton rounded bg-panel-strong"
         />
       )}
+      {/* Loaded eagerly: these badges sit inside a continuously animated
+          marquee, and lazy-loading was triggering at random times as each
+          icon crossed the viewport threshold mid-scroll, causing its
+          skeleton-to-real-width jump to land mid-animation and throw off
+          the track width — which made icons jump into their neighbors. */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         ref={imgRef}
         src={badgeUrl(badge)}
         alt={badge.label}
         height={size}
-        loading="lazy"
         onLoad={() => setLoaded(true)}
         style={{ height: size }}
         className={cn(

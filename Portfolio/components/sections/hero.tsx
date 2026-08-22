@@ -1,4 +1,3 @@
-import { Ripple } from "@/components/ui/ripple";
 import { InteractiveHoverButton } from "@/components/ui/interactive-hover-button";
 import { TypingAnimation } from "@/components/ui/typing-animation";
 import { HeroHeading } from "@/components/hero-heading";

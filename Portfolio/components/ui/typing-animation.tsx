@@ -106,6 +106,8 @@ export function TypingAnimation({
   )
 
   useEffect(() => {
+    // Resets the typewriter state machine whenever the source text changes.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setDisplayedText("")
     setCurrentWordIndex(0)
     setCurrentCharIndex(0)

@@ -102,7 +102,7 @@ export function Skills() {
             delay={0.2}
             className="font-mono text-code-md text-sky-600 dark:text-sky-400 uppercase tracking-widest"
           >
-            // CORE_SKILLS
+            {"// CORE_SKILLS"}
           </TextAnimate>
         </div>
         <div

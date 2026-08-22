@@ -38,6 +38,8 @@ function HexagonBackground({
   }, [rowSpacing, hexagonWidth]);
 
   React.useEffect(() => {
+    // Grid size depends on window dimensions, unknown until mount; measure once then track resizes.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     updateGridDimensions();
     window.addEventListener('resize', updateGridDimensions);
     return () => window.removeEventListener('resize', updateGridDimensions);

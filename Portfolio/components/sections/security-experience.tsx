@@ -269,13 +269,13 @@ export function SecurityExperience() {
 
   return (
     <div id="cybersecurity" className="relative">
-      <div className="max-w-[1200px] mx-auto px-6 sm:px-8 mb-10 sm:mb-12 text-center">
+      <div className="max-w-[1200px] mx-auto px-3 sm:px-8 mb-10 sm:mb-12 text-center">
         <TextAnimate
           as="h2"
           by="character"
           animation="slideLeft"
           once
-          className="text-headline-lg-mobile font-bold text-ink mb-2"
+          className="text-headline-lg-mobile font-bold text-ink mb-2 whitespace-nowrap tracking-tighter sm:tracking-normal"
         >
           Cybersecurity Experience
         </TextAnimate>
@@ -291,8 +291,8 @@ export function SecurityExperience() {
         </TextAnimate>
       </div>
 
-      <div className="mx-auto max-w-[660px] px-6 sm:px-8">
-        <div className="relative h-[720px] sm:h-[580px]">
+      <div className="mx-auto max-w-[680px] px-3 sm:px-8">
+        <div className="relative h-[828px] sm:h-[580px]">
           <div
             role="region"
             aria-roledescription="carousel"
@@ -300,7 +300,7 @@ export function SecurityExperience() {
             tabIndex={0}
             onKeyDown={handleKeyDown}
             style={{ perspective: PERSPECTIVE_PX }}
-            className="absolute inset-x-0 top-0 h-[900px] origin-top scale-75 outline-none focus-visible:ring-2 focus-visible:ring-accent sm:relative sm:top-auto sm:h-[580px] sm:scale-100"
+            className="absolute inset-x-0 top-0 h-[920px] origin-top scale-90 outline-none focus-visible:ring-2 focus-visible:ring-accent sm:relative sm:top-auto sm:h-[580px] sm:scale-100"
           >
             {engagements.map((engagement, i) => (
               <DepthStackCard
@@ -321,9 +321,13 @@ export function SecurityExperience() {
             type="button"
             onClick={() => goTo(index - 1)}
             aria-label="Previous engagement"
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-panel-strong text-ink transition-colors duration-300 ease-out hover:border-ink hover:bg-ink hover:text-card"
+            className="group flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-panel-strong text-ink outline-none transition-[color,background-color,border-color,transform] duration-300 ease-out hover:scale-110 hover:border-ink hover:bg-ink hover:text-card active:scale-90 active:duration-150 focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           >
-            <CaretLeftIcon size={18} weight="bold" />
+            <CaretLeftIcon
+              size={18}
+              weight="bold"
+              className="transition-transform duration-300 ease-out group-hover:-translate-x-0.5"
+            />
           </button>
 
           <div className="flex items-center gap-2">
@@ -346,9 +350,13 @@ export function SecurityExperience() {
             type="button"
             onClick={() => goTo(index + 1)}
             aria-label="Next engagement"
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-panel-strong text-ink transition-colors duration-300 ease-out hover:border-ink hover:bg-ink hover:text-card"
+            className="group flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-panel-strong text-ink outline-none transition-[color,background-color,border-color,transform] duration-300 ease-out hover:scale-110 hover:border-ink hover:bg-ink hover:text-card active:scale-90 active:duration-150 focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           >
-            <CaretRightIcon size={18} weight="bold" />
+            <CaretRightIcon
+              size={18}
+              weight="bold"
+              className="transition-transform duration-300 ease-out group-hover:translate-x-0.5"
+            />
           </button>
         </div>
       </div>
