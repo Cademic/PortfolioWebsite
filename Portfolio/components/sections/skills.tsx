@@ -1,60 +1,13 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import type { Icon } from "@phosphor-icons/react/lib";
-import { CodeIcon, DatabaseIcon, CaretDownIcon } from "@phosphor-icons/react/dist/ssr";
+import { CodeIcon, DatabaseIcon, ShieldCheckIcon, CaretDownIcon } from "@phosphor-icons/react/dist/ssr";
 import { TextAnimate } from "@/components/ui/text-animate";
 import { GridPattern } from "@/components/ui/grid-pattern";
 import { Marquee } from "@/components/ui/marquee";
+import { type Badge, TechBadge } from "@/components/ui/tech-badge";
 import { cn } from "@/lib/utils";
-
-type Badge = { label: string; color: string; logo?: string; logoColor?: string };
-
-function badgeUrl({ label, color, logo, logoColor = "white" }: Badge) {
-  const params = new URLSearchParams({ style: "for-the-badge", logoColor });
-  if (logo) params.set("logo", logo);
-  return `https://img.shields.io/badge/${encodeURIComponent(label)}-${color}?${params.toString()}`;
-}
-
-function SkillBadge({ badge }: { badge: Badge }) {
-  const [loaded, setLoaded] = useState(false);
-
-  // Cached images can finish loading before React attaches the onLoad
-  // listener, so the event never fires. This ref callback catches that
-  // case by checking `complete` as soon as the node mounts.
-  const imgRef = useCallback((node: HTMLImageElement | null) => {
-    if (node?.complete) setLoaded(true);
-  }, []);
-
-  return (
-    <span
-      className={cn(
-        "relative inline-flex h-7 shrink-0 items-center",
-        !loaded && "w-20 overflow-hidden"
-      )}
-    >
-      {!loaded && (
-        <span
-          aria-hidden="true"
-          className="absolute inset-0 animate-skeleton rounded bg-panel-strong"
-        />
-      )}
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        ref={imgRef}
-        src={badgeUrl(badge)}
-        alt={badge.label}
-        height={28}
-        loading="lazy"
-        onLoad={() => setLoaded(true)}
-        className={cn(
-          "h-7 w-auto rounded transition-opacity duration-300 ease-out hover:scale-110",
-          loaded ? "opacity-100" : "absolute inset-0 opacity-0"
-        )}
-      />
-    </span>
-  );
-}
 
 const groups: { title: string; icon: Icon; reverse?: boolean; badges: Badge[] }[] = [
   {
@@ -92,6 +45,24 @@ const groups: { title: string; icon: Icon; reverse?: boolean; badges: Badge[] }[
       { label: "JWT / OAuth", color: "000000", logo: "jsonwebtokens" },
       { label: "Agile / Scrum", color: "0052CC" },
       { label: "CI/CD", color: "2088FF", logo: "githubactions" },
+    ],
+  },
+  {
+    title: "Security & Operating Systems",
+    icon: ShieldCheckIcon,
+    badges: [
+      { label: "Nmap", color: "1B1B1B" },
+      { label: "Metasploit", color: "2596CD", logo: "metasploit" },
+      { label: "Burp Suite", color: "FF6633", logo: "burpsuite" },
+      { label: "OWASP ZAP", color: "000000", logo: "owasp" },
+      { label: "Wireshark", color: "1679A7", logo: "wireshark" },
+      { label: "Kali Linux", color: "557C94", logo: "kalilinux" },
+      { label: "Windows Server", color: "0078D6" },
+      { label: "Active Directory", color: "00A4EF" },
+      { label: "PowerShell", color: "5391FE" },
+      { label: "Group Policy (GPO)", color: "0078D4" },
+      { label: "Hyper-V", color: "0067B8" },
+      { label: "Windows Event Viewer", color: "737373" },
     ],
   },
 ];
@@ -155,7 +126,7 @@ export function Skills() {
                       className="[--duration:70s] [--gap:0.75rem]"
                     >
                       {badges.map((b) => (
-                        <SkillBadge key={b.label} badge={b} />
+                        <TechBadge key={b.label} badge={b} />
                       ))}
                     </Marquee>
                     <div className="pointer-events-none absolute inset-y-0 left-0 w-16 bg-gradient-to-r from-paper to-transparent" />
@@ -202,7 +173,7 @@ export function Skills() {
                     </h4>
                     <div className="flex flex-wrap gap-3">
                       {badges.map((b) => (
-                        <SkillBadge key={b.label} badge={b} />
+                        <TechBadge key={b.label} badge={b} />
                       ))}
                     </div>
                   </div>

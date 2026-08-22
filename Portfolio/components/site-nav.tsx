@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { AnimatePresence, motion } from "motion/react";
 import { List, X } from "@phosphor-icons/react";
 import { AnimatedShinyText } from "@/components/ui/animated-shiny-text";
 import { AnimatedThemeToggler } from "@/components/ui/animated-theme-toggler";
@@ -17,12 +18,12 @@ export function SiteNav() {
   const [open, setOpen] = useState(false);
 
   return (
-    <nav className="bg-card/90 backdrop-blur-sm w-full fixed top-0 z-50 border-b border-panel-strong">
-      <div className="flex justify-between items-center w-full px-6 sm:px-8 py-6 max-w-[1200px] mx-auto">
+    <nav className="bg-card/90 backdrop-blur-sm w-full fixed top-0 z-50 border-b border-panel-strong isolate transform-gpu">
+      <div className="grid grid-cols-[auto_1fr_auto] items-center w-full px-6 sm:px-8 py-6 max-w-[1200px] mx-auto">
         <a href="#" className="text-headline-lg-mobile font-bold tracking-tighter text-ink">
           <AnimatedShinyText>CARTER WRIGHT</AnimatedShinyText>
         </a>
-        <div className="hidden md:flex space-x-8 items-center">
+        <div className="hidden md:flex justify-center items-center gap-8">
           {links.map((link) => (
             <a
               key={link.href}
@@ -33,7 +34,7 @@ export function SiteNav() {
             </a>
           ))}
         </div>
-        <div className="hidden md:flex items-center gap-4">
+        <div className="col-start-3 row-start-1 hidden md:flex items-center gap-4 justify-self-end">
           <AnimatedThemeToggler
             fromCenter
             className="text-ink transition-transform duration-300 ease-out hover:scale-110 hover:text-accent"
@@ -55,7 +56,7 @@ export function SiteNav() {
             </ShimmerButton>
           </a>
         </div>
-        <div className="flex items-center gap-3 md:hidden">
+        <div className="col-start-3 row-start-1 flex items-center gap-3 md:hidden justify-self-end">
           <AnimatedThemeToggler
             fromCenter
             className="text-ink transition-transform duration-300 ease-out hover:scale-110 hover:text-accent"
@@ -70,20 +71,40 @@ export function SiteNav() {
           </button>
         </div>
       </div>
-      {open && (
-        <div className="md:hidden border-t border-panel-strong bg-card px-6 py-4 flex flex-col gap-4">
-          {links.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              onClick={() => setOpen(false)}
-              className="inline-block text-ink font-mono text-label-sm tracking-[0.1em] transition-transform duration-300 ease-out hover:scale-110 hover:underline decoration-accent underline-offset-4"
-            >
-              {link.label}
-            </a>
-          ))}
-        </div>
-      )}
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            key="mobile-menu"
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
+            className="md:hidden overflow-hidden border-t border-panel-strong bg-card/90 backdrop-blur-sm"
+          >
+            <div className="px-6 py-4 flex flex-col gap-4">
+              {links.map((link) => (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setOpen(false)}
+                  className="self-start inline-block text-ink font-mono text-label-sm tracking-[0.1em] transition-transform duration-300 ease-out hover:scale-110 hover:underline decoration-accent underline-offset-4"
+                >
+                  {link.label}
+                </a>
+              ))}
+              <a
+                href="/resume.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => setOpen(false)}
+                className="self-start inline-block text-ink font-mono text-label-sm tracking-[0.1em] transition-transform duration-300 ease-out hover:scale-110 hover:underline decoration-accent underline-offset-4"
+              >
+                Resume
+              </a>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </nav>
   );
 }

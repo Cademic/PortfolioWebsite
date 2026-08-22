@@ -4,6 +4,7 @@ import { memo } from "react"
 import {
   AnimatePresence,
   motion,
+  useReducedMotion,
   type DOMMotionComponents,
   type MotionProps,
   type Variants,
@@ -344,6 +345,11 @@ const TextAnimateBase = ({
   ...props
 }: TextAnimateProps) => {
   const MotionComponent = motionElements[Component]
+  const prefersReducedMotion = useReducedMotion()
+  // filter: blur() is expensive to animate on many simultaneous spans; fall back
+  // to a plain opacity fade when the user has requested reduced motion.
+  const resolvedAnimation =
+    prefersReducedMotion && animation?.startsWith("blurIn") ? "fadeIn" : animation
 
   let segments: string[] = []
   switch (by) {
@@ -384,26 +390,26 @@ const TextAnimateBase = ({
         },
         item: variants,
       }
-    : animation
+    : resolvedAnimation
       ? {
           container: {
-            ...defaultItemAnimationVariants[animation].container,
+            ...defaultItemAnimationVariants[resolvedAnimation].container,
             show: {
-              ...defaultItemAnimationVariants[animation].container.show,
+              ...defaultItemAnimationVariants[resolvedAnimation].container.show,
               transition: {
                 delayChildren: delay,
                 staggerChildren: duration / segments.length,
               },
             },
             exit: {
-              ...defaultItemAnimationVariants[animation].container.exit,
+              ...defaultItemAnimationVariants[resolvedAnimation].container.exit,
               transition: {
                 staggerChildren: duration / segments.length,
                 staggerDirection: -1,
               },
             },
           },
-          item: defaultItemAnimationVariants[animation].item,
+          item: defaultItemAnimationVariants[resolvedAnimation].item,
         }
       : { container: defaultContainerVariants, item: defaultItemVariants }
 

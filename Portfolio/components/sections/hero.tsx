@@ -1,4 +1,3 @@
-import { HeroShaderBackground } from "@/components/hero-shader-background";
 import { Ripple } from "@/components/ui/ripple";
 import { InteractiveHoverButton } from "@/components/ui/interactive-hover-button";
 import { TypingAnimation } from "@/components/ui/typing-animation";
@@ -7,16 +6,17 @@ import { HeroHeading } from "@/components/hero-heading";
 export function Hero() {
   return (
     <section className="relative flex items-center px-6 sm:px-8 py-20 sm:py-0 sm:min-h-[70vh] overflow-hidden">
-      <HeroShaderBackground className="absolute inset-0 w-full h-full -z-10 animate-in fade-in duration-1000 fill-mode-both" />
       <Ripple
         mainCircleSize={140}
         numCircles={6}
-        className="sm:hidden animate-in fade-in duration-1000 fill-mode-both"
+        mediaQuery="(max-width: 639.98px)"
+        className="animate-in fade-in duration-1000 fill-mode-both"
       />
       <Ripple
         mainCircleSize={420}
         numCircles={10}
-        className="hidden sm:block animate-in fade-in duration-1000 fill-mode-both"
+        mediaQuery="(min-width: 640px)"
+        className="animate-in fade-in duration-1000 fill-mode-both"
       />
       <div className="max-w-[1200px] w-full mx-auto grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
         <div className="md:col-span-8">
