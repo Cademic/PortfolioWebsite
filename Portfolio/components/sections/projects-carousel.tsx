@@ -198,7 +198,7 @@ function ProjectBack({ project, priority }: { project: Project; priority: boolea
           needed in the common case. */}
       <div className="scrollbar-hide flex flex-1 flex-col overflow-y-auto p-1 sm:p-3">
         <div className="space-y-0 sm:space-y-1.5">
-          <h3 className="font-mono text-xs font-bold text-ink sm:text-lg">
+          <h3 className="mb-1.5 font-mono text-xs font-bold text-ink sm:mb-3 sm:text-lg">
             {project.name}
           </h3>
           {/* The bullets below restate the description in more detail,

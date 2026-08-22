@@ -132,7 +132,7 @@ function EngagementCard({ engagement }: { engagement: SecurityEngagement }) {
 // edge faces the viewer, rather than a flat 2D tilt. Unlike that reference
 // (which only stacks toward one side), neighbors recede symmetrically on
 // both sides so the previous card stays visible too.
-const PEEK_OFFSET_PX = 125;
+const PEEK_OFFSET_PX = 225;
 const PEEK_DEPTH_PX = 200;
 const PEEK_TILT_DEG = 10;
 const PEEK_OPACITY = 0.55;
@@ -292,7 +292,7 @@ export function SecurityExperience() {
       </div>
 
       <div className="mx-auto max-w-[660px] px-6 sm:px-8">
-        <div className="relative h-[548px] sm:h-[580px]">
+        <div className="relative h-[720px] sm:h-[580px]">
           <div
             role="region"
             aria-roledescription="carousel"
@@ -300,7 +300,7 @@ export function SecurityExperience() {
             tabIndex={0}
             onKeyDown={handleKeyDown}
             style={{ perspective: PERSPECTIVE_PX }}
-            className="absolute inset-x-0 top-0 h-[730px] origin-top scale-75 outline-none focus-visible:ring-2 focus-visible:ring-accent sm:relative sm:top-auto sm:h-[580px] sm:scale-100"
+            className="absolute inset-x-0 top-0 h-[900px] origin-top scale-75 outline-none focus-visible:ring-2 focus-visible:ring-accent sm:relative sm:top-auto sm:h-[580px] sm:scale-100"
           >
             {engagements.map((engagement, i) => (
               <DepthStackCard
