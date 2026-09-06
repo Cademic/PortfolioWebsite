@@ -1,7 +1,6 @@
 import { SiteNav } from "@/components/site-nav";
 import { Hero } from "@/components/sections/hero";
-import { ProjectsCarousel } from "@/components/sections/projects-carousel";
-import { SecurityExperience } from "@/components/sections/security-experience";
+import { ProjectsSection } from "@/components/sections/projects-section";
 import { About } from "@/components/sections/about";
 import { Skills } from "@/components/sections/skills";
 import { Contact } from "@/components/sections/contact";
@@ -29,8 +28,7 @@ export default function Home() {
               "[mask-image:radial-gradient(500px_circle_at_center,white,transparent)]"
             )}
           />
-          <ProjectsCarousel />
-          <SecurityExperience />
+          <ProjectsSection />
         </section>
         <About />
         <Skills />

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, motion, useScroll, useSpring } from "motion/react";
 import { List, X } from "@phosphor-icons/react";
 import { AnimatedShinyText } from "@/components/ui/animated-shiny-text";
 import { AnimatedThemeToggler } from "@/components/ui/animated-theme-toggler";
@@ -17,6 +17,12 @@ const links = [
 
 export function SiteNav() {
   const [open, setOpen] = useState(false);
+  const { scrollYProgress } = useScroll();
+  const progress = useSpring(scrollYProgress, {
+    stiffness: 200,
+    damping: 40,
+    restDelta: 0.001,
+  });
 
   return (
     <nav className="bg-card/90 backdrop-blur-sm w-full fixed top-0 z-50 border-b border-panel-strong isolate transform-gpu">
@@ -127,6 +133,11 @@ export function SiteNav() {
           </motion.div>
         )}
       </AnimatePresence>
+      <motion.div
+        aria-hidden
+        style={{ scaleX: progress }}
+        className="absolute bottom-0 left-0 h-0.5 w-full origin-left bg-black dark:bg-white"
+      />
     </nav>
   );
 }

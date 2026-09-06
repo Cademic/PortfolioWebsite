@@ -1,11 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import { CodeIcon, GithubLogoIcon, ArrowSquareOutIcon, CheckCircle } from "@phosphor-icons/react/dist/ssr";
-import { TextAnimate } from "@/components/ui/text-animate";
+import { GithubLogoIcon, ArrowSquareOutIcon, CheckCircle } from "@phosphor-icons/react/dist/ssr";
 import { type Badge, TechBadge } from "@/components/ui/tech-badge";
-import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
-import { AccordionGallery } from "@/components/ui/accordion-gallery";
+import { DepthStackCarousel } from "@/components/ui/depth-stack-carousel";
 
 const REACT: Badge = { label: "React", color: "20232A", logo: "react", logoColor: "61DAFB" };
 const TYPESCRIPT: Badge = { label: "TypeScript", color: "3178C6", logo: "typescript" };
@@ -20,6 +18,8 @@ const JAVA: Badge = { label: "Java", color: "ED8B00", logo: "openjdk" };
 const SPRING_BOOT: Badge = { label: "Spring Boot", color: "6DB33F", logo: "springboot" };
 const MYSQL: Badge = { label: "MySQL", color: "4479A1", logo: "mysql" };
 const NEXTJS: Badge = { label: "Next.js", color: "000000", logo: "nextdotjs" };
+const VITE: Badge = { label: "Vite", color: "646CFF", logo: "vite" };
+const TAILWIND: Badge = { label: "Tailwind CSS", color: "06B6D4", logo: "tailwindcss" };
 
 const projects = [
   {
@@ -36,6 +36,22 @@ const projects = [
       "Implemented secure user accounts with JWT authentication, Google sign-in, and email verification.",
       "Connected the React frontend to an ASP.NET Core API and PostgreSQL database to manage users, notes, and boards.",
       "Deployed the application with Docker, GitHub Actions, and Render, with automated testing and security checks.",
+    ],
+  },
+  {
+    name: "McNelly Construction",
+    description:
+      "Marketing website for a family-owned general contractor in northeast Genesee County, Michigan.",
+    image: "/projects/mcnelly.png",
+    logo: "/mcnelly_logo.png",
+    githubUrl: "https://github.com/Cademic/McNelly",
+    liveUrl: "https://mc-nelly.vercel.app",
+    techStack: [REACT, TYPESCRIPT, VITE, TAILWIND],
+    highlights: [
+      "Built a single-page marketing site with React 19, TypeScript, and Vite, styled with Tailwind CSS v4 design tokens.",
+      "Designed a \"Still Water\" design system with a misty blue-to-sand gradient, deep-pine typography, and frosted-glass panels.",
+      "Created an interactive hero with a self-advancing photo carousel and Ken Burns parallax using Motion.",
+      "Added scroll reveals that respect prefers-reduced-motion and served optimized WebP and JPEG image derivatives.",
     ],
   },
   {
@@ -118,201 +134,96 @@ const projects = [
 
 type Project = (typeof projects)[number];
 
-function ProjectFront({ project }: { project: Project }) {
+function ProjectCard({ project, priority }: { project: Project; priority: boolean }) {
   const slug = project.name.toLowerCase().replace(/\s+/g, "-");
   return (
-    <>
-      <Image
-        src={project.image}
-        alt=""
-        fill
-        sizes="(max-width: 639px) 100vw, 320px"
-        className="scale-110 object-cover blur-md"
-      />
-      <div className="absolute inset-0 bg-black/70 transition-colors duration-300 ease-out group-hover:bg-black/55" />
-      <div className="relative flex h-full w-full flex-row items-center justify-center gap-2 px-3 text-center sm:flex-col sm:gap-3">
-        {project.logo ? (
-          <span className="relative h-10 w-20 shrink-0 sm:h-14 sm:w-32">
-            <Image
-              src={project.logo}
-              alt={`${project.name} logo`}
-              fill
-              sizes="128px"
-              className="object-contain"
-            />
-          </span>
-        ) : (
-          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/10 text-white sm:h-14 sm:w-14">
-            <CodeIcon size={20} weight="bold" className="sm:hidden" />
-            <CodeIcon size={26} weight="bold" className="hidden sm:block" />
-          </span>
-        )}
-        <div className="flex flex-col gap-1">
-          <p className="max-w-full truncate font-mono text-base font-bold text-white">
-            {project.name}
-          </p>
-          <p className="hidden max-w-full truncate font-mono text-xs text-white/50 sm:block">
-            ~/{slug}
-          </p>
-        </div>
-      </div>
-    </>
-  );
-}
-
-function ProjectBack({ project, priority }: { project: Project; priority: boolean }) {
-  const slug = project.name.toLowerCase().replace(/\s+/g, "-");
-  return (
-    <>
-      <div className="flex shrink-0 items-center gap-2 border-b border-panel-strong/60 bg-panel px-3 py-1.5">
+    <div className="flex h-full flex-col overflow-hidden rounded-xl bg-card shadow-lg">
+      <div className="flex shrink-0 items-center gap-2 border-b border-panel-strong/60 bg-panel px-4 py-0.5 sm:py-1">
         <span className="h-2.5 w-2.5 rounded-full bg-red-500" />
         <span className="h-2.5 w-2.5 rounded-full bg-yellow-500" />
         <span className="h-2.5 w-2.5 rounded-full bg-green-500" />
-        <span className="ml-1.5 truncate font-mono text-xs text-ink-muted sm:text-sm">
-          ~/projects/{slug}
-        </span>
+        <span className="ml-1.5 truncate font-mono text-xs text-ink-muted">~/projects/{slug}</span>
       </div>
 
-      <div className="relative aspect-video w-full shrink-0 overflow-hidden bg-panel-strong sm:aspect-auto sm:h-20">
+      <div className="relative h-14 w-full shrink-0 overflow-hidden bg-panel-strong sm:h-24">
         <Image
           src={project.image}
           alt={project.name}
           fill
-          sizes="(max-width: 639px) 100vw, 60vw"
+          sizes="(max-width: 639px) 100vw, 680px"
           draggable={false}
           priority={priority}
-          className="object-cover select-none"
+          className="scale-110 object-cover blur-sm select-none"
         />
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-black/0" />
+        <div className="pointer-events-none absolute inset-0 bg-black/55" />
+        {project.logo && (
+          <span className="absolute left-1/2 top-1/2 h-6 w-16 -translate-x-1/2 -translate-y-1/2 drop-shadow-md sm:h-10 sm:w-32">
+            <Image src={project.logo} alt="" fill sizes="128px" className="object-contain" />
+          </span>
+        )}
       </div>
 
-      {/* A flex column so the tech-stack/links group can be pinned to
-          the bottom with mt-auto regardless of how much text is above
-          it. The text itself lives in a nested block-flow div, not as a
-          direct flex-column child — a line-clamp element as a direct
-          flex item in a shrinking column collapses to 0 height instead
-          of the container scrolling, so it stays one level removed.
-          overflow-y-auto (with the scrollbar visually hidden below) is
-          a fallback for content that doesn't quite fit rather than the
-          intended read path — the card's sizing is tuned so it isn't
-          needed in the common case. */}
-      <div className="scrollbar-hide flex flex-1 flex-col overflow-y-auto p-3">
-        <div className="space-y-1.5">
-          <h3 className="mb-2 font-mono text-base font-bold text-ink sm:mb-3 sm:text-lg">
-            {project.name}
-          </h3>
-          {/* The bullets below restate the description in more detail,
-              so skip the redundant summary when they're present. */}
-          {project.highlights.length === 0 && (
-            <p className="line-clamp-3 text-sm leading-snug text-ink-muted sm:text-base">
-              {project.description}
-            </p>
-          )}
-          {project.highlights.length > 0 && (
-            <ul className="space-y-1 text-sm leading-snug text-ink-muted sm:space-y-1.5 sm:text-base">
-              {project.highlights.map((point) => (
-                <li key={point} className="flex items-start gap-1.5 sm:gap-2">
-                  <CheckCircle
-                    size={14}
-                    className="mt-0.5 shrink-0 text-sky-600 dark:text-sky-400 sm:hidden"
-                  />
-                  <CheckCircle
-                    size={18}
-                    className="mt-0.5 hidden shrink-0 text-sky-600 dark:text-sky-400 sm:block"
-                  />
-                  <span>{point}</span>
-                </li>
-              ))}
-            </ul>
-          )}
+      {/* flex-1 (without overflow-auto) lets `mt-auto` below pin the badges
+          and buttons to the bottom of the card. This is safe from the old
+          "scrolling flex item collapses to 0" flexbox quirk because nothing
+          here sets `overflow` to non-visible, and it can never actually need
+          to scroll anyway: the carousel sizes every card to the height of
+          the tallest one (see DepthStackCarousel), so a shorter card's own
+          content always fits with room to spare above this footer. */}
+      <div className="flex flex-1 flex-col p-2 sm:p-4">
+        <h3 className="font-mono text-base font-bold text-ink sm:text-lg">{project.name}</h3>
+        <ul className="mt-1 space-y-1 text-sm text-ink-muted sm:mt-2 sm:text-body-md">
+          {project.highlights.map((point) => (
+            <li key={point} className="flex items-start gap-1.5 sm:gap-2">
+              <CheckCircle size={15} className="mt-0.5 shrink-0 text-sky-600 dark:text-sky-400 sm:hidden" />
+              <CheckCircle size={18} className="mt-0.5 hidden shrink-0 text-sky-600 dark:text-sky-400 sm:block" />
+              <span>{point}</span>
+            </li>
+          ))}
+        </ul>
+        <div className="mt-auto flex flex-wrap gap-1.5 pt-1 sm:pt-2">
+          {project.techStack.map((badge) => (
+            <TechBadge key={badge.label} badge={badge} size={20} />
+          ))}
         </div>
-        <div className="mt-auto space-y-1.5 pt-2 sm:space-y-2">
-          <div className="flex flex-wrap gap-1.5 sm:gap-2">
-            {project.techStack.map((badge) => (
-              <TechBadge key={badge.label} badge={badge} size={16} />
-            ))}
-          </div>
-          <div className="flex items-center gap-2 sm:gap-3">
-            <Tooltip>
-              <TooltipTrigger
-                render={
-                  <a
-                    href={project.githubUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={`View ${project.name} source code on GitHub`}
-                    onClick={(e: React.MouseEvent) => e.stopPropagation()}
-                    className="flex h-9 w-9 items-center justify-center rounded-full border border-panel-strong text-ink transition-[color,background-color,transform,border-color] duration-300 ease-out hover:scale-110 hover:border-ink hover:bg-ink hover:text-card sm:h-10 sm:w-10"
-                  >
-                    <GithubLogoIcon size={16} className="sm:hidden" />
-                    <GithubLogoIcon size={18} className="hidden sm:block" />
-                  </a>
-                }
-              />
-              <TooltipContent>Github</TooltipContent>
-            </Tooltip>
-            {project.liveUrl && (
-              <Tooltip>
-                <TooltipTrigger
-                  render={
-                    <a
-                      href={project.liveUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label={`Open ${project.name} live site`}
-                      onClick={(e: React.MouseEvent) => e.stopPropagation()}
-                      className="flex h-9 w-9 items-center justify-center rounded-full border border-panel-strong text-ink transition-[color,background-color,transform,border-color] duration-300 ease-out hover:scale-110 hover:border-accent hover:bg-accent hover:text-ink-on-accent sm:h-10 sm:w-10"
-                    >
-                      <ArrowSquareOutIcon size={16} className="sm:hidden" />
-                      <ArrowSquareOutIcon size={18} className="hidden sm:block" />
-                    </a>
-                  }
-                />
-                <TooltipContent>Live Site</TooltipContent>
-              </Tooltip>
-            )}
-          </div>
+        <div className="mt-1 flex items-center justify-center gap-2 sm:mt-2">
+          <a
+            href={project.githubUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`View ${project.name} source code on GitHub`}
+            className="flex h-7 items-center gap-2.5 rounded-lg border border-panel-strong px-3 font-mono text-[11px] uppercase tracking-wide text-ink transition-[color,background-color,transform,border-color] duration-300 ease-out hover:scale-105 hover:border-ink hover:bg-ink hover:text-card sm:h-9 sm:gap-3 sm:px-4 sm:text-xs"
+          >
+            <GithubLogoIcon size={13} />
+            GitHub
+          </a>
+          {project.liveUrl && (
+            <a
+              href={project.liveUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`Open ${project.name} live site`}
+              className="flex h-7 items-center gap-2.5 rounded-lg border border-panel-strong px-3 font-mono text-[11px] uppercase tracking-wide text-ink transition-[color,background-color,transform,border-color] duration-300 ease-out hover:scale-105 hover:border-accent hover:bg-accent hover:text-ink-on-accent sm:h-9 sm:gap-3 sm:px-4 sm:text-xs"
+            >
+              <ArrowSquareOutIcon size={13} />
+              Live Site
+            </a>
+          )}
         </div>
       </div>
-    </>
+    </div>
   );
 }
 
 export function ProjectsCarousel() {
   return (
-    <>
-      <div className="max-w-[1200px] mx-auto px-6 sm:px-8 mb-10 sm:mb-12 text-center">
-        <TextAnimate
-          as="h2"
-          by="character"
-          animation="slideLeft"
-          once
-          className="text-headline-lg-mobile font-bold text-ink mb-2"
-        >
-          Check Out My Work
-        </TextAnimate>
-        <TextAnimate
-          as="p"
-          by="word"
-          animation="fadeIn"
-          once
-          delay={0.2}
-          className="font-mono text-code-md text-sky-600 dark:text-sky-400 uppercase tracking-widest"
-        >
-          {"// RECENT_PROJECTS"}
-        </TextAnimate>
-      </div>
-
-      <div className="mx-auto max-w-[1400px] px-6 sm:px-8 mb-16 sm:mb-20">
-        <AccordionGallery
-          ariaLabel="Featured projects"
-          items={projects}
-          getKey={(project) => project.name}
-          getLabel={(project) => project.name}
-          renderFront={(project) => <ProjectFront project={project} />}
-          renderBack={(project, { priority }) => <ProjectBack project={project} priority={priority} />}
-        />
-      </div>
-    </>
+    <div className="mx-auto max-w-[600px] px-3 sm:px-8">
+      <DepthStackCarousel
+        items={projects}
+        getKey={(project) => project.name}
+        ariaLabel="Featured projects"
+        renderCard={(project, i) => <ProjectCard project={project} priority={i === 0} />}
+      />
+    </div>
   );
 }

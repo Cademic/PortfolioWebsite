@@ -1,7 +1,5 @@
 "use client";
 
-import { useCallback, useEffect, useState, type KeyboardEvent } from "react";
-import { animate, motion, useMotionValue, type PanInfo } from "motion/react";
 import type { Icon } from "@phosphor-icons/react/lib";
 import {
   BugIcon,
@@ -9,12 +7,9 @@ import {
   ShieldWarningIcon,
   CheckCircle,
   ArrowSquareOutIcon,
-  CaretLeftIcon,
-  CaretRightIcon,
 } from "@phosphor-icons/react/dist/ssr";
-import { TextAnimate } from "@/components/ui/text-animate";
 import { type Badge, TechBadge } from "@/components/ui/tech-badge";
-import { cn } from "@/lib/utils";
+import { DepthStackCarousel } from "@/components/ui/depth-stack-carousel";
 
 const BURP_SUITE: Badge = { label: "Burp Suite", color: "FF6633", logo: "burpsuite" };
 const OWASP_ZAP: Badge = { label: "OWASP ZAP", color: "000000", logo: "owasp" };
@@ -81,285 +76,71 @@ const engagements: SecurityEngagement[] = [
 function EngagementCard({ engagement }: { engagement: SecurityEngagement }) {
   const EngagementIcon = engagement.icon;
   return (
-    <div className="flex h-full flex-col overflow-hidden rounded-xl border border-panel-strong bg-card shadow-lg">
-      <div className="flex shrink-0 items-center gap-2 border-b border-panel-strong/60 bg-panel px-4 py-2">
+    <div className="flex h-full flex-col overflow-hidden rounded-xl bg-card shadow-lg">
+      <div className="flex shrink-0 items-center gap-2 border-b border-panel-strong/60 bg-panel px-4 py-0.5 sm:py-1">
         <span className="h-2.5 w-2.5 rounded-full bg-red-500" />
         <span className="h-2.5 w-2.5 rounded-full bg-yellow-500" />
         <span className="h-2.5 w-2.5 rounded-full bg-green-500" />
         <span className="ml-1.5 truncate font-mono text-xs text-ink-muted">{engagement.title}</span>
       </div>
 
-      <div className="flex flex-1 flex-col overflow-y-auto p-5 sm:p-6">
-        <div className="flex items-start gap-3">
-          <EngagementIcon size={24} className="mt-0.5 shrink-0 text-accent" />
-          <h3 className="font-mono text-lg font-bold text-ink">{engagement.title}</h3>
+      {/* flex-1 (without overflow-auto) lets `mt-auto` below pin the badges
+          and button to the bottom of the card. This is safe from the old
+          "scrolling flex item collapses to 0" flexbox quirk because nothing
+          here sets `overflow` to non-visible, and it can never actually need
+          to scroll anyway: the carousel sizes every card to the height of
+          the tallest one (see DepthStackCarousel), so a shorter card's own
+          content always fits with room to spare above this footer. */}
+      <div className="flex flex-1 flex-col p-2 sm:p-4">
+        <div className="flex items-start gap-2 sm:gap-3">
+          <EngagementIcon size={20} className="mt-0.5 shrink-0 text-accent sm:hidden" />
+          <EngagementIcon size={24} className="mt-0.5 hidden shrink-0 text-accent sm:block" />
+          <h3 className="font-mono text-base font-bold text-ink sm:text-lg">{engagement.title}</h3>
         </div>
-        <ul className="mt-3 space-y-2 text-body-md text-ink-muted">
+        <ul className="mt-1 space-y-1 text-sm text-ink-muted sm:mt-2 sm:text-body-md">
           {engagement.bullets.map((point) => (
-            <li key={point} className="flex items-start gap-2">
-              <CheckCircle size={18} className="mt-0.5 shrink-0 text-sky-600 dark:text-sky-400" />
+            <li key={point} className="flex items-start gap-1.5 sm:gap-2">
+              <CheckCircle size={15} className="mt-0.5 shrink-0 text-sky-600 dark:text-sky-400 sm:hidden" />
+              <CheckCircle size={18} className="mt-0.5 hidden shrink-0 text-sky-600 dark:text-sky-400 sm:block" />
               <span>{point}</span>
             </li>
           ))}
         </ul>
         {engagement.disclaimer && (
-          <p className="mt-4 border-l-2 border-panel-strong pl-3 text-label-sm italic text-ink-muted">
+          <p className="mt-1 border-l-2 border-panel-strong pl-3 text-xs italic text-ink-muted sm:mt-2 sm:text-label-sm">
             {engagement.disclaimer}
           </p>
         )}
-        <div className="mt-auto flex flex-wrap gap-1.5 pt-4">
+        <div className="mt-auto flex flex-wrap gap-1.5 pt-1 sm:pt-2">
           {engagement.tools.map((badge) => (
             <TechBadge key={badge.label} badge={badge} size={20} />
           ))}
         </div>
-        <a
-          href={engagement.reportHref}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="mt-6 inline-flex items-center gap-2 self-start rounded-full border border-panel-strong px-5 py-2.5 font-mono text-label-sm uppercase tracking-widest text-ink transition-colors duration-300 ease-out hover:border-ink hover:bg-ink hover:text-card"
-        >
-          View Report
-          <ArrowSquareOutIcon size={16} weight="bold" />
-        </a>
+        <div className="mt-1.5 flex items-center justify-center sm:mt-3">
+          <a
+            href={engagement.reportHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex h-7 items-center gap-2.5 rounded-lg border border-panel-strong px-3 font-mono text-[11px] uppercase tracking-wide text-ink transition-[color,background-color,transform,border-color] duration-300 ease-out hover:scale-105 hover:border-ink hover:bg-ink hover:text-card sm:h-9 sm:gap-3 sm:px-4 sm:text-xs"
+          >
+            <ArrowSquareOutIcon size={13} />
+            View Report
+          </a>
+        </div>
       </div>
     </div>
   );
 }
 
-// Depth-stack geometry for peeking cards, modeled on reactbits' Depth
-// Carousel: each neighbor sits further along the Z axis (pushed back under
-// a shared `perspective`) and rotated around the vertical axis so its inner
-// edge faces the viewer, rather than a flat 2D tilt. Unlike that reference
-// (which only stacks toward one side), neighbors recede symmetrically on
-// both sides so the previous card stays visible too.
-const PEEK_OFFSET_PX = 225;
-const PEEK_DEPTH_PX = 200;
-const PEEK_TILT_DEG = 10;
-const PEEK_OPACITY = 0.55;
-const PEEK_BLUR_PX = 3;
-const PEEK_TINT_OPACITY = 0.35;
-const PERSPECTIVE_PX = 1400;
-
-// Drag-to-swipe thresholds for the front card: crossing either the distance
-// or the velocity threshold advances the stack, whichever comes first (a
-// slow deliberate drag vs. a quick flick).
-const SWIPE_DISTANCE_THRESHOLD = 80;
-const SWIPE_VELOCITY_THRESHOLD = 500;
-
-// Framer Motion recommends memoizing dragConstraints rather than passing a
-// new object every render — a fresh reference each time (as this was, being
-// inline JSX) can leave the drag gesture's origin out of sync with the
-// `animate` prop when a card's role changes, freezing it at a stale peek
-// transform after a non-adjacent jump (e.g. clicking a distant dot).
-const DRAG_CONSTRAINTS = { left: 0, right: 0 };
-
-// Signed distance from the active card, wrapped around the loop so it's
-// always the shortest way there — e.g. with 3 cards, the one "after" the
-// last card is 1 step forward, not 2, so a neighbor is always populated on
-// both sides regardless of which card is active.
-function wrappedOffset(i: number, activeIndex: number, count: number): number {
-  const raw = i - activeIndex;
-  const half = count / 2;
-  if (raw > half) return raw - count;
-  if (raw < -half) return raw + count;
-  return raw;
-}
-
-function DepthStackCard({
-  engagement,
-  index: i,
-  count,
-  offset,
-  onActivate,
-  onDragEnd,
-}: {
-  engagement: SecurityEngagement;
-  index: number;
-  count: number;
-  offset: number;
-  onActivate: () => void;
-  onDragEnd: (event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => void;
-}) {
-  const isActive = offset === 0;
-  const isHidden = Math.abs(offset) > 1;
-  const sign = Math.sign(offset);
-  const targetX = isActive ? 0 : offset * PEEK_OFFSET_PX;
-
-  // `x` is a MotionValue we own and hand to `drag` via `style` (rather than
-  // driving it through the declarative `animate` prop) so there's a single
-  // source of truth for it. Splitting ownership — `animate` claiming x while
-  // `drag` also manages it — is what caused a card to freeze at its old peek
-  // position after a non-adjacent jump (e.g. clicking a distant dot): the two
-  // systems disagreed about which of them owned the value.
-  const x = useMotionValue(targetX);
-  useEffect(() => {
-    const controls = animate(x, targetX, { duration: 0.6, ease: [0.16, 1, 0.3, 1] });
-    return () => controls.stop();
-  }, [targetX, x]);
-
-  return (
-    <motion.div
-      role="group"
-      aria-roledescription="slide"
-      aria-label={`${i + 1} of ${count}`}
-      aria-hidden={!isActive}
-      className={cn("absolute inset-0", !isActive && "hidden cursor-pointer sm:block")}
-      style={{ zIndex: 10 - Math.abs(offset), x }}
-      initial={false}
-      animate={
-        isActive
-          ? { z: 0, rotateY: 0, opacity: 1, filter: "blur(0px)" }
-          : {
-              z: -PEEK_DEPTH_PX,
-              rotateY: -sign * PEEK_TILT_DEG,
-              opacity: isHidden ? 0 : PEEK_OPACITY,
-              filter: `blur(${PEEK_BLUR_PX}px)`,
-            }
-      }
-      transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-      drag={isActive ? "x" : false}
-      dragConstraints={DRAG_CONSTRAINTS}
-      dragElastic={0.6}
-      onDragEnd={isActive ? onDragEnd : undefined}
-      onClick={isActive ? undefined : onActivate}
-    >
-      <div className={cn("relative h-full", !isActive && "pointer-events-none")}>
-        <EngagementCard engagement={engagement} />
-        {!isActive && (
-          <div
-            aria-hidden="true"
-            className="absolute inset-0 rounded-xl bg-black"
-            style={{ opacity: isHidden ? 0 : PEEK_TINT_OPACITY }}
-          />
-        )}
-      </div>
-    </motion.div>
-  );
-}
-
 export function SecurityExperience() {
-  const count = engagements.length;
-  const [index, setIndex] = useState(0);
-
-  const goTo = useCallback((i: number) => setIndex(((i % count) + count) % count), [count]);
-
-  const handleDragEnd = useCallback(
-    (_event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
-      if (info.offset.x < -SWIPE_DISTANCE_THRESHOLD || info.velocity.x < -SWIPE_VELOCITY_THRESHOLD) {
-        goTo(index + 1);
-      } else if (info.offset.x > SWIPE_DISTANCE_THRESHOLD || info.velocity.x > SWIPE_VELOCITY_THRESHOLD) {
-        goTo(index - 1);
-      }
-    },
-    [index, goTo]
-  );
-
-  const handleKeyDown = useCallback(
-    (e: KeyboardEvent<HTMLDivElement>) => {
-      if (e.key === "ArrowRight") {
-        e.preventDefault();
-        goTo(index + 1);
-      } else if (e.key === "ArrowLeft") {
-        e.preventDefault();
-        goTo(index - 1);
-      }
-    },
-    [index, goTo]
-  );
-
   return (
-    <div id="cybersecurity" className="relative">
-      <div className="max-w-[1200px] mx-auto px-3 sm:px-8 mb-10 sm:mb-12 text-center">
-        <TextAnimate
-          as="h2"
-          by="character"
-          animation="slideLeft"
-          once
-          className="text-headline-lg-mobile font-bold text-ink mb-2 whitespace-nowrap tracking-tighter sm:tracking-normal"
-        >
-          Cybersecurity Experience
-        </TextAnimate>
-        <TextAnimate
-          as="p"
-          by="word"
-          animation="fadeIn"
-          once
-          delay={0.2}
-          className="font-mono text-code-md text-sky-600 dark:text-sky-400 uppercase tracking-widest"
-        >
-          {"// SECURITY_ENGAGEMENTS"}
-        </TextAnimate>
-      </div>
-
-      <div className="mx-auto max-w-[680px] px-3 sm:px-8">
-        <div className="relative h-[760px] sm:h-[580px]">
-          <div
-            role="region"
-            aria-roledescription="carousel"
-            aria-label="Cybersecurity engagements"
-            tabIndex={0}
-            onKeyDown={handleKeyDown}
-            style={{ perspective: PERSPECTIVE_PX }}
-            className="absolute inset-x-0 top-0 h-[760px] origin-top outline-none focus-visible:ring-2 focus-visible:ring-accent sm:relative sm:top-auto sm:h-[580px]"
-          >
-            {engagements.map((engagement, i) => (
-              <DepthStackCard
-                key={engagement.title}
-                engagement={engagement}
-                index={i}
-                count={count}
-                offset={wrappedOffset(i, index, count)}
-                onActivate={() => goTo(i)}
-                onDragEnd={handleDragEnd}
-              />
-            ))}
-          </div>
-        </div>
-
-        <div className="mt-3 flex items-center justify-center gap-4 sm:mt-6">
-          <button
-            type="button"
-            onClick={() => goTo(index - 1)}
-            aria-label="Previous engagement"
-            className="group flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-panel-strong text-ink outline-none transition-[color,background-color,border-color,transform] duration-300 ease-out hover:scale-110 hover:border-ink hover:bg-ink hover:text-card active:scale-90 active:duration-150 focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-          >
-            <CaretLeftIcon
-              size={18}
-              weight="bold"
-              className="transition-transform duration-300 ease-out group-hover:-translate-x-0.5"
-            />
-          </button>
-
-          <div className="flex items-center gap-2">
-            {engagements.map((engagement, i) => (
-              <button
-                key={engagement.title}
-                type="button"
-                onClick={() => goTo(i)}
-                aria-label={`Go to engagement ${i + 1}`}
-                aria-current={i === index ? "true" : undefined}
-                className={cn(
-                  "h-2 rounded-full transition-all duration-300 ease-out",
-                  i === index ? "w-6 bg-accent" : "w-2 bg-panel-strong hover:bg-ink-muted"
-                )}
-              />
-            ))}
-          </div>
-
-          <button
-            type="button"
-            onClick={() => goTo(index + 1)}
-            aria-label="Next engagement"
-            className="group flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-panel-strong text-ink outline-none transition-[color,background-color,border-color,transform] duration-300 ease-out hover:scale-110 hover:border-ink hover:bg-ink hover:text-card active:scale-90 active:duration-150 focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-          >
-            <CaretRightIcon
-              size={18}
-              weight="bold"
-              className="transition-transform duration-300 ease-out group-hover:translate-x-0.5"
-            />
-          </button>
-        </div>
-      </div>
+    <div className="mx-auto max-w-[600px] px-3 sm:px-8">
+      <DepthStackCarousel
+        items={engagements}
+        getKey={(engagement) => engagement.title}
+        ariaLabel="Cybersecurity engagements"
+        renderCard={(engagement) => <EngagementCard engagement={engagement} />}
+      />
     </div>
   );
 }

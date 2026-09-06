@@ -84,7 +84,7 @@ export function Skills() {
         )}
       />
       <div className="max-w-[1200px] mx-auto px-6 sm:px-8">
-        <div className="text-center mb-12">
+        <div className="text-center mb-8">
           <TextAnimate
             as="h2"
             by="character"
@@ -105,6 +105,32 @@ export function Skills() {
             {"// CORE_SKILLS"}
           </TextAnimate>
         </div>
+
+        <div className="mb-12 flex justify-start">
+          <button
+            type="button"
+            onClick={() => {
+              setShowAll((v) => !v);
+              setHasExpanded(true);
+            }}
+            aria-expanded={showAll}
+            className="group relative isolate inline-flex items-center gap-2 overflow-hidden rounded border border-ink bg-card px-4 py-2 font-mono text-[11px] uppercase tracking-widest text-ink outline-none transition-transform duration-300 ease-out hover:scale-105 active:scale-95 active:duration-150 focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
+          >
+            <span
+              aria-hidden="true"
+              className="absolute inset-0 origin-left scale-x-0 bg-ink transition-transform duration-300 ease-out group-hover:scale-x-100"
+            />
+            <span className="relative flex items-center gap-2 transition-colors duration-300 ease-out group-hover:text-card">
+              {showAll ? "Hide All Skills" : "Show All Skills"}
+              <CaretDownIcon
+                size={14}
+                weight="bold"
+                className={cn("transition-transform duration-300 ease-out", showAll && "rotate-180")}
+              />
+            </span>
+          </button>
+        </div>
+
         <div
           className={cn(
             "grid transition-[grid-template-rows] duration-500 ease-out",
@@ -138,29 +164,10 @@ export function Skills() {
           </div>
         </div>
 
-        <div className="mt-10 flex justify-center">
-          <button
-            type="button"
-            onClick={() => {
-              setShowAll((v) => !v);
-              setHasExpanded(true);
-            }}
-            aria-expanded={showAll}
-            className="flex items-center gap-2 rounded-full border border-panel-strong px-5 py-2.5 font-mono text-label-sm uppercase tracking-widest text-ink transition-colors duration-300 ease-out hover:border-ink hover:bg-ink hover:text-card"
-          >
-            {showAll ? "Hide All Skills" : "Show All Skills"}
-            <CaretDownIcon
-              size={16}
-              weight="bold"
-              className={cn("transition-transform duration-300 ease-out", showAll && "rotate-180")}
-            />
-          </button>
-        </div>
-
         <div
           className={cn(
             "grid transition-[grid-template-rows] duration-500 ease-out",
-            showAll ? "grid-rows-[1fr] mt-8" : "grid-rows-[0fr]"
+            showAll ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
           )}
         >
           <div className="overflow-hidden">
