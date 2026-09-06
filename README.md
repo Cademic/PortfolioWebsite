@@ -1,47 +1,40 @@
 # Carter Wright's Portfolio
 
-A modern, responsive portfolio website showcasing my projects, skills, and experience as a full-stack developer.
+A modern, responsive portfolio site showcasing my projects, skills, and experience
+as a full-stack developer and cybersecurity analyst.
 
-## Overview
+The application lives in [`Portfolio/`](Portfolio/).
 
-This portfolio is designed with a dark coding theme that reflects my passion for programming. Built with Vue.js and TypeScript, it features smooth scrolling navigation, responsive design, and a clean, professional layout highlighting my technical skills and projects.
+## Tech stack
 
-## Features
+- **Next.js 16** (App Router, Turbopack) + **React 19**
+- **TypeScript**
+- **Tailwind CSS v4** with shadcn (`base-lyra`) primitives
+- **motion** for animation
+- **Phosphor Icons**
 
-- **Responsive Design**: Fully responsive layout that works on mobile, tablet, and desktop devices
-- **Dark Coding Theme**: Modern developer-focused aesthetic with code-inspired UI elements
-- **Interactive Elements**: Animated skill bars and hover effects for enhanced user experience
-- **Contact Form**: Integrated with Formspree for reliable message delivery without server-side code
-- **Smooth Navigation**: Implemented scroll behavior for seamless page transitions
+## Getting started
 
-## Technologies Used
+```bash
+cd Portfolio
+npm install
+npm run dev
+```
 
-- **Vue.js 3**: Progressive JavaScript framework for building user interfaces
-- **TypeScript**: Static typing for improved code quality and developer experience
-- **CSS3**: Custom styling with modern CSS features
-- **Vite**: Next-generation frontend build tool for fast development
-- **Formspree**: Form handling solution for contact form submissions
+Open http://localhost:3000.
 
-## Project Structure
+## Scripts
 
-- Modern component-based architecture
-- CSS variables for consistent theming
-- Responsive design using CSS Grid and Flexbox
-- Form validation and error handling
+Run from `Portfolio/`:
 
-## Goals
-
-My goal with this portfolio is to:
-
-1. Showcase my technical skills and projects to potential employers
-2. Demonstrate my ability to create clean, maintainable code
-3. Reflect my coding style and attention to detail
-4. Provide an easy way for visitors to learn about me and make contact
-5. Create a platform that can grow with me as my career develops
+| Command | Description |
+| --- | --- |
+| `npm run dev` | Start the dev server (Turbopack) |
+| `npm run build` | Production build |
+| `npm run start` | Serve the production build |
+| `npm run lint` | Run ESLint |
 
 ## Contact
-
-Feel free to reach out through the contact form on the website or directly:
 
 - **Email**: carterwright221@gmail.com
 - **LinkedIn**: [linkedin.com/in/carterdanw](https://linkedin.com/in/carterdanw/)
@@ -49,4 +42,5 @@ Feel free to reach out through the contact form on the website or directly:
 
 ## License
 
-This project is available for viewing and inspiration, but please respect that the design and content are my intellectual property.
+This project is available for viewing and inspiration, but the design and content
+are my intellectual property.
