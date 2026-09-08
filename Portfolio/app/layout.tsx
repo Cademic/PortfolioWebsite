@@ -16,9 +16,24 @@ const jetbrainsMono = JetBrains_Mono({
   variable: "--font-jetbrains-mono",
 });
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL;
+
 export const metadata: Metadata = {
+  ...(siteUrl ? { metadataBase: new URL(siteUrl) } : {}),
   title: "Carter Wright | Portfolio",
   description: "Full-stack software developer & Cybersecurity analyst",
+  // og:image / twitter:image are supplied automatically by app/opengraph-image.tsx.
+  openGraph: {
+    type: "website",
+    siteName: "Carter Wright | Portfolio",
+    title: "Carter Wright | Portfolio",
+    description: "Full-stack software developer & Cybersecurity analyst",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Carter Wright | Portfolio",
+    description: "Full-stack software developer & Cybersecurity analyst",
+  },
 };
 
 const themeInitScript = `(function(){try{var t=localStorage.getItem("theme");if(t==="dark"){document.documentElement.classList.add("dark")}}catch(e){}})();`;
