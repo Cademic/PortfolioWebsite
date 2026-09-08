@@ -48,10 +48,10 @@ const projects = [
     liveUrl: "https://mc-nelly.vercel.app",
     techStack: [REACT, TYPESCRIPT, VITE, TAILWIND],
     highlights: [
-      "Built a single-page marketing site with React 19, TypeScript, and Vite, styled with Tailwind CSS v4 design tokens.",
-      "Designed a \"Still Water\" design system with a misty blue-to-sand gradient, deep-pine typography, and frosted-glass panels.",
-      "Created an interactive hero with a self-advancing photo carousel and Ken Burns parallax using Motion.",
-      "Added scroll reveals that respect prefers-reduced-motion and served optimized WebP and JPEG image derivatives.",
+      "Built a marketing website for a family-owned construction company as a paid project for the client.",
+      "Used React, TypeScript, and Vite for the frontend, styled with Tailwind CSS.",
+      "Created an interactive hero section with a rotating slideshow of project photos and scroll-in animations.",
+      "Pointed the client's custom domain at the Vercel deployment through its DNS records, then launched the live site.",
     ],
   },
   {
